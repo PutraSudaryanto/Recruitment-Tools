@@ -69,3 +69,7 @@ mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\controllers
 --
 mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\views\o" "D:\htdocs\_project_ommu_module_users\modules\users\views\o"
 mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\views\admin" "D:\htdocs\_project_ommu_module_users\modules\users\views\admin"
+
+///recruitment\\\
+mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\externals\recruitment" "D:\htdocs\_project_ommu_module_others\ecc.ft.ugm.ac.id\externals\recruitment"
+mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\recruitment" "D:\htdocs\_project_ommu_module_others\ecc.ft.ugm.ac.id\modules\recruitment"
