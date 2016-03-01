@@ -252,20 +252,18 @@ class Recruitments extends CActiveRecord
 			);
 			$this->defaultColumns[] = 'event_name';
 			$this->defaultColumns[] = 'event_desc';
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'event_type',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("event_type",array("id"=>$data->recruitment_id)), $data->event_type, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Phrase::trans(588,0),
-						0=>Phrase::trans(589,0),
-					),
-					'type' => 'raw',
-				);
-			}
+			$this->defaultColumns[] = array(
+				'name' => 'event_type',
+				'value' => '$data->event_type == 0 ? "Direct" : "Bundle"',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter'=>array(
+					1=>'Bundle',
+					0=>'Direct',
+				),
+				'type' => 'raw',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'start_date',
 				'value' => 'Utility::dateFormat($data->start_date)',
@@ -318,7 +316,6 @@ class Recruitments extends CActiveRecord
 					),
 				), true),
 			);
-			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
 				'value' => '$data->creation->displayname',
@@ -349,7 +346,6 @@ class Recruitments extends CActiveRecord
 					),
 				), true),
 			);
-			*/
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'publish',

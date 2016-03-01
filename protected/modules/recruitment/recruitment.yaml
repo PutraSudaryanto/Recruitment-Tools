@@ -12,18 +12,24 @@ db_table_name	:
 db_sql_filename	: 
 
 plugin_menu		:
-	- urlTitle: Recruitment Event
+	- urlTitle: Event
 		urlRules: {siteType: 0, userLevel: 1,2}
 		urlPath: {url: o/admin/manage, attr: -, icon: -}
 		submenu :
-			- urlTitle: Recruitment User
+			- urlTitle: Event User
 				urlRules: {siteType: 0, userLevel: 1,2}
-				urlPath: {url: o/history/subscribe, attr: -, icon: -}
+				urlPath: {url: o/eventuser/manage, attr: -, icon: -}
 		
 	- urlTitle: Session
 		urlRules: {siteType: 0, userLevel: 1,2}
-		urlPath: {url: o/member/manage, attr: -, icon: -}
+		urlPath: {url: o/session/manage, attr: -, icon: -}
 		submenu :
 			- urlTitle: Session User
 				urlRules: {siteType: 0, userLevel: 1,2}
-				urlPath: {url: o/history/subscribe, attr: -, icon: -}
+				urlPath: {url: o/sessionuser/manage, attr: -, icon: -}
+
+content_menu	:
+# controller o/admin
+	- urlTitle: Add Recruitment
+		urlRules: {recruitment, o/admin, manage, siteType: 0, userLevel: 1,2}
+		urlPath: {url: add, attr: -, icon: -}
