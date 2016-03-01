@@ -1,7 +1,7 @@
 code			: 
-name			: Career
-description		: Career
-folder_name		: career
+name			: Recruitment
+description		: Recruitment
+folder_name		: Recruitment
 version			: 0.1.0
 created_date	: 
 author			: Putra Sudaryanto [putra@sudaryanto.id]
@@ -10,3 +10,20 @@ db_table_name	:
 
  
 db_sql_filename	: 
+
+plugin_menu		:
+	- urlTitle: Recruitment Event
+		urlRules: {siteType: 0, userLevel: 1,2}
+		urlPath: {url: o/admin/manage, attr: -, icon: -}
+		submenu :
+			- urlTitle: Recruitment User
+				urlRules: {siteType: 0, userLevel: 1,2}
+				urlPath: {url: o/history/subscribe, attr: -, icon: -}
+		
+	- urlTitle: Session
+		urlRules: {siteType: 0, userLevel: 1,2}
+		urlPath: {url: o/member/manage, attr: -, icon: -}
+		submenu :
+			- urlTitle: Session User
+				urlRules: {siteType: 0, userLevel: 1,2}
+				urlPath: {url: o/history/subscribe, attr: -, icon: -}
