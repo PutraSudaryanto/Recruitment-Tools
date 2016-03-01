@@ -17,6 +17,7 @@ product
 project
 publication
 quicknews
+recruitment
 report
 review
 status
