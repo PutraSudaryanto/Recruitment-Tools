@@ -40,6 +40,11 @@
 class Recruitments extends CActiveRecord
 {
 	public $defaultColumns = array();
+	public $permanent;
+	
+	// Variable Search
+	public $creation_search;
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -68,14 +73,17 @@ class Recruitments extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('event_name, event_desc, creation_date, creation_id, modified_id', 'required'),
-			array('publish, event_type', 'numerical', 'integerOnly'=>true),
+			array('publish, event_name, event_desc, event_type, start_date, finish_date', 'required'),
+			array('publish, event_type,
+				permanent', 'numerical', 'integerOnly'=>true),
 			array('event_name', 'length', 'max'=>32),
 			array('creation_id, modified_id', 'length', 'max'=>11),
-			array('start_date, finish_date, modified_date', 'safe'),
+			array('start_date, finish_date, 
+				permanent', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('recruitment_id, publish, event_name, event_desc, event_type, start_date, finish_date, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('recruitment_id, publish, event_name, event_desc, event_type, start_date, finish_date, creation_date, creation_id, modified_date, modified_id,
+				creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -87,8 +95,10 @@ class Recruitments extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ommuRecruitmentEventUsers_relation' => array(self::HAS_MANY, 'OmmuRecruitmentEventUser', 'recruitment_id'),
-			'ommuRecruitmentSessions_relation' => array(self::HAS_MANY, 'OmmuRecruitmentSessions', 'recruitment_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
+			'EventUser' => array(self::HAS_MANY, 'RecruitmentEventUser', 'recruitment_id'),
+			'SessionUser' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'recruitment_id'),
 		);
 	}
 
@@ -109,6 +119,9 @@ class Recruitments extends CActiveRecord
 			'creation_id' => 'Creation',
 			'modified_date' => 'Modified Date',
 			'modified_id' => 'Modified',
+			'permanent' => 'Permanent',
+			'creation_search' => 'Creation',
+			'modified_search' => 'Modified',
 		);
 	}
 
@@ -160,6 +173,20 @@ class Recruitments extends CActiveRecord
 			$criteria->compare('t.modified_id',$_GET['modified']);
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['Recruitments_sort']))
 			$criteria->order = 't.recruitment_id DESC';
@@ -223,20 +250,6 @@ class Recruitments extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->recruitment_id)), $data->publish, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Phrase::trans(588,0),
-						0=>Phrase::trans(589,0),
-					),
-					'type' => 'raw',
-				);
-			}
 			$this->defaultColumns[] = 'event_name';
 			$this->defaultColumns[] = 'event_desc';
 			if(!isset($_GET['type'])) {
@@ -281,7 +294,7 @@ class Recruitments extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'finish_date',
-				'value' => 'Utility::dateFormat($data->finish_date)',
+				'value' => '$data->finish_date != "1970-01-01" ? Utility::dateFormat($data->finish_date) : "Permanent"',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -304,6 +317,11 @@ class Recruitments extends CActiveRecord
 						'showButtonPanel' => true,
 					),
 				), true),
+			);
+			/*
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation->displayname',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
@@ -331,34 +349,21 @@ class Recruitments extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = 'creation_id';
-			$this->defaultColumns[] = array(
-				'name' => 'modified_date',
-				'value' => 'Utility::dateFormat($data->modified_date)',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'modified_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
+			*/
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->recruitment_id)), $data->publish, 1)',
 					'htmlOptions' => array(
-						'id' => 'modified_date_filter',
+						'class' => 'center',
 					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
+					'filter'=>array(
+						1=>Phrase::trans(588,0),
+						0=>Phrase::trans(589,0),
 					),
-				), true),
-			);
-			$this->defaultColumns[] = 'modified_id';
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}
@@ -383,70 +388,34 @@ class Recruitments extends CActiveRecord
 	/**
 	 * before validate attributes
 	 */
-	/*
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
-			// Create action
+			if($this->isNewRecord)
+				$this->creation_id = Yii::app()->user->id;		
+			else
+				$this->modified_id = Yii::app()->user->id;
+			
+			if(in_array(date('Y-m-d', strtotime($this->finish_date)), array('00-00-0000','01-01-1970')))
+				$this->permanent = 1;
+			
+			if($this->permanent == 1)
+				$this->finish_date = '00-00-0000';
+			
+			if($this->permanent != 1 && ($this->start_date != '' && $this->finish_date != '') && (date('Y-m-d', strtotime($this->start_date)) >= date('Y-m-d', strtotime($this->finish_date))))
+				$this->addError('finish_date', 'Finish Data tidak boleh lebih kecil dari Start Date');
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * after validate attributes
-	 */
-	/*
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-			// Create action
-		return true;
-	}
-	*/
 	
 	/**
 	 * before save attributes
 	 */
-	/*
 	protected function beforeSave() {
 		if(parent::beforeSave()) {
-			//$this->start_date = date('Y-m-d', strtotime($this->start_date));
-			//$this->finish_date = date('Y-m-d', strtotime($this->finish_date));
-		}
-		return true;	
-	}
-	*/
-	
-	/**
-	 * After save attributes
-	 */
-	/*
-	protected function afterSave() {
-		parent::afterSave();
-		// Create action
-	}
-	*/
-
-	/**
-	 * Before delete attributes
-	 */
-	/*
-	protected function beforeDelete() {
-		if(parent::beforeDelete()) {
-			// Create action
+			$this->start_date = date('Y-m-d', strtotime($this->start_date));
+			$this->finish_date = date('Y-m-d', strtotime($this->finish_date));
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * After delete attributes
-	 */
-	/*
-	protected function afterDelete() {
-		parent::afterDelete();
-		// Create action
-	}
-	*/
 
 }

@@ -18,72 +18,58 @@
 	);
 ?>
 
-<?php //begin.Messages ?>
-<?php
-if(Yii::app()->user->hasFlash('success'))
-	echo Utility::flashSuccess(Yii::app()->user->getFlash('success'));
-?>
-<?php //end.Messages ?>
-
+<div class="dialog-content">
 <?php $this->widget('application.components.system.FDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		array(
 			'name'=>'recruitment_id',
 			'value'=>$model->recruitment_id,
-			//'value'=>$model->recruitment_id != '' ? $model->recruitment_id : '-',
 		),
 		array(
 			'name'=>'publish',
 			'value'=>$model->publish == '1' ? Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/publish.png') : Chtml::image(Yii::app()->theme->baseUrl.'/images/icons/unpublish.png'),
-			//'value'=>$model->publish,
+			'type'=>'raw',
 		),
 		array(
 			'name'=>'event_name',
 			'value'=>$model->event_name,
-			//'value'=>$model->event_name != '' ? $model->event_name : '-',
 		),
 		array(
 			'name'=>'event_desc',
-			'value'=>'value'=>$model->event_desc != '' ? $model->event_desc : '-',
-			//'value'=>$model->event_desc != '' ? CHtml::link($model->event_desc, Yii::app()->request->baseUrl.'/public/visit/'.$model->event_desc, array('target' => '_blank')) : '-',
+			'value'=>$model->event_desc != '' ? $model->event_desc : '-',
 			'type'=>'raw',
 		),
 		array(
 			'name'=>'event_type',
-			'value'=>$model->event_type,
-			//'value'=>$model->event_type != '' ? $model->event_type : '-',
+			'value'=>$model->event_type == 0 ? 'Direct' : 'Bundle',
 		),
 		array(
 			'name'=>'start_date',
-			'value'=>Utility::dateFormat($model->start_date),
+			'value'=>!in_array($model->start_date, array('0000-00-00','1970-01-01')) ? Utility::dateFormat($model->start_date) : '-',
 		),
 		array(
 			'name'=>'finish_date',
-			'value'=>Utility::dateFormat($model->finish_date),
+			'value'=>!in_array($model->finish_date, array('0000-00-00','1970-01-01')) ? Utility::dateFormat($model->finish_date) : '-',
 		),
 		array(
 			'name'=>'creation_date',
-			'value'=>Utility::dateFormat($model->creation_date, true),
+			'value'=>!in_array($model->creation_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00')) ? Utility::dateFormat($model->creation_date, true) : '-',
 		),
 		array(
 			'name'=>'creation_id',
-			'value'=>$model->creation_id,
-			//'value'=>$model->creation_id != '' ? $model->creation_id : '-',
+			'value'=>$model->creation_id != 0 ? $model->creation->displayname : '-',
 		),
 		array(
 			'name'=>'modified_date',
-			'value'=>Utility::dateFormat($model->modified_date, true),
+			'value'=>!in_array($model->modified_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00')) ? Utility::dateFormat($model->modified_date, true) : '-',
 		),
 		array(
 			'name'=>'modified_id',
-			'value'=>$model->modified_id,
-			//'value'=>$model->modified_id != '' ? $model->modified_id : '-',
+			'value'=>$model->modified_id != 0 ? $model->modified->displayname : '-',
 		),
 	),
 )); ?>
-
-<div class="dialog-content">
 </div>
 <div class="dialog-submit">
 	<?php echo CHtml::button(Phrase::trans(4,0), array('id'=>'closed')); ?>
