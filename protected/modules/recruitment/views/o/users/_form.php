@@ -30,7 +30,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'email'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'email',array('size'=>32,'maxlength'=>32)); ?>
+				<?php echo $form->textField($model,'email',array('maxlength'=>32)); ?>
 				<?php echo $form->error($model,'email'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
@@ -39,7 +39,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'username'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'username',array('size'=>32,'maxlength'=>32)); ?>
+				<?php echo $form->textField($model,'username',array('maxlength'=>32)); ?>
 				<?php echo $form->error($model,'username'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
@@ -48,7 +48,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'password'); ?>
 			<div class="desc">
-				<?php echo $form->passwordField($model,'password',array('size'=>32,'maxlength'=>32)); ?>
+				<?php echo $form->passwordField($model,'password',array('maxlength'=>32)); ?>
 				<?php echo $form->error($model,'password'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
@@ -57,7 +57,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'displayname'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'displayname',array('size'=>60,'maxlength'=>64)); ?>
+				<?php echo $form->textField($model,'displayname',array('maxlength'=>64)); ?>
 				<?php echo $form->error($model,'displayname'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
