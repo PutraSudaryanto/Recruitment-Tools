@@ -20,6 +20,4 @@
 	);
 ?>
 
-<div class="form">
-	<?php echo $this->renderPartial('/o/event_user/_form', array('model'=>$model)); ?>
-</div>
+<?php echo $this->renderPartial('/o/event_user/_form', array('model'=>$model)); ?>
