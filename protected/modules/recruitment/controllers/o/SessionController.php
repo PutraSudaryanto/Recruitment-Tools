@@ -157,24 +157,29 @@ class SessionController extends Controller
 			$sessionId = $_POST['sessionsId'];
 			$url = Yii::app()->controller->createUrl('manage');			
 		}
+		$model = RecruitmentSessions::getInfo($sessionId);
 		
 		if(isset($_FILES['usersExcel'])) {
 			$fileName = CUploadedFile::getInstanceByName('usersExcel');
-			if(in_array(strtolower($fileName->extensionName), array('xls','xlsx')) && $sessionId != '') {
-				$model = RecruitmentSessions::getInfo($sessionId);
+			if(in_array(strtolower($fileName->extensionName), array('xls','xlsx')) && $sessionId != '') {				
 				$file = time().'_'.Utility::getUrlTitle($model->recruitment->event_name.' '.$model->session_name).'.'.strtolower($fileName->extensionName);
 				if($fileName->saveAs($path.'/'.$file)) {
 					Yii::import('ext.excel_reader.OExcelReader');
 					$xls = new OExcelReader($path.'/'.$file);
 					
 					for ($row = 2; $row <= $xls->sheets[0]['numRows']; $row++) {
-						$no						= trim($xls->sheets[0]['cells'][$row][1]);
-						$user_id				= trim($xls->sheets[0]['cells'][$row][2]);
-						$phonebook_name			= ucfirst(strtolower(trim($xls->sheets[0]['cells'][$row][3])));
-						$phonebook_nomor		= trim($xls->sheets[0]['cells'][$row][4]);
-						
-						$phonebook_nomor = SmsPhonebook::setPhoneNumber($phonebook_nomor);
-						SmsPhonebook::insertPhonebook($user_id, $phonebook_nomor, $phonebook_name);
+						if($model->recruitment->event_type == 1) {
+							$no				= trim($xls->sheets[0]['cells'][$row][1]);
+							$displayname	= trim($xls->sheets[0]['cells'][$row][2]);
+							$email			= strtolower(trim($xls->sheets[0]['cells'][$row][3]));
+							$username		= strtolower(trim($xls->sheets[0]['cells'][$row][4]));
+							$password		= trim($xls->sheets[0]['cells'][$row][5]);
+							$session_seat	= strtoupper(trim($xls->sheets[0]['cells'][$row][6]));
+							
+							$userId = RecruitmentUsers::insertUser($email, $username, $password, $displayname);
+						} else {
+							
+						}
 					}
 					
 					Yii::app()->user->setFlash('success', 'Import Recruitment Sessions User Success.');

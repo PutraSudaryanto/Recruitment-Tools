@@ -434,6 +434,22 @@ class RecruitmentUsers extends CActiveRecord
 	{
 		return md5($salt.$password);
 	}
+	
+	public static function insertUser($email, $username, $password, $displayname) 
+	{
+		$return = true;
+		
+		$model=new SmsPhonebook;		
+		$model->email = $email;
+		$model->username = $username;
+		$model->displayname = $displayname;
+		$model->newPassword = $password;
+		if($model->save())
+			$return = $model->user_id;
+		
+		return $return;
+		
+	}
 
 	/**
 	 * before validate attributes
@@ -458,7 +474,7 @@ class RecruitmentUsers extends CActiveRecord
 				} else {
 					$this->update_date = date('Y-m-d H:i:s');
 					$this->update_ip = $_SERVER['REMOTE_ADDR'];
-				}				
+				}
 			}
 		}
 		return true;
@@ -469,6 +485,8 @@ class RecruitmentUsers extends CActiveRecord
 	 */
 	protected function beforeSave() {
 		if(parent::beforeSave()) {
+			$this->email = strtolower($this->email);
+			$this->username = strtolower($this->username);
 			$this->password = self::hashPassword($this->salt, $this->newPassword);
 		}
 		return true;	
