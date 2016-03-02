@@ -36,6 +36,11 @@
 class RecruitmentSessionUser extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $user_search;
+	public $session_search;
+	public $creation_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -70,7 +75,8 @@ class RecruitmentSessionUser extends CActiveRecord
 			array('session_seat', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, publish, user_id, session_id, session_seat, creation_date, creation_id', 'safe', 'on'=>'search'),
+			array('id, publish, user_id, session_id, session_seat, creation_date, creation_id,
+				user_search, session_search, creation_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -84,6 +90,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		return array(
 			'user' => array(self::BELONGS_TO, 'RecruitmentUsers', 'user_id'),
 			'session' => array(self::BELONGS_TO, 'RecruitmentSessions', 'session_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 		);
 	}
 
@@ -100,6 +107,9 @@ class RecruitmentSessionUser extends CActiveRecord
 			'session_seat' => 'Session Seat',
 			'creation_date' => 'Creation Date',
 			'creation_id' => 'Creation',
+			'user_search' => 'User',
+			'session_search' => 'Session',
+			'creation_search' => 'Creation',
 		);
 	}
 
@@ -147,6 +157,25 @@ class RecruitmentSessionUser extends CActiveRecord
 			$criteria->compare('t.creation_id',$_GET['creation']);
 		else
 			$criteria->compare('t.creation_id',$this->creation_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'user' => array(
+				'alias'=>'user',
+				'select'=>'displayname'
+			),
+			'session' => array(
+				'alias'=>'session',
+				'select'=>'session_name'
+			),
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+		);
+		$criteria->compare('user.displayname',strtolower($this->user_search), true);
+		$criteria->compare('session.session_name',strtolower($this->session_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 
 		if(!isset($_GET['RecruitmentSessionUser_sort']))
 			$criteria->order = 't.id DESC';
@@ -206,23 +235,19 @@ class RecruitmentSessionUser extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->id)), $data->publish, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Phrase::trans(588,0),
-						0=>Phrase::trans(589,0),
-					),
-					'type' => 'raw',
-				);
-			}
-			$this->defaultColumns[] = 'user_id';
-			$this->defaultColumns[] = 'session_id';
+			$this->defaultColumns[] = array(
+				'name' => 'user_search',
+				'value' => '$data->user->displayname',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'session_search',
+				'value' => '$data->session->session_name',
+			);
 			$this->defaultColumns[] = 'session_seat';
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation->displayname',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -249,7 +274,20 @@ class RecruitmentSessionUser extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = 'creation_id';
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->id)), $data->publish, 1)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter'=>array(
+						1=>Phrase::trans(588,0),
+						0=>Phrase::trans(589,0),
+					),
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}
