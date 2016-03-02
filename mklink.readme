@@ -50,7 +50,7 @@ mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\views" "D:\htdocs\_projec
 themes
 =======
 mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\themes\ommu" "D:\htdocs\_project_ommu_bootstrap\themes\backend-end\ommu"
-
+mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\externals\content.css" "D:\htdocs\_client_ecc_pln_cdugm19\themes\pln_recruitment\css\content.css"
 
 -------
 protected\modules

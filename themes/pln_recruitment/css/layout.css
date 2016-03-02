@@ -1,22 +1,58 @@
 /** 
- * content.css
+ * layout.css
  * @author Putra Sudaryanto <putra.sudaryanto@gmail.com>
  * @copyright Copyright (c) 2015 Ommu Platform (ommu.co)
  * version: 0.0.1
  * @link https://github.com/oMMu/Ommu-Bootstrap
- * @contact (+62)856-299-4114
+ * @contect (+62)856-299-4114
  *
- *	Custom Default
- *	Main
+ *	CSS Reset : reset default browser style
+ *	Loading and Dialog
+ *	Header
+ *	Body
+ *	Footer
  *	Responsive
  *
  */
- 
-/* =Custom Default
+
+/* =CSS Reset : reset default browser style
+-------------------------------------------------------------*/
+html,
+body {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	min-height: 100%;
+}
+html {
+	background: #262626;
+}
+body,
+div.body {
+	position: relative;
+}
+div.body,
+header {
+	background: #fff;
+}
+.container {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	width: 950px;
+	margin: 0 auto;
+}
+
+/* =Header
 -------------------------------------------------------------- */
 
+/* =Body
+-------------------------------------------------------------- */
 
-/* =Main
+/* =Content
+-------------------------------------------------------------- */
+
+/* =Footer
 -------------------------------------------------------------- */
 
 
@@ -24,16 +60,11 @@
 -------------------------------------------------------------- */
 /* Resolution 1280 */
 @media only screen and (max-width:1280px) {
-	
+
 }
 
 /* Resolution 1024 */
 @media only screen and (max-width:1024px) {
-	
-}
-
-/* Resolution 900 */
-@media only screen and (max-width:900px) {
 	
 }
 
