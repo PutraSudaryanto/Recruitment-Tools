@@ -94,7 +94,7 @@ class RecruitmentSessions extends CActiveRecord
 			'recruitment' => array(self::BELONGS_TO, 'Recruitments', 'recruitment_id'),
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
-			'Users' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'session_id'),
+			'users' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'session_id'),
 		);
 	}
 

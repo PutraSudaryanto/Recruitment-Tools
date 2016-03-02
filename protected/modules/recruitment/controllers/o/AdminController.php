@@ -199,6 +199,7 @@ class AdminController extends Controller
 
 		if(isset($_POST['Recruitments'])) {
 			$model->attributes=$_POST['Recruitments'];
+			
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
 				echo $jsonError;

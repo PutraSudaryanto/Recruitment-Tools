@@ -45,6 +45,8 @@
 class RecruitmentUsers extends CActiveRecord
 {
 	public $defaultColumns = array();
+	public $newPassword;
+	public $confirmPassword;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -73,12 +75,15 @@ class RecruitmentUsers extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('salt, email, username, password, displayname, photos, creation_date, creation_ip, update_ip, lastlogin_ip, modified_id', 'required'),
+			array('enabled, username, password, displayname', 'required'),
+			array('email', 'required', 'on'=>'adminform'),
 			array('enabled, modified_id', 'numerical', 'integerOnly'=>true),
 			array('salt, email, username, password', 'length', 'max'=>32),
 			array('displayname', 'length', 'max'=>64),
 			array('creation_ip, update_ip, lastlogin_ip', 'length', 'max'=>20),
-			array('update_date, lastlogin_date, modified_date', 'safe'),
+			array('email', 'safe'),
+			array('
+				newPassword', 'compare', 'compareAttribute' => 'confirmPassword', 'message' => 'Kedua password tidak sama2.'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('user_id, enabled, salt, email, username, password, displayname, photos, creation_date, creation_ip, update_date, update_ip, lastlogin_date, lastlogin_ip, modified_date, modified_id', 'safe', 'on'=>'search'),
@@ -93,8 +98,8 @@ class RecruitmentUsers extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ommuRecruitmentEventUsers_relation' => array(self::HAS_MANY, 'OmmuRecruitmentEventUser', 'user_id'),
-			'ommuRecruitmentSessionUsers_relation' => array(self::HAS_MANY, 'OmmuRecruitmentSessionUser', 'user_id'),
+			'eventUser' => array(self::HAS_MANY, 'RecruitmentEventUser', 'user_id'),
+			'sessionUser' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'user_id'),
 		);
 	}
 
@@ -385,73 +390,88 @@ class RecruitmentUsers extends CActiveRecord
 	}
 
 	/**
+	 * User salt codes
+	 */
+	public static function getUniqueCode() {
+		$chars = "abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		srand((double)microtime()*1000000);
+		$i = 0;
+		$salt = '' ;
+
+		while ($i <= 15) {
+			$num = rand() % 33;
+			$tmp = substr($chars, $num, 2);
+			$salt = $salt . $tmp; 
+			$i++;
+		}
+
+		return $salt;
+	}
+
+	/**
+	 * User generate password
+	 */
+	public static function getGeneratePassword() {
+		$chars = "abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		srand((double)microtime()*1000000);
+		$i = 0;
+		$password = '' ;
+
+		while ($i <= 4) {
+			$num = rand() % 33;
+			$tmp = substr($chars, $num, 2);
+			$password = $password . $tmp; 
+			$i++;
+		}
+
+		return $password;
+	}
+
+	/**
+	 * User Salt
+	 */
+	public static function hashPassword($salt, $password)
+	{
+		return md5($salt.$password);
+	}
+
+	/**
 	 * before validate attributes
 	 */
-	/*
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
-			// Create action
+			$controller = strtolower(Yii::app()->controller->id);
+			$currentAction = strtolower(Yii::app()->controller->id.'/'.Yii::app()->controller->action->id);
+			
+			if($this->isNewRecord) {
+				$this->salt = self::getUniqueCode();
+				if($this->newPassword == '' && $currentAction == 'o/session/importuser')
+					$this->newPassword = $this->confirmPassword = self::getGeneratePassword();
+				$this->creation_ip = $_SERVER['REMOTE_ADDR'];
+				$this->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
+				
+			} else {
+				// Admin modify member
+				if(in_array($currentAction, array('o/admin/edit','o/member/edit'))) {
+					$this->modified_date = date('Y-m-d H:i:s');
+					$this->modified_id = Yii::app()->user->id;
+				} else {
+					$this->update_date = date('Y-m-d H:i:s');
+					$this->update_ip = $_SERVER['REMOTE_ADDR'];
+				}				
+			}
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * after validate attributes
-	 */
-	/*
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-			// Create action
-		return true;
-	}
-	*/
 	
 	/**
 	 * before save attributes
 	 */
-	/*
 	protected function beforeSave() {
 		if(parent::beforeSave()) {
-			//$this->update_date = date('Y-m-d', strtotime($this->update_date));
-			//$this->lastlogin_date = date('Y-m-d', strtotime($this->lastlogin_date));
-			//$this->modified_date = date('Y-m-d', strtotime($this->modified_date));
+			$this->password = self::hashPassword($this->salt, $this->newPassword);
 		}
 		return true;	
 	}
-	*/
-	
-	/**
-	 * After save attributes
-	 */
-	/*
-	protected function afterSave() {
-		parent::afterSave();
-		// Create action
-	}
-	*/
-
-	/**
-	 * Before delete attributes
-	 */
-	/*
-	protected function beforeDelete() {
-		if(parent::beforeDelete()) {
-			// Create action
-		}
-		return true;
-	}
-	*/
-
-	/**
-	 * After delete attributes
-	 */
-	/*
-	protected function afterDelete() {
-		parent::afterDelete();
-		// Create action
-	}
-	*/
 
 }

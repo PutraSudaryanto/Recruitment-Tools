@@ -151,6 +151,7 @@ class UsersController extends Controller
 
 		if(isset($_POST['RecruitmentUsers'])) {
 			$model->attributes=$_POST['RecruitmentUsers'];
+			$model->scenario = 'adminform';
 			
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
@@ -199,6 +200,7 @@ class UsersController extends Controller
 
 		if(isset($_POST['RecruitmentUsers'])) {
 			$model->attributes=$_POST['RecruitmentUsers'];
+			$model->scenario = 'adminform';
 			
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
