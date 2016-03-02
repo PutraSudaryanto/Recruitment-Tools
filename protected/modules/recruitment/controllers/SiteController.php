@@ -123,10 +123,10 @@ class SiteController extends Controller
 	 */
 	public function actionLogin()
 	{
-		if(!Yii::app()->user->user_id) {
+		if(!Yii::app()->user->isGuest)
 			$this->redirect(Yii::app()->controller->createUrl('account/index'));
 
-		} else {				
+		else {				
 			$model=new LoginFormRecruitment;
 
 			// if it is ajax validation request
