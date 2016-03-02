@@ -51,3 +51,15 @@ content_menu	:
 	- urlTitle: Import Users
 		urlRules: {recruitment, o/session, edit, siteType: 0, userLevel: 1,2}
 		urlPath: {url: importuser, attr: id=$_GET*id, icon: -}
+		
+# controller o/eventuser
+
+	- urlTitle: Back to Manage
+		urlRules: {recruitment, o/eventuser, manage, siteType: 0, userLevel: 1,2}
+		urlPath: {url: o/admin/manage, attr: -, icon: -}
+		
+# controller o/eventuser
+
+	- urlTitle: Back to Manage
+		urlRules: {recruitment, o/sessionuser, manage, siteType: 0, userLevel: 1,2}
+		urlPath: {url: o/session/manage, attr: -, icon: -}

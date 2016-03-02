@@ -35,6 +35,11 @@
 class RecruitmentEventUser extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $recruitment_search;
+	public $user_search;
+	public $creation_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -68,7 +73,8 @@ class RecruitmentEventUser extends CActiveRecord
 			array('recruitment_id, user_id, creation_id', 'length', 'max'=>11),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, publish, recruitment_id, user_id, creation_date, creation_id', 'safe', 'on'=>'search'),
+			array('id, publish, recruitment_id, user_id, creation_date, creation_id,
+				recruitment_search, user_search, creation_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -80,8 +86,9 @@ class RecruitmentEventUser extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'recruitment' => array(self::BELONGS_TO, 'OmmuRecruitments', 'Recruitments'),
+			'recruitment' => array(self::BELONGS_TO, 'Recruitments', 'recruitment_id'),
 			'user' => array(self::BELONGS_TO, 'RecruitmentUsers', 'user_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 		);
 	}
 
@@ -97,6 +104,9 @@ class RecruitmentEventUser extends CActiveRecord
 			'user_id' => 'User',
 			'creation_date' => 'Creation Date',
 			'creation_id' => 'Creation',
+			'recruitment_search' => 'Recruitment',
+			'user_search' => 'User',
+			'creation_search' => 'Creation',
 		);
 	}
 
@@ -143,6 +153,25 @@ class RecruitmentEventUser extends CActiveRecord
 			$criteria->compare('t.creation_id',$_GET['creation']);
 		else
 			$criteria->compare('t.creation_id',$this->creation_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'recruitment' => array(
+				'alias'=>'recruitment',
+				'select'=>'event_name'
+			),
+			'user' => array(
+				'alias'=>'user',
+				'select'=>'displayname'
+			),
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+		);
+		$criteria->compare('recruitment.event_name',strtolower($this->recruitment_search), true);
+		$criteria->compare('user.displayname',strtolower($this->user_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 
 		if(!isset($_GET['RecruitmentEventUser_sort']))
 			$criteria->order = 't.id DESC';
@@ -201,22 +230,18 @@ class RecruitmentEventUser extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->id)), $data->publish, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Phrase::trans(588,0),
-						0=>Phrase::trans(589,0),
-					),
-					'type' => 'raw',
-				);
-			}
-			$this->defaultColumns[] = 'recruitment_id';
-			$this->defaultColumns[] = 'user_id';
+			$this->defaultColumns[] = array(
+				'name' => 'recruitment_search',
+				'value' => '$data->recruitment->event_name',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'user_search',
+				'value' => '$data->user->displayname',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation->displayname',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -243,7 +268,20 @@ class RecruitmentEventUser extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = 'creation_id';
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->id)), $data->publish, 1)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter'=>array(
+						1=>Phrase::trans(588,0),
+						0=>Phrase::trans(589,0),
+					),
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}
