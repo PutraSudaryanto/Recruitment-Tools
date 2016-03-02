@@ -99,6 +99,7 @@ class Recruitments extends CActiveRecord
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 			'eventUser' => array(self::HAS_MANY, 'RecruitmentEventUser', 'recruitment_id'),
 			'sessionUser' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'recruitment_id'),
+			'view' => array(self::BELONGS_TO, 'ViewRecruitments', 'recruitment_id'),
 		);
 	}
 
@@ -184,6 +185,10 @@ class Recruitments extends CActiveRecord
 				'alias'=>'modified',
 				'select'=>'displayname'
 			),
+			'view' => array(
+				'alias'=>'view',
+				'select'=>'users'
+			),
 		);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
@@ -261,6 +266,14 @@ class Recruitments extends CActiveRecord
 				'filter'=>array(
 					1=>'Bundle',
 					0=>'Direct',
+				),
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'header' => 'Users',
+				'value' => 'CHtml::link($data->view->users." User", Yii::app()->controller->createUrl("o/eventuser/manage",array("recruitment"=>$data->recruitment_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
 				),
 				'type' => 'raw',
 			);

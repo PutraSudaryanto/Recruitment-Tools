@@ -95,6 +95,7 @@ class RecruitmentSessions extends CActiveRecord
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 			'users' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'session_id'),
+			'view' => array(self::BELONGS_TO, 'ViewRecruitmentSessions', 'session_id'),
 		);
 	}
 
@@ -180,6 +181,10 @@ class RecruitmentSessions extends CActiveRecord
 			'modified' => array(
 				'alias'=>'modified',
 				'select'=>'displayname'
+			),
+			'view' => array(
+				'alias'=>'view',
+				'select'=>'users'
 			),
 		);
 		$criteria->compare('recruitment.event_name',strtolower($this->recruitment_search), true);
@@ -268,6 +273,14 @@ class RecruitmentSessions extends CActiveRecord
 			$this->defaultColumns[] = array(
 				'name' => 'session_info',
 				'value' => '$data->session_info',
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'header' => 'Users',
+				'value' => 'CHtml::link($data->view->users." User", Yii::app()->controller->createUrl("o/sessionuser/manage",array("session"=>$data->session_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
 				'type' => 'raw',
 			);
 			$this->defaultColumns[] = array(
