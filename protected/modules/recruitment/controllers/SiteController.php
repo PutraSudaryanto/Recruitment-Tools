@@ -123,7 +123,7 @@ class SiteController extends Controller
 	 */
 	public function actionLogin()
 	{
-		if(!Yii::app()->user->isGuest)
+		if(!empty(Yii::app()->user->user_id))
 			$this->redirect(Yii::app()->controller->createUrl('account/index'));
 
 		else {				

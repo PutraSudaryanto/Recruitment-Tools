@@ -16,6 +16,7 @@
 	);
 ?>
 
+<div name="post-on">
 <?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
 	'id'=>'login-form',
 	'enableClientValidation'=>true,
@@ -47,3 +48,4 @@
 		</div>
 	</fieldset>
 <?php $this->endWidget(); ?>
+</div>
