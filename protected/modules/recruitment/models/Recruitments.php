@@ -316,10 +316,12 @@ class Recruitments extends CActiveRecord
 					),
 				), true),
 			);
+			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
 				'value' => '$data->creation->displayname',
 			);
+			*/
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -378,6 +380,30 @@ class Recruitments extends CActiveRecord
 		} else {
 			$model = self::model()->findByPk($id);
 			return $model;			
+		}
+	}
+
+	/**
+	 * Get Event
+	 * 0 = unpublish
+	 * 1 = publish
+	 */
+	public static function getEvent($publish=null) {
+		
+		$criteria=new CDbCriteria;
+		if($publish != null)
+			$criteria->compare('t.publish',$publish);
+		
+		$model = self::model()->findAll($criteria);
+
+		$items = array();
+		if($model != null) {
+			foreach($model as $key => $val) {
+				$items[$val->recruitment_id] = $val->event_name;
+			}
+			return $items;
+		} else {
+			return false;
 		}
 	}
 

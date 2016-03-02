@@ -38,6 +38,11 @@
 class RecruitmentSessions extends CActiveRecord
 {
 	public $defaultColumns = array();
+	
+	// Variable Search
+	public $recruitment_search;
+	public $creation_search;
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -66,14 +71,15 @@ class RecruitmentSessions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('recruitment_id, session_name, session_info, creation_date, creation_id, modified_id', 'required'),
+			array('publish, recruitment_id, session_name, session_info', 'required'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('recruitment_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('session_name', 'length', 'max'=>32),
-			array('modified_date', 'safe'),
+			array('', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('session_id, publish, recruitment_id, session_name, session_info, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('session_id, publish, recruitment_id, session_name, session_info, creation_date, creation_id, modified_date, modified_id,
+				recruitment_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -85,8 +91,10 @@ class RecruitmentSessions extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ommuRecruitmentSessionUsers_relation' => array(self::HAS_MANY, 'OmmuRecruitmentSessionUser', 'session_id'),
-			'recruitment_relation' => array(self::BELONGS_TO, 'OmmuRecruitments', 'recruitment_id'),
+			'recruitment' => array(self::BELONGS_TO, 'Recruitments', 'recruitment_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
+			'Users' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'session_id'),
 		);
 	}
 
@@ -105,6 +113,9 @@ class RecruitmentSessions extends CActiveRecord
 			'creation_id' => 'Creation',
 			'modified_date' => 'Modified Date',
 			'modified_id' => 'Modified',
+			'recruitment_search' => 'Recruitment',
+			'creation_search' => 'Creation',
+			'modified_search' => 'Modified',
 		);
 	}
 
@@ -155,6 +166,25 @@ class RecruitmentSessions extends CActiveRecord
 			$criteria->compare('t.modified_id',$_GET['modified']);
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'recruitment' => array(
+				'alias'=>'recruitment',
+				'select'=>'event_name'
+			),
+			'creation' => array(
+				'alias'=>'creation',
+				'select'=>'displayname'
+			),
+			'modified' => array(
+				'alias'=>'modified',
+				'select'=>'displayname'
+			),
+		);
+		$criteria->compare('recruitment.event_name',strtolower($this->recruitment_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['RecruitmentSessions_sort']))
 			$criteria->order = 't.session_id DESC';
@@ -230,9 +260,20 @@ class RecruitmentSessions extends CActiveRecord
 					'type' => 'raw',
 				);
 			}
-			$this->defaultColumns[] = 'recruitment_id';
+			$this->defaultColumns[] = array(
+				'name' => 'recruitment_search',
+				'value' => '$data->recruitment->event_name',
+			);
 			$this->defaultColumns[] = 'session_name';
-			$this->defaultColumns[] = 'session_info';
+			$this->defaultColumns[] = array(
+				'name' => 'session_info',
+				'value' => '$data->session_info',
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation->displayname',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -259,34 +300,6 @@ class RecruitmentSessions extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = 'creation_id';
-			$this->defaultColumns[] = array(
-				'name' => 'modified_date',
-				'value' => 'Utility::dateFormat($data->modified_date)',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'modified_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
-					'htmlOptions' => array(
-						'id' => 'modified_date_filter',
-					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
-					),
-				), true),
-			);
-			$this->defaultColumns[] = 'modified_id';
 		}
 		parent::afterConstruct();
 	}
@@ -311,68 +324,14 @@ class RecruitmentSessions extends CActiveRecord
 	/**
 	 * before validate attributes
 	 */
-	/*
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
-			// Create action
+			if($this->isNewRecord)
+				$this->creation_id = Yii::app()->user->id;		
+			else
+				$this->modified_id = Yii::app()->user->id;
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * after validate attributes
-	 */
-	/*
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-			// Create action
-		return true;
-	}
-	*/
-	
-	/**
-	 * before save attributes
-	 */
-	/*
-	protected function beforeSave() {
-		if(parent::beforeSave()) {
-		}
-		return true;	
-	}
-	*/
-	
-	/**
-	 * After save attributes
-	 */
-	/*
-	protected function afterSave() {
-		parent::afterSave();
-		// Create action
-	}
-	*/
-
-	/**
-	 * Before delete attributes
-	 */
-	/*
-	protected function beforeDelete() {
-		if(parent::beforeDelete()) {
-			// Create action
-		}
-		return true;
-	}
-	*/
-
-	/**
-	 * After delete attributes
-	 */
-	/*
-	protected function afterDelete() {
-		parent::afterDelete();
-		// Create action
-	}
-	*/
 
 }

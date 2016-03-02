@@ -15,21 +15,39 @@ plugin_menu		:
 	- urlTitle: Event
 		urlRules: {siteType: 0, userLevel: 1,2}
 		urlPath: {url: o/admin/manage, attr: -, icon: -}
-		submenu :
-			- urlTitle: Event User
+		submenu :		
+			- urlTitle: Session
 				urlRules: {siteType: 0, userLevel: 1,2}
-				urlPath: {url: o/eventuser/manage, attr: -, icon: -}
-		
-	- urlTitle: Session
+				urlPath: {url: o/session/manage, attr: -, icon: -}
+				
+	- urlTitle: Event
 		urlRules: {siteType: 0, userLevel: 1,2}
-		urlPath: {url: o/session/manage, attr: -, icon: -}
-		submenu :
-			- urlTitle: Session User
-				urlRules: {siteType: 0, userLevel: 1,2}
-				urlPath: {url: o/sessionuser/manage, attr: -, icon: -}
+		urlPath: {url: o/users/manage, attr: -, icon: -}
+				
+	- urlTitle: Setting
+		urlRules: {siteType: 0, userLevel: 1,2}
+		urlPath: {url: o/setting/edit, attr: -, icon: -}
 
 content_menu	:
 # controller o/admin
-	- urlTitle: Add Recruitment
+	- urlTitle: Add Event
 		urlRules: {recruitment, o/admin, manage, siteType: 0, userLevel: 1,2}
 		urlPath: {url: add, attr: -, icon: -}
+		
+# controller o/session
+
+	- urlTitle: Add Session
+		urlRules: {recruitment, o/session, manage, siteType: 0, userLevel: 1,2}
+		urlPath: {url: add, attr: -, icon: -}
+
+	- urlTitle: Import Users
+		urlRules: {recruitment, o/session, manage, siteType: 0, userLevel: 1,2}
+		urlPath: {url: importuser, attr: -, icon: -}
+
+	- urlTitle: Back to Manage
+		urlRules: {recruitment, o/session, edit,view, siteType: 0, userLevel: 1,2}
+		urlPath: {url: manage, attr: -, icon: -}
+
+	- urlTitle: Import Users
+		urlRules: {recruitment, o/session, edit, siteType: 0, userLevel: 1,2}
+		urlPath: {url: importuser, attr: id=$_GET*id, icon: -}
