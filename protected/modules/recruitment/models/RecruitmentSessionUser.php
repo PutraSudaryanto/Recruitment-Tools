@@ -64,7 +64,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('user_id, session_id, session_seat, creation_date, creation_id', 'required'),
+			array('publish, user_id, session_id, session_seat', 'required'),
 			array('publish, creation_id', 'numerical', 'integerOnly'=>true),
 			array('user_id, session_id', 'length', 'max'=>11),
 			array('session_seat', 'length', 'max'=>32),
@@ -82,8 +82,8 @@ class RecruitmentSessionUser extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'user_relation' => array(self::BELONGS_TO, 'OmmuRecruitmentUsers', 'user_id'),
-			'session_relation' => array(self::BELONGS_TO, 'OmmuRecruitmentSessions', 'session_id'),
+			'user' => array(self::BELONGS_TO, 'RecruitmentUsers', 'user_id'),
+			'session' => array(self::BELONGS_TO, 'RecruitmentSessions', 'session_id'),
 		);
 	}
 
@@ -270,72 +270,29 @@ class RecruitmentSessionUser extends CActiveRecord
 			return $model;			
 		}
 	}
+	
+	public static function insertUser($user_id, $session_id, $session_seat) 
+	{
+		$return = true;
+		
+		$model=new RecruitmentSessionUser;		
+		$model->user_id = $user_id;
+		$model->session_id = $session_id;
+		$model->session_seat = $session_seat;
+		if($model->save())
+			$return = $model->id;
+		
+		return $return;
+	}
 
 	/**
 	 * before validate attributes
 	 */
-	/*
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
-			// Create action
+			$this->creation_id = Yii::app()->user->id;
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * after validate attributes
-	 */
-	/*
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-			// Create action
-		return true;
-	}
-	*/
-	
-	/**
-	 * before save attributes
-	 */
-	/*
-	protected function beforeSave() {
-		if(parent::beforeSave()) {
-		}
-		return true;	
-	}
-	*/
-	
-	/**
-	 * After save attributes
-	 */
-	/*
-	protected function afterSave() {
-		parent::afterSave();
-		// Create action
-	}
-	*/
-
-	/**
-	 * Before delete attributes
-	 */
-	/*
-	protected function beforeDelete() {
-		if(parent::beforeDelete()) {
-			// Create action
-		}
-		return true;
-	}
-	*/
-
-	/**
-	 * After delete attributes
-	 */
-	/*
-	protected function afterDelete() {
-		parent::afterDelete();
-		// Create action
-	}
-	*/
 
 }

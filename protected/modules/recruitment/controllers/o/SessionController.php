@@ -147,7 +147,7 @@ class SessionController extends Controller
 		ini_set('max_execution_time', 0);
 		ob_start();
 		
-		$path = 'public/sms';
+		$path = 'public/recruitment';
 		$error = array();
 		
 		if(isset($_GET['id'])) {
@@ -177,8 +177,7 @@ class SessionController extends Controller
 							$session_seat	= strtoupper(trim($xls->sheets[0]['cells'][$row][6]));
 							
 							$userId = RecruitmentUsers::insertUser($email, $username, $password, $displayname);
-						} else {
-							
+							RecruitmentSessionUser::insertUser($userId, $sessionId, $session_seat);
 						}
 					}
 					

@@ -63,7 +63,7 @@ class RecruitmentEventUser extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('recruitment_id, user_id, creation_date, creation_id', 'required'),
+			array('publish, recruitment_id, user_id', 'required'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('recruitment_id, user_id, creation_id', 'length', 'max'=>11),
 			// The following rule is used by search().
@@ -80,8 +80,8 @@ class RecruitmentEventUser extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'recruitment_relation' => array(self::BELONGS_TO, 'OmmuRecruitments', 'recruitment_id'),
-			'user_relation' => array(self::BELONGS_TO, 'OmmuRecruitmentUsers', 'user_id'),
+			'recruitment' => array(self::BELONGS_TO, 'OmmuRecruitments', 'Recruitments'),
+			'user' => array(self::BELONGS_TO, 'RecruitmentUsers', 'user_id'),
 		);
 	}
 
@@ -268,68 +268,11 @@ class RecruitmentEventUser extends CActiveRecord
 	/**
 	 * before validate attributes
 	 */
-	/*
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
-			// Create action
+			$this->creation_id = Yii::app()->user->id;
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * after validate attributes
-	 */
-	/*
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-			// Create action
-		return true;
-	}
-	*/
-	
-	/**
-	 * before save attributes
-	 */
-	/*
-	protected function beforeSave() {
-		if(parent::beforeSave()) {
-		}
-		return true;	
-	}
-	*/
-	
-	/**
-	 * After save attributes
-	 */
-	/*
-	protected function afterSave() {
-		parent::afterSave();
-		// Create action
-	}
-	*/
-
-	/**
-	 * Before delete attributes
-	 */
-	/*
-	protected function beforeDelete() {
-		if(parent::beforeDelete()) {
-			// Create action
-		}
-		return true;
-	}
-	*/
-
-	/**
-	 * After delete attributes
-	 */
-	/*
-	protected function afterDelete() {
-		parent::afterDelete();
-		// Create action
-	}
-	*/
 
 }

@@ -322,6 +322,30 @@ class RecruitmentSessions extends CActiveRecord
 	}
 
 	/**
+	 * Get Event
+	 * 0 = unpublish
+	 * 1 = publish
+	 */
+	public static function getSession($publish=null) {
+		
+		$criteria=new CDbCriteria;
+		if($publish != null)
+			$criteria->compare('t.publish',$publish);
+		
+		$model = self::model()->findAll($criteria);
+
+		$items = array();
+		if($model != null) {
+			foreach($model as $key => $val) {
+				$items[$val->session_id] = $val->recruitment->event_name.' ('.$val->session_name.')';
+			}
+			return $items;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * before validate attributes
 	 */
 	protected function beforeValidate() {

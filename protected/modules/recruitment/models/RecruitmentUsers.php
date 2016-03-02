@@ -75,13 +75,14 @@ class RecruitmentUsers extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('enabled, username, password, displayname', 'required'),
+			array('enabled, username, displayname', 'required'),
 			array('email', 'required', 'on'=>'adminform'),
 			array('enabled, modified_id', 'numerical', 'integerOnly'=>true),
 			array('salt, email, username, password', 'length', 'max'=>32),
 			array('displayname', 'length', 'max'=>64),
 			array('creation_ip, update_ip, lastlogin_ip', 'length', 'max'=>20),
-			array('email', 'safe'),
+			array('email,
+				newPassword, confirmPassword', 'safe'),
 			array('
 				newPassword', 'compare', 'compareAttribute' => 'confirmPassword', 'message' => 'Kedua password tidak sama2.'),
 			// The following rule is used by search().
@@ -439,7 +440,7 @@ class RecruitmentUsers extends CActiveRecord
 	{
 		$return = true;
 		
-		$model=new SmsPhonebook;		
+		$model=new RecruitmentUsers;		
 		$model->email = $email;
 		$model->username = $username;
 		$model->displayname = $displayname;
@@ -448,7 +449,6 @@ class RecruitmentUsers extends CActiveRecord
 			$return = $model->user_id;
 		
 		return $return;
-		
 	}
 
 	/**
@@ -461,8 +461,12 @@ class RecruitmentUsers extends CActiveRecord
 			
 			if($this->isNewRecord) {
 				$this->salt = self::getUniqueCode();
-				if($this->newPassword == '' && $currentAction == 'o/session/importuser')
-					$this->newPassword = $this->confirmPassword = self::getGeneratePassword();
+				if($currentAction == 'o/session/importuser') {
+					if($this->newPassword == '')
+						$this->confirmPassword = $this->newPassword = self::getGeneratePassword();
+					else
+						$this->confirmPassword = $this->newPassword;
+				}
 				$this->creation_ip = $_SERVER['REMOTE_ADDR'];
 				$this->modified_id = !Yii::app()->user->isGuest ? Yii::app()->user->id : 0;
 				
