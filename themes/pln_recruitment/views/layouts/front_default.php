@@ -18,9 +18,11 @@
 		} else
 			$class = $controller;
 	} else {
-		if($controller == 'site')
+		if($controller == 'site') {
 			$class = $module;
-		else
+			if($action == 'index')
+				$class = 'main';
+		} else
 			$class = $module.'-'.$controller;
 	}
 ?>

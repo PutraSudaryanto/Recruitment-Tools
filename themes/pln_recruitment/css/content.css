@@ -18,7 +18,13 @@
 
 /* =Main
 -------------------------------------------------------------- */
-
+#main {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: #fff;
+	border: 1px solid #c9d0e1;	
+}
 
 /* =Responsive
 -------------------------------------------------------------- */

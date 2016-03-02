@@ -33,7 +33,7 @@ input, button, select, textarea,
 table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, details, figcaption, figure, footer, header,
 hgroup, nav, section {
-	color: #333; 
+	color: #6e768f; 
 	font-size: 13px; 
 	line-height: 18px;
 	font-weight: 400;
@@ -82,9 +82,9 @@ a {
 	outline: none; 
 	text-decoration: none;
 }
-a:link {color: #1e5fa9; text-decoration: none;}
-a:visited {color: #1e5fa9; text-decoration: none;}
-a:hover {color: #1e5fa9; text-decoration: underline;}
+a:link {color: #76a7e1; text-decoration: none;}
+a:visited {color: #76a7e1; text-decoration: none;}
+a:hover {color: #76a7e1; text-decoration: underline;}
 a:visited:hover {color: #325579; text-decoration: underline;}
 a:active,
 a:hover,

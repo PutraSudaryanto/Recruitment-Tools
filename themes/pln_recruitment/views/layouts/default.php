@@ -119,6 +119,27 @@ if(isset($_GET['protocol']) && $_GET['protocol'] == 'script') {
   <style type="text/css"></style>
  </head>
  <body <?php echo $this->dialogDetail == true ? 'style="overflow-y: hidden;"' : '';?>>
+ 
+	<?php //begin.Header ?>
+	<header>
+	</header>
+	<?php //end.Header ?>
+	
+	<?php //begin.Body ?>
+	<div class="body">
+		<div class="container">
+			<?php echo $content;?>
+		</div>
+	</div>
+	<?php //end.Body ?>
+	
+	<?php //begin.Footer ?>
+	<footer>
+		<div class="container">
+			aaaaaaaaaaaa
+		</div>
+	</footer>
+	<?php //end.Footer ?>
 	
 	<?php $this->widget('FrontGoogleAnalytics'); ?>
  </body>

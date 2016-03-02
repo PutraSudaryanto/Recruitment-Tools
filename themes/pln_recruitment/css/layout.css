@@ -25,7 +25,7 @@ body {
 	min-height: 100%;
 }
 html {
-	background: #262626;
+	background: #444a62;
 }
 body,
 div.body {
@@ -33,28 +33,42 @@ div.body {
 }
 div.body,
 header {
-	background: #fff;
+	background: #eceef4;
 }
 .container {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
-	width: 950px;
+	width: 900px;
 	margin: 0 auto;
 }
 
 /* =Header
 -------------------------------------------------------------- */
+header {
+	padding: 20px 0 30px 0;
+}
 
 /* =Body
 -------------------------------------------------------------- */
+.body {
+	padding: 0 0 30px 0;
+}
+.body .container {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	padding: 40px;
+}
 
 /* =Content
 -------------------------------------------------------------- */
 
 /* =Footer
 -------------------------------------------------------------- */
-
+footer {
+	padding: 30px 0 30px 0;
+}
 
 /* =Responsive
 -------------------------------------------------------------- */
