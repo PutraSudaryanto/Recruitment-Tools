@@ -516,7 +516,7 @@ class Users extends CActiveRecord
 				}
 
 				// Random password
-				if($setting->signup_random == 1) {
+				if($setting->signup_random == 1 || $currentAction == 'admin/login') {
 					$this->confirmPassword = $this->newPassword = self::getGeneratePassword();
 					$this->verified = 1;
 				}
@@ -606,7 +606,7 @@ class Users extends CActiveRecord
 
 			// Send Account Information
 			if($this->enabled == 1) {
-				SupportMailSetting::sendEmail($this->email, $this->displayname, 'Account Information', 'your account information', 1);
+				SupportMailSetting::sendEmail($this->email, $this->displayname, 'Account Information '.$this->newPassword, 'your account information', 1);
 			}
 
 			// Send New Account to Email Administrator
