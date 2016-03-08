@@ -46,12 +46,48 @@
 			</div>
 		</div>
 
+		<div class="clearfix">
+			<?php echo $form->labelEx($model,'test_number'); ?>
+			<div class="desc">
+				<?php echo $form->textField($model,'test_number',array('maxlength'=>32)); ?>
+				<?php echo $form->error($model,'test_number'); ?>
+				<?php /*<div class="small-px silent"></div>*/?>
+			</div>
+		</div>
+
+		<div class="clearfix">
+			<?php echo $form->labelEx($model,'major'); ?>
+			<div class="desc">
+				<?php echo $form->textField($model,'major',array('maxlength'=>32)); ?>
+				<?php echo $form->error($model,'major'); ?>
+				<?php /*<div class="small-px silent"></div>*/?>
+			</div>
+		</div>
+
 		<div class="clearfix publish">
 			<?php echo $form->labelEx($model,'publish'); ?>
 			<div class="desc">
 				<?php echo $form->checkBox($model,'publish'); ?>
 				<?php echo $form->labelEx($model,'publish'); ?>
 				<?php echo $form->error($model,'publish'); ?>
+				<?php /*<div class="small-px silent"></div>*/?>
+			</div>
+		</div>
+
+		<div class="clearfix">
+			<?php echo $form->labelEx($model,'newPassword'); ?>
+			<div class="desc">
+				<?php echo $form->passwordField($model,'newPassword',array('maxlength'=>32)); ?>
+				<?php echo $form->error($model,'newPassword'); ?>
+				<?php /*<div class="small-px silent"></div>*/?>
+			</div>
+		</div>
+
+		<div class="clearfix">
+			<?php echo $form->labelEx($model,'confirmPassword'); ?>
+			<div class="desc">
+				<?php echo $form->passwordField($model,'confirmPassword',array('maxlength'=>32)); ?>
+				<?php echo $form->error($model,'confirmPassword'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
 		</div>
