@@ -152,6 +152,7 @@ class AdminController extends Controller
 		if(isset($_POST['Recruitments'])) {
 			$model->attributes=$_POST['Recruitments'];
 			
+			/*
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
 				echo $jsonError;
@@ -171,6 +172,12 @@ class AdminController extends Controller
 				}
 			}
 			Yii::app()->end();
+			*/
+				
+			if($model->save()) {
+				Yii::app()->user->setFlash('success', 'Recruitments success created.');
+				$this->redirect(array('manage'));
+			}
 		}
 		
 		$this->dialogDetail = true;
@@ -200,6 +207,7 @@ class AdminController extends Controller
 		if(isset($_POST['Recruitments'])) {
 			$model->attributes=$_POST['Recruitments'];
 			
+			/*
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {
 				echo $jsonError;
@@ -219,6 +227,12 @@ class AdminController extends Controller
 				}
 			}
 			Yii::app()->end();
+			*/
+				
+			if($model->save()) {
+				Yii::app()->user->setFlash('success', 'Recruitments success updated.');
+				$this->redirect(array('manage'));
+			}
 		}
 		
 		$this->dialogDetail = true;
