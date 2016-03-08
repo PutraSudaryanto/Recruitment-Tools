@@ -156,7 +156,7 @@ class BatchController extends Controller
 			$url = Yii::app()->controller->createUrl('edit',array('id'=>$_GET['id']));			
 		} else {
 			$sessionId = $_POST['sessionsId'];
-			$url = Yii::app()->controller->createUrl('manage');			
+			$url = Yii::app()->controller->createUrl('manage');
 		}
 		$model = RecruitmentSessions::getInfo($sessionId);
 		
