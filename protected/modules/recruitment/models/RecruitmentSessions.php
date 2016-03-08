@@ -27,6 +27,9 @@
  * @property string $parent_id
  * @property string $session_name
  * @property string $session_info
+ * @property string $session_date
+ * @property string $session_time_start
+ * @property string $session_time_finish
  * @property string $creation_date
  * @property string $creation_id
  * @property string $modified_date
@@ -72,14 +75,14 @@ class RecruitmentSessions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('publish, recruitment_id, parent_id, session_name, session_info', 'required'),
+			array('publish, recruitment_id, parent_id, session_name, session_info, session_date, session_time_start, session_time_finish', 'required'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('recruitment_id, parent_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('session_name', 'length', 'max'=>32),
 			array('', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, creation_date, creation_id, modified_date, modified_id,
+			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, session_date, session_time_start, session_time_finish, creation_date, creation_id, modified_date, modified_id,
 				recruitment_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -112,6 +115,9 @@ class RecruitmentSessions extends CActiveRecord
 			'parent_id' => 'Parent',
 			'session_name' => 'Session Name',
 			'session_info' => 'Session Info',
+			'session_date' => 'Session Date',
+			'session_time_start' => 'Time Start',
+			'session_time_finish' => 'Time Finish',
 			'creation_date' => 'Creation Date',
 			'creation_id' => 'Creation',
 			'modified_date' => 'Modified Date',
@@ -161,6 +167,10 @@ class RecruitmentSessions extends CActiveRecord
 			$criteria->compare('t.parent_id',$this->parent_id);
 		$criteria->compare('t.session_name',strtolower($this->session_name),true);
 		$criteria->compare('t.session_info',strtolower($this->session_info),true);
+		if($this->session_date != null && !in_array($this->session_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.session_date)',date('Y-m-d', strtotime($this->session_date)));
+		$criteria->compare('t.session_time_start',strtolower($this->session_time_start),true);
+		$criteria->compare('t.session_time_finish',strtolower($this->session_time_finish),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if(isset($_GET['creation']))
@@ -232,6 +242,9 @@ class RecruitmentSessions extends CActiveRecord
 			$this->defaultColumns[] = 'parent_id';
 			$this->defaultColumns[] = 'session_name';
 			$this->defaultColumns[] = 'session_info';
+			$this->defaultColumns[] = 'session_date';
+			$this->defaultColumns[] = 'session_time_start';
+			$this->defaultColumns[] = 'session_time_finish';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
 			$this->defaultColumns[] = 'modified_date';
@@ -258,30 +271,47 @@ class RecruitmentSessions extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->session_id)), $data->publish, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Phrase::trans(588,0),
-						0=>Phrase::trans(589,0),
-					),
-					'type' => 'raw',
-				);
-			}
 			$this->defaultColumns[] = array(
 				'name' => 'recruitment_search',
 				'value' => '$data->recruitment->event_name',
 			);
-			$this->defaultColumns[] = 'parent_id';
+			$this->defaultColumns[] = array(
+				'name' => 'parent_id',
+				'value' => '$data->parent_id != 0 ? $data->parent_id : "-"',
+			);
 			$this->defaultColumns[] = 'session_name';
+			/*
 			$this->defaultColumns[] = array(
 				'name' => 'session_info',
 				'value' => '$data->session_info',
 				'type' => 'raw',
+			);
+			*/
+			$this->defaultColumns[] = array(
+				'name' => 'session_date',
+				'value' => 'Utility::dateFormat($data->session_date)',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+					'model'=>$this,
+					'attribute'=>'session_date',
+					'language' => 'ja',
+					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+					//'mode'=>'datetime',
+					'htmlOptions' => array(
+						'id' => 'session_date_filter',
+					),
+					'options'=>array(
+						'showOn' => 'focus',
+						'dateFormat' => 'dd-mm-yy',
+						'showOtherMonths' => true,
+						'selectOtherMonths' => true,
+						'changeMonth' => true,
+						'changeYear' => true,
+						'showButtonPanel' => true,
+					),
+				), true),
 			);
 			$this->defaultColumns[] = array(
 				'header' => 'Users',
@@ -291,10 +321,12 @@ class RecruitmentSessions extends CActiveRecord
 				),
 				'type' => 'raw',
 			);
+			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
 				'value' => '$data->creation->displayname',
 			);
+			*/
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -321,6 +353,20 @@ class RecruitmentSessions extends CActiveRecord
 					),
 				), true),
 			);
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->session_id)), $data->publish, 1)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter'=>array(
+						1=>Phrase::trans(588,0),
+						0=>Phrase::trans(589,0),
+					),
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}
@@ -373,6 +419,10 @@ class RecruitmentSessions extends CActiveRecord
 	 */
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
+			$this->session_date = date('Y-m-d', strtotime($this->session_date));
+			$this->session_time_start = date('H:i:s', strtotime($this->session_time_start));
+			$this->session_time_finish = date('H:i:s', strtotime($this->session_time_finish));
+			
 			if($this->isNewRecord)
 				$this->creation_id = Yii::app()->user->id;		
 			else

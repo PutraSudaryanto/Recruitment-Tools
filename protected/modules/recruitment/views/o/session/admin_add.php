@@ -93,6 +93,28 @@
 			</div>
 		</div>
 
+		<div class="clearfix">
+			<?php echo $form->labelEx($model,'session_date'); ?>
+			<div class="desc">
+				<?php
+				!$model->isNewRecord ? ($model->session_date != '0000-00-00' ? $model->session_date = date('d-m-Y', strtotime($model->session_date)) : '') : '';
+				//echo $form->textField($model,'session_date');
+				$this->widget('zii.widgets.jui.CJuiDatePicker',array(
+					'model'=>$model,
+					'attribute'=>'session_date',
+					//'mode'=>'datetime',
+					'options'=>array(
+						'dateFormat' => 'dd-mm-yy',
+					),
+					'htmlOptions'=>array(
+						'class' => 'span-4',
+					 ),
+				)); ?>
+				<?php echo $form->error($model,'session_date'); ?>
+				<?php /*<div class="small-px silent"></div>*/?>
+			</div>
+		</div>
+
 		<div class="clearfix publish">
 			<?php echo $form->labelEx($model,'publish'); ?>
 			<div class="desc">
