@@ -80,7 +80,7 @@ class RecruitmentEventUser extends CActiveRecord
 				newPassword, confirmPassword', 'required', 'on'=>'formAdd'),
 			array('recruitment_id, user_id, creation_id', 'length', 'max'=>11),
 			array('salt, test_number, password, major', 'length', 'max'=>32),
-			array('test_number', 'match', 'pattern' => '/^[a-zA-Z0-9_.-/]{0,25}$/', 'message' => Yii::t('other', 'Nama user hanya boleh berisi karakter, angka dan karakter (., -, _, /)')),
+			//array('test_number', 'match', 'pattern' => '/^[a-zA-Z0-9_.-]{0,25}$/', 'message' => Yii::t('other', 'Nama user hanya boleh berisi karakter, angka dan karakter (., -, _)')),
 			array('test_number, major,
 				newPassword, confirmPassword', 'safe'),
 			array('
@@ -378,6 +378,22 @@ class RecruitmentEventUser extends CActiveRecord
 	{
 		return md5($salt.$password);
 	}
+	
+	public static function insertUser($recruitment_id, $user_id, $test_number, $password, $major) 
+	{
+		$return = true;
+		
+		$model=new RecruitmentEventUser;
+		$model->recruitment_id = $recruitment_id;
+		$model->user_id = $user_id;
+		$model->test_number = $test_number;
+		$model->newPassword = $password;
+		$model->major = $major;
+		
+		if($model->save())
+			$return = $model->event_user_id;
+		return $return;
+	}
 
 	/**
 	 * before validate attributes
@@ -389,7 +405,7 @@ class RecruitmentEventUser extends CActiveRecord
 			
 			if($this->isNewRecord) {
 				$this->salt = self::getUniqueCode();
-				if($currentAction == 'o/session/importuser') {
+				if($currentAction == 'o/batch/import') {
 					if($this->newPassword == '')
 						$this->confirmPassword = $this->newPassword = self::getGeneratePassword();
 					else

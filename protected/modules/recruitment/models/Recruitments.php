@@ -192,7 +192,7 @@ class Recruitments extends CActiveRecord
 			),
 			'view' => array(
 				'alias'=>'view',
-				'select'=>'users'
+				//'select'=>'users'
 			),
 		);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
@@ -277,6 +277,22 @@ class Recruitments extends CActiveRecord
 				'filter'=>array(
 					1=>'Bundle',
 					0=>'Direct',
+				),
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'header' => 'Sessions',
+				'value' => 'CHtml::link($data->view->sessions." Session", Yii::app()->controller->createUrl("o/session/manage",array("recruitment"=>$data->recruitment_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'header' => 'Batchs',
+				'value' => 'CHtml::link($data->view->batchs." Batch", Yii::app()->controller->createUrl("o/batch/manage",array("recruitment"=>$data->recruitment_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
 				),
 				'type' => 'raw',
 			);

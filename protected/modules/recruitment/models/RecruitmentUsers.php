@@ -293,7 +293,7 @@ class RecruitmentUsers extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'lastlogin_date',
-				'value' => '!in_array($data->lastlogin_date, array("0000-00-00 00:00:00")) ? Utility::dateFormat($data->lastlogin_date) : "-"',
+				'value' => '!in_array($data->lastlogin_date, array("0000-00-00 00:00:00","1970-01-01 00:00:00")) ? Utility::dateFormat($data->lastlogin_date) : "-"',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -404,8 +404,8 @@ class RecruitmentUsers extends CActiveRecord
 		
 		$model=new RecruitmentUsers;		
 		$model->email = $email;
-		$model->displayname = $displayname;
 		$model->newPassword = $password;
+		$model->displayname = $displayname;
 		if($model->save())
 			$return = $model->user_id;
 		
@@ -422,7 +422,7 @@ class RecruitmentUsers extends CActiveRecord
 			
 			if($this->isNewRecord) {
 				$this->salt = self::getUniqueCode();
-				if($currentAction == 'o/session/importuser') {
+				if($currentAction == 'o/batch/import') {
 					if($this->newPassword == '')
 						$this->confirmPassword = $this->newPassword = self::getGeneratePassword();
 					else
@@ -442,15 +442,17 @@ class RecruitmentUsers extends CActiveRecord
 				}
 			}
 				
-			$this->oldPhoto = $this->photos;			
-			$photo = CUploadedFile::getInstance($this, 'photos');		
-			if($photo->name != '') {
-				$extension = pathinfo($photo->name, PATHINFO_EXTENSION);
-				if(!in_array(strtolower($extension), array('bmp','gif','jpg','png')))
-					$this->addError('photos', 'The file "'.$photo->name.'" cannot be uploaded. Only files with these extensions are allowed: bmp, gif, jpg, png.');
-			} else
-				if($currentAction != 'o/users/edit')
-					$this->addError('photos', 'User Photo cannot be blank.');
+			if($currentAction != 'o/batch/import') {
+				$this->oldPhoto = $this->photos;			
+				$photo = CUploadedFile::getInstance($this, 'photos');		
+				if($photo->name != '') {
+					$extension = pathinfo($photo->name, PATHINFO_EXTENSION);
+					if(!in_array(strtolower($extension), array('bmp','gif','jpg','png')))
+						$this->addError('photos', 'The file "'.$photo->name.'" cannot be uploaded. Only files with these extensions are allowed: bmp, gif, jpg, png.');
+				} else
+					if($currentAction != 'o/users/edit')
+						$this->addError('photos', 'User Photo cannot be blank.');
+			}
 		}
 		return true;
 	}
@@ -464,7 +466,7 @@ class RecruitmentUsers extends CActiveRecord
 			$this->password = self::hashPassword($this->salt, $this->newPassword);
 			
 			//upload new photo
-			$recruitment_path = "public/recruitment";
+			$recruitment_path = "public/recruitment/photos";
 			$this->photos = CUploadedFile::getInstance($this, 'photos');
 			if($this->photos instanceOf CUploadedFile) {
 				$fileName = time().'_'.Utility::getUrlTitle($this->displayname).'.'.strtolower($this->photos->extensionName);
@@ -493,7 +495,7 @@ class RecruitmentUsers extends CActiveRecord
 	protected function afterDelete() {
 		parent::afterDelete();
 		//delete recruitment image
-		$recruitment_path = "public/recruitment";
+		$recruitment_path = "public/recruitment/photos";
 		if($this->photos != '' && file_exists($recruitment_path.'/'.$this->photos))
 			rename($recruitment_path.'/'.$this->photos, 'public/recruitment/verwijderen/'.$this->user_id.'_'.$this->photos);
 	}

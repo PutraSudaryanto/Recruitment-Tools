@@ -45,6 +45,7 @@ class RecruitmentSessions extends CActiveRecord
 	
 	// Variable Search
 	public $recruitment_search;
+	public $session_search;
 	public $creation_search;
 	public $modified_search;
 
@@ -76,16 +77,16 @@ class RecruitmentSessions extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('publish, session_name, ', 'required'),
-			array('recruitment_id, session_info, session_date', 'required', 'on'=>'sessionForm'),
-			array('parent_id, session_time_start, session_time_finish', 'required', 'on'=>'batchForm'),
+			array('recruitment_id, session_info', 'required', 'on'=>'sessionForm'),
+			array('parent_id', 'required', 'on'=>'batchForm'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('recruitment_id, parent_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('session_name', 'length', 'max'=>32),
-			array('', 'safe'),
+			array('session_date, session_time_start, session_time_finish', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, session_date, session_time_start, session_time_finish, creation_date, creation_id, modified_date, modified_id,
-				recruitment_search, creation_search, modified_search', 'safe', 'on'=>'search'),
+				recruitment_search, session_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -101,6 +102,7 @@ class RecruitmentSessions extends CActiveRecord
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 			'view' => array(self::BELONGS_TO, 'ViewRecruitmentSessions', 'session_id'),
+			'viewBatch' => array(self::BELONGS_TO, 'ViewRecruitmentSessionBatch', 'session_id'),
 			'users' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'session_id'),
 		);
 	}
@@ -125,6 +127,7 @@ class RecruitmentSessions extends CActiveRecord
 			'modified_date' => 'Modified Date',
 			'modified_id' => 'Modified',
 			'recruitment_search' => 'Recruitment',
+			'session_search' => 'Session',
 			'creation_search' => 'Creation',
 			'modified_search' => 'Modified',
 		);
@@ -145,6 +148,7 @@ class RecruitmentSessions extends CActiveRecord
 	public function search()
 	{
 		// @todo Please modify the following code to remove attributes that should not be searched.
+		$controller = strtolower(Yii::app()->controller->id);
 
 		$criteria=new CDbCriteria;
 
@@ -163,10 +167,15 @@ class RecruitmentSessions extends CActiveRecord
 			$criteria->compare('t.recruitment_id',$_GET['recruitment']);
 		else
 			$criteria->compare('t.recruitment_id',$this->recruitment_id);
-		if(isset($_GET['parent']))
-			$criteria->compare('t.parent_id',$_GET['parent']);
-		else
-			$criteria->compare('t.parent_id',$this->parent_id);
+		if($controller == 'o/session') {
+			$criteria->compare('t.parent_id',0);			
+		} else {
+			$criteria->addNotInCondition('t.parent_id',array(0));
+			if(isset($_GET['parent']))
+				$criteria->compare('t.parent_id',$_GET['parent']);
+			else
+				$criteria->compare('t.parent_id',$this->parent_id);
+		}
 		$criteria->compare('t.session_name',strtolower($this->session_name),true);
 		$criteria->compare('t.session_info',strtolower($this->session_info),true);
 		if($this->session_date != null && !in_array($this->session_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -202,10 +211,15 @@ class RecruitmentSessions extends CActiveRecord
 			),
 			'view' => array(
 				'alias'=>'view',
-				'select'=>'users'
+				//'select'=>'users'
+			),
+			'viewBatch' => array(
+				'alias'=>'viewBatch',
+				//'select'=>'users'
 			),
 		);
 		$criteria->compare('recruitment.event_name',strtolower($this->recruitment_search), true);
+		$criteria->compare('viewBatch.session_name',strtolower($this->session_search), true);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
@@ -261,6 +275,8 @@ class RecruitmentSessions extends CActiveRecord
 	 */
 	protected function afterConstruct() {
 		if(count($this->defaultColumns) == 0) {
+			$controller = strtolower(Yii::app()->controller->id);
+			
 			/*
 			$this->defaultColumns[] = array(
 				'class' => 'CCheckBoxColumn',
@@ -273,15 +289,17 @@ class RecruitmentSessions extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
+			$this->defaultColumns[] = 'session_name';
+			if($controller == 'o/batch') {
+				$this->defaultColumns[] = array(
+					'name' => 'session_search',
+					'value' => '$data->parent_id != 0 ? $data->viewBatch->session_name : "-"',
+				);
+			}
 			$this->defaultColumns[] = array(
 				'name' => 'recruitment_search',
 				'value' => '$data->recruitment->event_name',
 			);
-			$this->defaultColumns[] = array(
-				'name' => 'parent_id',
-				'value' => '$data->parent_id != 0 ? $data->parent_id : "-"',
-			);
-			$this->defaultColumns[] = 'session_name';
 			/*
 			$this->defaultColumns[] = array(
 				'name' => 'session_info',
@@ -291,7 +309,7 @@ class RecruitmentSessions extends CActiveRecord
 			*/
 			$this->defaultColumns[] = array(
 				'name' => 'session_date',
-				'value' => 'Utility::dateFormat($data->session_date)',
+				'value' => '!in_array($data->session_date, array("0000-00-00","1970-01-01")) ? Utility::dateFormat($data->session_date) : "-"',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -315,20 +333,45 @@ class RecruitmentSessions extends CActiveRecord
 					),
 				), true),
 			);
+			if($controller == 'o/batch') {
+				$this->defaultColumns[] = array(
+					'header' => 'Time',
+					'value' => 'date("H:i", strtotime($data->session_time_start))." - ".date("H:i", strtotime($data->session_time_finish))',
+				);				
+			}
+			if($controller == 'o/session') {
+				$this->defaultColumns[] = array(
+					'header' => 'Batchs',
+					'value' => 'CHtml::link($data->view->batchs." Batch", Yii::app()->controller->createUrl("o/batch/manage",array("parent"=>$data->session_id)))',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);
+			}
 			$this->defaultColumns[] = array(
 				'header' => 'Users',
-				'value' => 'CHtml::link($data->view->users." User", Yii::app()->controller->createUrl("o/sessionuser/manage",array("session"=>$data->session_id)))',
+				'value' => 'CHtml::link($controller == "o/session" ? $data->view->users." User" : $data->viewBatch->users." User", Yii::app()->controller->createUrl("o/sessionuser/manage",array("session"=>$data->session_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
 				'type' => 'raw',
 			);
+			if($controller == 'o/batch') {
+				$this->defaultColumns[] = array(
+					'header' => 'Blasting',
+					'value' => 'CHtml::link("Blasting Email", Yii::app()->controller->createUrl("o/batch/blast",array("id"=>$data->session_id)))',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);				
+			}
 			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
 				'value' => '$data->creation->displayname',
 			);
-			*/
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -355,6 +398,7 @@ class RecruitmentSessions extends CActiveRecord
 					),
 				), true),
 			);
+			*/
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'publish',
@@ -400,8 +444,13 @@ class RecruitmentSessions extends CActiveRecord
 		$criteria=new CDbCriteria;
 		if($publish != null)
 			$criteria->compare('t.publish',$publish);
-		if($parent != null)
-			$criteria->compare('t.parent_id',$parent);
+		if($parent != null) {
+			if($parent == 'batch')
+				$criteria->addNotInCondition('t.parent_id',array(0));
+			else
+				$criteria->compare('t.parent_id',$parent);
+		}
+			
 		
 		$model = self::model()->findAll($criteria);
 

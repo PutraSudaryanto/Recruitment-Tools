@@ -3,7 +3,7 @@
  * ViewRecruitments
  * @author Putra Sudaryanto <putra.sudaryanto@gmail.com>
  * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
- * @created date 2 March 2016, 16:18 WIB
+ * @created date 8 March 2016, 14:50 WIB
  * @link http://company.ommu.co
  * @contact (+62)856-299-4114
  *
@@ -22,6 +22,8 @@
  *
  * The followings are the available columns in table '_view_recruitments':
  * @property string $recruitment_id
+ * @property string $sessions
+ * @property string $batchs
  * @property string $users
  */
 class ViewRecruitments extends CActiveRecord
@@ -64,10 +66,10 @@ class ViewRecruitments extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('recruitment_id', 'length', 'max'=>11),
-			array('users', 'length', 'max'=>21),
+			array('sessions, batchs, users', 'length', 'max'=>21),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('recruitment_id, users', 'safe', 'on'=>'search'),
+			array('recruitment_id, sessions, batchs, users', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -89,6 +91,8 @@ class ViewRecruitments extends CActiveRecord
 	{
 		return array(
 			'recruitment_id' => 'Recruitment',
+			'sessions' => 'Sessions',
+			'batchs' => 'Batchs',
 			'users' => 'Users',
 		);
 	}
@@ -112,6 +116,8 @@ class ViewRecruitments extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('t.recruitment_id',strtolower($this->recruitment_id),true);
+		$criteria->compare('t.sessions',strtolower($this->sessions),true);
+		$criteria->compare('t.batchs',strtolower($this->batchs),true);
 		$criteria->compare('t.users',strtolower($this->users),true);
 
 		if(!isset($_GET['ViewRecruitments_sort']))
@@ -144,6 +150,8 @@ class ViewRecruitments extends CActiveRecord
 			}
 		} else {
 			$this->defaultColumns[] = 'recruitment_id';
+			$this->defaultColumns[] = 'sessions';
+			$this->defaultColumns[] = 'batchs';
 			$this->defaultColumns[] = 'users';
 		}
 
@@ -155,7 +163,21 @@ class ViewRecruitments extends CActiveRecord
 	 */
 	protected function afterConstruct() {
 		if(count($this->defaultColumns) == 0) {
+			/*
+			$this->defaultColumns[] = array(
+				'class' => 'CCheckBoxColumn',
+				'name' => 'id',
+				'selectableRows' => 2,
+				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
+			);
+			*/
+			$this->defaultColumns[] = array(
+				'header' => 'No',
+				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
+			);
 			$this->defaultColumns[] = 'recruitment_id';
+			$this->defaultColumns[] = 'sessions';
+			$this->defaultColumns[] = 'batchs';
 			$this->defaultColumns[] = 'users';
 		}
 		parent::afterConstruct();

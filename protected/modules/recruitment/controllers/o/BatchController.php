@@ -11,6 +11,7 @@
  *	Index
  *	Manage
  *	Import
+ *	Blast
  *	Add
  *	Edit
  *	View
@@ -148,7 +149,7 @@ class BatchController extends Controller
 		ini_set('max_execution_time', 0);
 		ob_start();
 		
-		$path = 'public/recruitment';
+		$path = 'public/recruitment/batch_excel';
 		$error = array();
 		
 		if(isset($_GET['id'])) {
@@ -163,7 +164,7 @@ class BatchController extends Controller
 		if(isset($_FILES['usersExcel'])) {
 			$fileName = CUploadedFile::getInstanceByName('usersExcel');
 			if(in_array(strtolower($fileName->extensionName), array('xls','xlsx')) && $sessionId != '') {				
-				$file = time().'_'.Utility::getUrlTitle($model->recruitment->event_name.' '.$model->session_name).'.'.strtolower($fileName->extensionName);
+				$file = time().'_'.Utility::getUrlTitle($model->session_name." ".$model->viewBatch->session_name." ".$model->recruitment->event_name).'.'.strtolower($fileName->extensionName);
 				if($fileName->saveAs($path.'/'.$file)) {
 					Yii::import('ext.excel_reader.OExcelReader');
 					$xls = new OExcelReader($path.'/'.$file);
@@ -171,14 +172,24 @@ class BatchController extends Controller
 					for ($row = 2; $row <= $xls->sheets[0]['numRows']; $row++) {
 						if($model->recruitment->event_type == 1) {
 							$no				= trim($xls->sheets[0]['cells'][$row][1]);
-							$displayname	= trim($xls->sheets[0]['cells'][$row][2]);
-							$email			= strtolower(trim($xls->sheets[0]['cells'][$row][3]));
-							$username		= strtolower(trim($xls->sheets[0]['cells'][$row][4]));
-							$password		= trim($xls->sheets[0]['cells'][$row][5]);
-							$session_seat	= strtoupper(trim($xls->sheets[0]['cells'][$row][6]));
+							$test_number	= strtolower(trim($xls->sheets[0]['cells'][$row][2]));
+							$password		= trim($xls->sheets[0]['cells'][$row][3]);
+							$email			= strtolower(trim($xls->sheets[0]['cells'][$row][4]));
+							$displayname	= trim($xls->sheets[0]['cells'][$row][5]);
+							$major			= trim($xls->sheets[0]['cells'][$row][6]);
+							$session_seat	= strtoupper(trim($xls->sheets[0]['cells'][$row][7]));
+							//echo $no.' '.$test_number.' '.$password.' '.$email.' '.$displayname.' '.$major.' '.$session_seat;
 							
-							$userId = RecruitmentUsers::insertUser($email, $password, $displayname);
-							RecruitmentSessionUser::insertUser($userId, $sessionId, $session_seat);
+							$user = RecruitmentUsers::model()->findByAttributes(array('email' => strtolower($email)), array(
+								'select' => 'user_id, email',
+							));
+							if($user == null)
+								$userId = RecruitmentUsers::insertUser($email, $password, $displayname);
+							else
+								$userId = $user->user_id;
+							//echo $model->recruitment_id.' '.$userId.' '.$test_number.' '.$password.' '.$major;
+							$eventUserId = RecruitmentEventUser::insertUser($model->recruitment_id, $userId, $test_number, $password, $major);
+							RecruitmentSessionUser::insertUser($userId, $eventUserId, $sessionId, $session_seat);
 						}
 					}
 					
@@ -207,6 +218,51 @@ class BatchController extends Controller
 			'model'=>$model,
 			'sessionsFieldRender'=>isset($_GET['id']) ? true : false,
 		));
+	}
+	
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionBlast() 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		
+		if(!isset($_GET['id']))
+			$this->redirect(Yii::app()->createUrl('site/index'));
+		else
+			$batchId = $_GET['id'];
+		
+		$criteria=new CDbCriteria;
+		$criteria->compare('t.publish',1);
+		$criteria->compare('t.session_id',$batchId);
+		
+		$model = RecruitmentSessionUser::model()->findAll($criteria);
+		if($model != null) {
+			foreach($model as $key => $val) {
+				if($val->id == '57') {
+					$search		= array(
+						'{$displayname}', '{$test_number}', '{$major}',
+						'{$batch_day}', '{$batch_data}','{$batch_month}', '{$batch_year}',
+						'{$session_date}', '{$session_time_start}', '{$session_time_finish}');
+					$replace	= array(
+						$val->user->displayname, strtoupper($val->eventUser->test_number), $val->eventUser->major,
+						Utility::getLocalDayName($val->session->session_date, false), date('d', strtotime($val->session->session_date)), Utility::getLocalMonthName($val->session->session_date), date('Y', strtotime($val->session->session_date)),
+						$val->session->session_name, $val->session->session_time_start, $val->session->session_time_finish);
+					$message = file_get_contents(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/pln_cdugm19_body_email.php');
+					$message = str_ireplace($search, $replace, $message);
+					$session = new RecruitmentSessionUser();
+					$attachment = $session->getPdf($val);
+					SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, 'UNDANGAN PANGGILAN TES PT PLN (Persero) | CAREER DAYS UGM 19', $message, 1, null, $attachment);
+				}				
+			}
+		}
+		
+		ob_end_flush();
+		
+		Yii::app()->user->setFlash('success', 'RecruitmentSessions success updated.');
+		$this->redirect(array('manage'));
 	}
 	
 	/**

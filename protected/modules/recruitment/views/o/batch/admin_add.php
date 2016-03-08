@@ -36,8 +36,8 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'parent_id'); ?>
 			<div class="desc">
-				<?php if(RecruitmentSessions::getSession() != null)
-					echo $form->dropDownList($model,'parent_id', RecruitmentSessions::getSession(0), array('prompt'=>'Pilih Session'));
+				<?php if(RecruitmentSessions::getSession('0') != null)
+					echo $form->dropDownList($model,'parent_id', RecruitmentSessions::getSession('0'), array('prompt'=>'Pilih Session'));
 				else 
 					echo $form->dropDownList($model,'parent_id', array('prompt'=>'Pilih Session'));?>
 				<?php echo $form->error($model,'parent_id'); ?>
