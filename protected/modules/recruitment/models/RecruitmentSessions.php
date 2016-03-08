@@ -75,7 +75,9 @@ class RecruitmentSessions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('publish, recruitment_id, parent_id, session_name, session_info, session_date, session_time_start, session_time_finish', 'required'),
+			array('publish, session_name, ', 'required'),
+			array('recruitment_id, session_info, session_date', 'required', 'on'=>'sessionForm'),
+			array('parent_id, session_time_start, session_time_finish', 'required', 'on'=>'batchForm'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('recruitment_id, parent_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('session_name', 'length', 'max'=>32),
