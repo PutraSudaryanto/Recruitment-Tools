@@ -88,7 +88,7 @@ class BatchController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','import','add','edit','view','runaction','delete','publish'),
+				'actions'=>array('manage','import','blast','add','edit','view','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -187,8 +187,21 @@ class BatchController extends Controller
 								$userId = RecruitmentUsers::insertUser($email, $password, $displayname);
 							else
 								$userId = $user->user_id;
+							
+							$eventUser = RecruitmentEventUser::model()->find(array(
+								'select'    => 'event_user_id, recruitment_id, test_number',
+								'condition' => 'recruitment_id= :recruitment AND test_number= :number',
+								'params'    => array(
+									':recruitment' => $model->recruitment_id,
+									':number' => strtolower($test_number),
+								),
+							));
 							//echo $model->recruitment_id.' '.$userId.' '.$test_number.' '.$password.' '.$major;
-							$eventUserId = RecruitmentEventUser::insertUser($model->recruitment_id, $userId, $test_number, $password, $major);
+							if($eventUser == null)
+								$eventUserId = RecruitmentEventUser::insertUser($model->recruitment_id, $userId, $test_number, $password, $major);
+							else
+								$eventUserId = $eventUser->event_user_id;
+							
 							RecruitmentSessionUser::insertUser($userId, $eventUserId, $sessionId, $session_seat);
 						}
 					}
@@ -241,12 +254,14 @@ class BatchController extends Controller
 		$model = RecruitmentSessionUser::model()->findAll($criteria);
 		if($model != null) {
 			foreach($model as $key => $val) {
-				if($val->id == '57') {
+				//if($val->id == '57') {
 					$search		= array(
+						'{$baseURL}', 
 						'{$displayname}', '{$test_number}', '{$major}',
 						'{$batch_day}', '{$batch_data}','{$batch_month}', '{$batch_year}',
 						'{$session_date}', '{$session_time_start}', '{$session_time_finish}');
 					$replace	= array(
+						Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl,
 						$val->user->displayname, strtoupper($val->eventUser->test_number), $val->eventUser->major,
 						Utility::getLocalDayName($val->session->session_date, false), date('d', strtotime($val->session->session_date)), Utility::getLocalMonthName($val->session->session_date), date('Y', strtotime($val->session->session_date)),
 						$val->session->session_name, $val->session->session_time_start, $val->session->session_time_finish);
@@ -255,7 +270,7 @@ class BatchController extends Controller
 					$session = new RecruitmentSessionUser();
 					$attachment = $session->getPdf($val);
 					SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, 'UNDANGAN PANGGILAN TES PT PLN (Persero) | CAREER DAYS UGM 19', $message, 1, null, $attachment);
-				}				
+				//}				
 			}
 		}
 		

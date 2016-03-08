@@ -48,16 +48,7 @@
 <body>
 
 <div class="member-card">
-	<table style="width: 100%;">
-		<tr>
-			<td style="width: 50%; vertical-align: middle; padding-bottom: 20px;">
-				<img style="height: 100px;" src="<?php echo Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl;?>/externals/recruitment/images/logo_pln.png" alt="">
-			</td>
-			<td style="width: 50%; vertical-align: middle; padding-bottom: 20px; text-align: right;">
-				<img style="height: 100px;" src="<?php echo Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl;?>/externals/recruitment/images/ecc_logo.jpg" alt="">
-			</td>
-		</tr>
-		
+	<table style="width: 100%;">		
 		<tr>
 			<td style="width: 50%; vertical-align: middle;">
 	<div style="padding-bottom: 15px;">
