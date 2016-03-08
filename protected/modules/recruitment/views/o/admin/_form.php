@@ -40,7 +40,7 @@ EOP;
 
 		<?php //begin.Messages ?>
 		<div id="ajax-message">
-			<?php echo $form->errorSummary($model); ?>
+			<?php //echo $form->errorSummary($model); ?>
 		</div>
 		<?php //begin.Messages ?>
 
