@@ -31,8 +31,23 @@
 	<div class="clearfix">
 		<?php echo $form->labelEx($model,'recruitment_id'); ?>
 		<div class="desc">
-			<?php echo $form->dropDownList($model,'recruitment_id', Recruitments::getEvent(), array('prompt'=>'Pilih Event')); ?>
+			<?php if(Recruitments::getEvent() != null)
+				echo $form->dropDownList($model,'recruitment_id', Recruitments::getEvent(), array('prompt'=>'Pilih Event'));
+			else 
+				echo $form->dropDownList($model,'recruitment_id', array('prompt'=>'Pilih Event'));?>
 			<?php echo $form->error($model,'recruitment_id'); ?>
+			<?php /*<div class="small-px silent"></div>*/?>
+		</div>
+	</div>
+
+	<div class="clearfix">
+		<?php echo $form->labelEx($model,'parent_id'); ?>
+		<div class="desc">
+			<?php if(RecruitmentSessions::getSession() != null)
+				echo $form->dropDownList($model,'parent_id', RecruitmentSessions::getSession(0), array('prompt'=>'Pilih Session'));
+			else 
+				echo $form->dropDownList($model,'parent_id', array('prompt'=>'Pilih Session'));?>
+			<?php echo $form->error($model,'parent_id'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>

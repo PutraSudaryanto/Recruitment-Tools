@@ -176,7 +176,7 @@ class SessionController extends Controller
 							$password		= trim($xls->sheets[0]['cells'][$row][5]);
 							$session_seat	= strtoupper(trim($xls->sheets[0]['cells'][$row][6]));
 							
-							$userId = RecruitmentUsers::insertUser($email, $username, $password, $displayname);
+							$userId = RecruitmentUsers::insertUser($email, $password, $displayname);
 							RecruitmentSessionUser::insertUser($userId, $sessionId, $session_seat);
 						}
 					}

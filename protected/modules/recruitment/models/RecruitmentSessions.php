@@ -24,6 +24,7 @@
  * @property string $session_id
  * @property integer $publish
  * @property string $recruitment_id
+ * @property string $parent_id
  * @property string $session_name
  * @property string $session_info
  * @property string $creation_date
@@ -71,14 +72,14 @@ class RecruitmentSessions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('publish, recruitment_id, session_name, session_info', 'required'),
+			array('publish, recruitment_id, parent_id, session_name, session_info', 'required'),
 			array('publish', 'numerical', 'integerOnly'=>true),
-			array('recruitment_id, creation_id, modified_id', 'length', 'max'=>11),
+			array('recruitment_id, parent_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('session_name', 'length', 'max'=>32),
 			array('', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('session_id, publish, recruitment_id, session_name, session_info, creation_date, creation_id, modified_date, modified_id,
+			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, creation_date, creation_id, modified_date, modified_id,
 				recruitment_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -94,8 +95,8 @@ class RecruitmentSessions extends CActiveRecord
 			'recruitment' => array(self::BELONGS_TO, 'Recruitments', 'recruitment_id'),
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
-			'users' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'session_id'),
 			'view' => array(self::BELONGS_TO, 'ViewRecruitmentSessions', 'session_id'),
+			'users' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'session_id'),
 		);
 	}
 
@@ -108,6 +109,7 @@ class RecruitmentSessions extends CActiveRecord
 			'session_id' => 'Session',
 			'publish' => 'Publish',
 			'recruitment_id' => 'Recruitment',
+			'parent_id' => 'Parent',
 			'session_name' => 'Session Name',
 			'session_info' => 'Session Info',
 			'creation_date' => 'Creation Date',
@@ -153,6 +155,10 @@ class RecruitmentSessions extends CActiveRecord
 			$criteria->compare('t.recruitment_id',$_GET['recruitment']);
 		else
 			$criteria->compare('t.recruitment_id',$this->recruitment_id);
+		if(isset($_GET['parent']))
+			$criteria->compare('t.parent_id',$_GET['parent']);
+		else
+			$criteria->compare('t.parent_id',$this->parent_id);
 		$criteria->compare('t.session_name',strtolower($this->session_name),true);
 		$criteria->compare('t.session_info',strtolower($this->session_info),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -223,6 +229,7 @@ class RecruitmentSessions extends CActiveRecord
 			//$this->defaultColumns[] = 'session_id';
 			$this->defaultColumns[] = 'publish';
 			$this->defaultColumns[] = 'recruitment_id';
+			$this->defaultColumns[] = 'parent_id';
 			$this->defaultColumns[] = 'session_name';
 			$this->defaultColumns[] = 'session_info';
 			$this->defaultColumns[] = 'creation_date';
@@ -269,6 +276,7 @@ class RecruitmentSessions extends CActiveRecord
 				'name' => 'recruitment_search',
 				'value' => '$data->recruitment->event_name',
 			);
+			$this->defaultColumns[] = 'parent_id';
 			$this->defaultColumns[] = 'session_name';
 			$this->defaultColumns[] = array(
 				'name' => 'session_info',
@@ -339,11 +347,13 @@ class RecruitmentSessions extends CActiveRecord
 	 * 0 = unpublish
 	 * 1 = publish
 	 */
-	public static function getSession($publish=null) {
+	public static function getSession($parent=null, $publish=null) {
 		
 		$criteria=new CDbCriteria;
 		if($publish != null)
 			$criteria->compare('t.publish',$publish);
+		if($parent != null)
+			$criteria->compare('t.parent_id',$parent);
 		
 		$model = self::model()->findAll($criteria);
 
