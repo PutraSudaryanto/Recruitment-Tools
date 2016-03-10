@@ -74,7 +74,7 @@
 		</tr>
 	<?php if($i%2 == 0) {?>
 		</table>
-		<br/>
+		<div style="padding-bottom: 15px;"></div>
 		<table style="width: 100%; border: 1px solid red;">
 	<?php }
 	if($i == $documentCount) {?>
