@@ -525,7 +525,17 @@ class RecruitmentSessions extends CActiveRecord
 			}
 		}
 		
-		if($currentAction == 'o/batch/blast' && $this->blasting_status == 1) {}
+		if($currentAction == 'o/batch/blast') {
+			$data = self::model()->findAll(array(
+				'condition'=> 'parent_id = :parent AND blasting_status = :blasting',
+				'params'=>array(
+					':parent'=>$this->parent_id,
+					':blasting'=>0,
+				),
+			));
+			if($data == null)
+				self::model()->updateByPk($this->parent_id, array('blasting_subject'=>'Ommu Done', 'blasting_status'=>1));
+		}
 	}
 
 }

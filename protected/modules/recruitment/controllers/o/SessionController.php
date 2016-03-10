@@ -196,9 +196,7 @@ class SessionController extends Controller
 					}
 				}
 				*/
-				RecruitmentSessions::model()->updateByPk($batchId, array(
-					'blasting_status'=>1,
-				));
+				RecruitmentSessions::model()->updateByPk($batchId, array('blasting_status'=>1));
 		
 				Yii::app()->user->setFlash('success', 'Blasting success.');
 				$this->redirect(array('manage'));
