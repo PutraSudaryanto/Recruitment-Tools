@@ -166,7 +166,8 @@ class SessionuserController extends Controller
 		SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->session->blasting_subject, $message, 1, null, $attachment);
 		
 		Yii::app()->user->setFlash('success', 'Send Email success.');
-		$this->redirect(array('manage'));
+		$this->redirect(Yii::app()->controller->createUrl('manage', array('session'=>$model->session_id)));
+		
 		
 		ob_end_flush();
 	}
