@@ -88,7 +88,7 @@ class BatchController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','import','add','edit','view','runaction','delete','publish'),
+				'actions'=>array('manage','import','add','edit','view','runaction','delete','publish', 'PrintParticipantCard', 'GenerateBarcodeParticipant'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -264,6 +264,30 @@ class BatchController extends Controller
 		Yii::app()->user->setFlash('success', 'RecruitmentSessions success updated.');
 		$this->redirect(array('manage'));
 	}
+        
+        
+        public function actionPrintParticipantCard($sessionid, $barcodetype) {
+            $criteria=new CDbCriteria;
+            
+            $criteria->compare('t.publish',1);
+            $criteria->compare('t.session_id', $sessionid);           
+            $criteria->order = 'session_seat ASC';
+            //$criteria->limit = 4;
+
+            $model = RecruitmentSessionUser::model()->findAll($criteria);
+            
+            RecruitmentSessionUser::model()->generateBarcodeParticipant($sessionid, $barcodetype, 2, 40);
+            
+            $this->layout = false;
+            $this->render('print_participant_card',array(
+			'models'=>$model,
+			'typeBarcode'=>  strtolower($barcodetype),
+		));
+        }
+        
+        
+        
+      
 	
 	/**
 	 * Creates a new model.

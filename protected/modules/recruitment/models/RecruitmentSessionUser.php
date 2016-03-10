@@ -71,7 +71,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('publish, user_id, event_user_id, session_id, session_seat', 'required'),
-			array('publish, creation_id', 'numerical', 'integerOnly'=>true),
+			array('id, publish, creation_id', 'numerical', 'integerOnly'=>true),
 			array('user_id, event_user_id, session_id', 'length', 'max'=>11),
 			array('session_seat', 'length', 'max'=>32),
 			// The following rule is used by search().
@@ -376,6 +376,53 @@ class RecruitmentSessionUser extends CActiveRecord
 		ob_end_flush();
 		return $fileName;
 	}
+        
+        
+	/**
+	 * Create pdf, save to disk and return the name with path
+	 */
+	public function getPdfParticipantCard($models, $developerMode=true) 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		
+		Yii::import('ext.html2pdf.HTML2PDF');
+		Yii::import('ext.html2pdf._mypdf.MyPDF');	// classe mypdf
+		Yii::import('ext.html2pdf.parsingHTML');	// classe de parsing HTML
+		Yii::import('ext.html2pdf.styleHTML');		// classe de gestion des styles
+		
+		$template = 'pln_cdugm19_participant_card';
+		include(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');		
+		$content  = ob_get_clean();
+		$fileName = '';
+		
+		try {
+			// initialisation de HTML2PDF
+			$html2pdf = new HTML2PDF('P','A4','en', false, 'ISO-8859-15', array(0, 0, 0, 0));
+
+			// affichage de la page en entier
+			$html2pdf->pdf->SetDisplayMode('fullpage');
+
+			// conversion
+			$html2pdf->writeHTML($content);
+
+			// envoie du PDF
+			
+			//$fileName = YiiBase::getPathOfAlias('webroot.public.recruitment.user_pdf').'/'.time().'_'.Utility::getUrlTitle($model->eventUser->test_number.' '.$model->user->displayname).'_participant_card.pdf';
+			$fileName = YiiBase::getPathOfAlias('webroot.public.recruitment.user_pdf').'/'.time().'_'.'_participant_cardxx.pdf';
+			if($developerMode == true)
+				$html2pdf->Output($fileName, 'F');
+			else
+				$html2pdf->Output($fileName);
+			@chmod($fileName, 0777);
+			
+		} catch(HTML2PDF_exception $e) {
+			echo $e;
+		}
+		
+		ob_end_flush();
+		return $fileName;
+	}
 
 	/**
 	 * before validate attributes
@@ -386,5 +433,38 @@ class RecruitmentSessionUser extends CActiveRecord
 		}
 		return true;
 	}
+        
+        /**
+         * 
+         * @param type $sessionid
+         * @param type $type
+         * @param type $w
+         * @param type $h
+         */
+        public function generateBarcodeParticipant($sessionid, $typeBarcode = 'upca', $widthBarcode=2, $hightBarcode=30) {
+            
+            $criteria=new CDbCriteria;            
+            $criteria->compare('t.publish',1);
+            $criteria->compare('t.session_id', $sessionid);    
+
+            $model = RecruitmentSessionUser::model()->findAll($criteria);
+            
+            
+            Yii::import('ext.php-barcodes.DNS1DBarcode');	
+            foreach($model as $val) {
+                
+                $text = str_pad($val->session->recruitment_id, 2, '0', STR_PAD_LEFT).''.str_pad($val->session_id, 3, '0', STR_PAD_LEFT).''.str_pad($val->user_id, 6, '0', STR_PAD_LEFT);
+               
+                $barcode = new DNS1DBarcode();               
+                
+                $pathFolder = YiiBase::getPathOfAlias('webroot.public.recruitment.user_barcode_'.$typeBarcode).'/';
+                if(!file_exists($pathFolder)){
+                                mkdir($pathFolder, 0777);
+                                chmod($pathFolder, 0777);
+                }
+                $barcode->save_path=$pathFolder;
+                $barcode->getBarcodePNGPath($text, $typeBarcode, $widthBarcode, $hightBarcode);               
+            }
+        }
 
 }
