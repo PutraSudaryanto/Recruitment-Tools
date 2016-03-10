@@ -30,6 +30,8 @@
  * @property string $session_date
  * @property string $session_time_start
  * @property string $session_time_finish
+ * @property string $blasting_subject
+ * @property integer $blasting_status
  * @property string $creation_date
  * @property string $creation_id
  * @property string $modified_date
@@ -76,16 +78,18 @@ class RecruitmentSessions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('publish, session_name, ', 'required'),
+			array('publish, session_name', 'required'),
 			array('recruitment_id, session_info', 'required', 'on'=>'sessionForm'),
 			array('parent_id', 'required', 'on'=>'batchForm'),
+			array('blasting_subject', 'required', 'on'=>'blastForm'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('recruitment_id, parent_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('session_name', 'length', 'max'=>32),
-			array('session_date, session_time_start, session_time_finish', 'safe'),
+			array('blasting_subject', 'length', 'max'=>64),
+			array('session_date, session_time_start, session_time_finish, blasting_subject', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, session_date, session_time_start, session_time_finish, creation_date, creation_id, modified_date, modified_id,
+			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, session_date, session_time_start, session_time_finish, blasting_subject, blasting_status, creation_date, creation_id, modified_date, modified_id,
 				recruitment_search, session_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -122,6 +126,8 @@ class RecruitmentSessions extends CActiveRecord
 			'session_date' => 'Session Date',
 			'session_time_start' => 'Time Start',
 			'session_time_finish' => 'Time Finish',
+			'blasting_subject' => 'Blasting Subject',
+			'blasting_status' => 'Blasting',
 			'creation_date' => 'Creation Date',
 			'creation_id' => 'Creation',
 			'modified_date' => 'Modified Date',
@@ -182,6 +188,8 @@ class RecruitmentSessions extends CActiveRecord
 			$criteria->compare('date(t.session_date)',date('Y-m-d', strtotime($this->session_date)));
 		$criteria->compare('t.session_time_start',strtolower($this->session_time_start),true);
 		$criteria->compare('t.session_time_finish',strtolower($this->session_time_finish),true);
+		$criteria->compare('t.blasting_subject',strtolower($this->blasting_subject),true);
+		$criteria->compare('t.blasting_status',strtolower($this->blasting_status),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if(isset($_GET['creation']))
@@ -261,6 +269,8 @@ class RecruitmentSessions extends CActiveRecord
 			$this->defaultColumns[] = 'session_date';
 			$this->defaultColumns[] = 'session_time_start';
 			$this->defaultColumns[] = 'session_time_finish';
+			$this->defaultColumns[] = 'blasting_subject';
+			$this->defaultColumns[] = 'blasting_status';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
 			$this->defaultColumns[] = 'modified_date';
@@ -357,16 +367,6 @@ class RecruitmentSessions extends CActiveRecord
 				),
 				'type' => 'raw',
 			);
-			if($controller == 'o/batch') {
-				$this->defaultColumns[] = array(
-					'header' => 'Blasting',
-					'value' => 'CHtml::link("Blasting Email", Yii::app()->controller->createUrl("o/batch/blast",array("id"=>$data->session_id)))',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'type' => 'raw',
-				);				
-			}
 			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
@@ -399,6 +399,20 @@ class RecruitmentSessions extends CActiveRecord
 				), true),
 			);
 			*/
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'blasting_status',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("blast",array("id"=>$data->session_id)), $data->blasting_status, 1)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter'=>array(
+						1=>Phrase::trans(588,0),
+						0=>Phrase::trans(589,0),
+					),
+					'type' => 'raw',
+				);
+			}
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'publish',
