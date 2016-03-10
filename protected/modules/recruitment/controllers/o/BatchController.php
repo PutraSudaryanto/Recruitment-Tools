@@ -256,7 +256,7 @@ class BatchController extends Controller
 			$batch->attributes=$_POST['RecruitmentSessions'];
 			$batch->scenario = 'blastForm';
 			
-			if($batch->save()) {		
+			if($batch->save()) {
 				$criteria=new CDbCriteria;
 				$criteria->compare('t.publish',1);
 				$criteria->compare('t.session_id',$batchId);

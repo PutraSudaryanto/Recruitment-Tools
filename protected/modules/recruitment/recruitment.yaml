@@ -79,8 +79,8 @@ content_menu	:
 
 	- urlTitle: Download Document Test
 		urlRules: {recruitment, o/sessionuser, manage, siteType: 0, userLevel: 1,2}
-		urlPath: {url: o/session/documenttest, attr: session=$_GET*session, icon: -}
+		urlPath: {url: o/sessionuser/documenttest, attr: session=$_GET*session, icon: -}
 
 	- urlTitle: Download Entry Card
 		urlRules: {recruitment, o/sessionuser, manage, siteType: 0, userLevel: 1,2}
-		urlPath: {url: o/session/entrycard, attr: session=$_GET*session, icon: -}
+		urlPath: {url: o/sessionuser/entrycard, attr: session=$_GET*session, icon: -}

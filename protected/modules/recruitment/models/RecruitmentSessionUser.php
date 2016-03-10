@@ -366,7 +366,7 @@ class RecruitmentSessionUser extends CActiveRecord
 	/**
 	 * Create pdf, save to disk and return the name with path
 	 */
-	public function getPdf($model, $preview=false, $template=null, $path=null, $documentName=null) 
+	public function getPdf($model, $preview=false, $template=null, $path=null, $documentName=null, $page=null) 
 	{
 		ini_set('max_execution_time', 0);
 		ob_start();
@@ -385,15 +385,15 @@ class RecruitmentSessionUser extends CActiveRecord
 		
 		try {
 			// initialisation de HTML2PDF
-			$html2pdf = new HTML2PDF('P','A4','en', false, 'ISO-8859-15', array(0, 0, 0, 0));
+			if($page == null)
+				$page = 'P';
+			$html2pdf = new HTML2PDF($page,'A4','en', false, 'ISO-8859-15', array(0, 0, 0, 0));
 
 			// affichage de la page en entier
 			$html2pdf->pdf->SetDisplayMode('fullpage');
 
 			// conversion
 			$html2pdf->writeHTML($content);
-
-			// envoie du PDF
 			
 			if($path == null)
 				$path = YiiBase::getPathOfAlias('webroot.public.recruitment.user_pdf');
