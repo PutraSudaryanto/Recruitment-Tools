@@ -59,9 +59,9 @@
 			<td rowspan="2"><?php echo $val->session_seat; ?></td>
 			<td rowspan="2"><span>FOTO<br/>3 x 4</span></td>
 			<td colspan="6">
-				<?php echo $val->user->displayname; ?><br/>
+				<?php echo strtoupper($val->user->displayname); ?><br/>
 				<?php echo strtoupper($val->eventUser->test_number); ?><br/>
-				<?php echo $val->eventUser->major; ?>
+				<?php echo strtoupper($val->eventUser->major); ?>
 			</td>
 		</tr>
 		<tr>
