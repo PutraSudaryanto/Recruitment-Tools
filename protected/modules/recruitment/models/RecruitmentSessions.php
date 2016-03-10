@@ -86,7 +86,7 @@ class RecruitmentSessions extends CActiveRecord
 			array('recruitment_id, parent_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('session_name', 'length', 'max'=>32),
 			array('blasting_subject', 'length', 'max'=>64),
-			array('session_date, session_time_start, session_time_finish, blasting_subject', 'safe'),
+			array('session_date, session_time_start, session_time_finish', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, session_date, session_time_start, session_time_finish, blasting_subject, blasting_status, creation_date, creation_id, modified_date, modified_id,
@@ -453,7 +453,7 @@ class RecruitmentSessions extends CActiveRecord
 	 * 0 = unpublish
 	 * 1 = publish
 	 */
-	public static function getSession($parent=null, $publish=null) {
+	public static function getSession($parent=null, $publish=null, $type=null) {
 		
 		$criteria=new CDbCriteria;
 		if($publish != null)
@@ -464,19 +464,21 @@ class RecruitmentSessions extends CActiveRecord
 			else
 				$criteria->compare('t.parent_id',$parent);
 		}
-			
 		
 		$model = self::model()->findAll($criteria);
 
-		$items = array();
-		if($model != null) {
-			foreach($model as $key => $val) {
-				$items[$val->session_id] = $val->recruitment->event_name.' ('.$val->session_name.')';
-			}
-			return $items;
-		} else {
-			return false;
-		}
+		if($type == null) {
+			$items = array();
+			if($model != null) {
+				foreach($model as $key => $val)
+					$items[$val->session_id] = $val->recruitment->event_name.' ('.$val->session_name.')';
+				return $items;
+				
+			} else
+				return false;
+			
+		} else
+			return $model;
 	}
 
 	/**
@@ -489,11 +491,41 @@ class RecruitmentSessions extends CActiveRecord
 			$this->session_time_finish = date('H:i:s', strtotime($this->session_time_finish));
 			
 			if($this->isNewRecord)
-				$this->creation_id = Yii::app()->user->id;		
-			else
+				$this->creation_id = Yii::app()->user->id;
+			else {
 				$this->modified_id = Yii::app()->user->id;
+			}
+			
+			
 		}
 		return true;
+	}
+	
+	/**
+	 * After save attributes
+	 */
+	protected function afterSave() {
+		parent::afterSave();
+		$controller = strtolower(Yii::app()->controller->id);
+		$currentAction = strtolower(Yii::app()->controller->id.'/'.Yii::app()->controller->action->id);
+		
+		if($currentAction == 'o/session/blast') {
+			$data = self::getSession($this->session_id, null, 'data');
+			if($data != null) {
+				foreach($data as $val) {
+					$batch = self::model()->findByPk($val->session_id);
+					$batch->session_date = $this->session_date;
+					if($this->blasting_status == 1) {
+						if($val->blasting_subject == '')
+							$batch->blasting_subject = $this->blasting_subject;
+						$batch->blasting_status = $this->blasting_status;
+					}
+					$batch->update();
+				}
+			}
+		}
+		
+		if($currentAction == 'o/batch/blast' && $this->blasting_status == 1) {}
 	}
 
 }
