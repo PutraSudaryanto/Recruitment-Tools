@@ -163,7 +163,8 @@ class SessionuserController extends Controller
 		$message = str_ireplace($search, $replace, $message);
 		$session = new RecruitmentSessionUser();
 		$attachment = $session->getPdf($model);
-		SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->session->blasting_subject, $message, 1, null, $attachment);
+		if(SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->session->blasting_subject, $message, 1, null, $attachment))
+			RecruitmentSessionUser::model()->updateByPk($model->id, array('sendemail_status'=>1));
 		
 		Yii::app()->user->setFlash('success', 'Send Email success.');
 		$this->redirect(Yii::app()->controller->createUrl('manage', array('session'=>$model->session_id)));

@@ -27,6 +27,7 @@
  * @property string $event_user_id
  * @property string $session_id
  * @property string $session_seat
+ * @property string $sendemail_status
  * @property string $creation_date
  * @property integer $creation_id
  *
@@ -72,12 +73,12 @@ class RecruitmentSessionUser extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('publish, user_id, event_user_id, session_id, session_seat', 'required'),
-			array('publish, creation_id', 'numerical', 'integerOnly'=>true),
+			array('publish, creation_id, sendemail_status', 'numerical', 'integerOnly'=>true),
 			array('user_id, event_user_id, session_id', 'length', 'max'=>11),
 			array('session_seat', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, publish, user_id, event_user_id, session_id, session_seat, creation_date, creation_id,
+			array('id, publish, user_id, event_user_id, session_id, session_seat, sendemail_status, creation_date, creation_id,
 				email_search, user_search, session_search, creation_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -109,6 +110,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			'event_user_id' => 'Event User',
 			'session_id' => 'Session',
 			'session_seat' => 'Session Seat',
+			'sendemail_status' => 'Send Email',
 			'creation_date' => 'Creation Date',
 			'creation_id' => 'Creation',
 			'email_search' => 'Email',
@@ -160,6 +162,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		else
 			$criteria->compare('t.session_id',$this->session_id);
 		$criteria->compare('t.session_seat',strtolower($this->session_seat),true);
+		$criteria->compare('t.sendemail_status',strtolower($this->sendemail_status),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if(isset($_GET['creation']))
@@ -222,6 +225,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			$this->defaultColumns[] = 'event_user_id';
 			$this->defaultColumns[] = 'session_id';
 			$this->defaultColumns[] = 'session_seat';
+			$this->defaultColumns[] = 'sendemail_status';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
 		}
@@ -297,6 +301,16 @@ class RecruitmentSessionUser extends CActiveRecord
 				),
 				'type' => 'raw',
 			);
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'sendemail_status',
+					'value' => '$data->sendemail_status == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);
+			}
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'publish',
