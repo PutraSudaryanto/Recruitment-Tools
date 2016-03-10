@@ -25,25 +25,6 @@
 class SiteController extends Controller
 {
 	/**
-	 * Declares class-based actions.
-	 */
-	public function actions()
-	{
-		return array(
-			// captcha action renders the CAPTCHA image displayed on the contact page
-			'captcha'=>array(
-				'class'=>'CCaptchaAction',
-				'backColor'=>0xFFFFFF,
-			),
-			// page action renders "static" pages stored under 'protected/views/site/pages'
-			// They can be accessed via: index.php?r=site/page&view=FileName
-			'page'=>array(
-				'class'=>'CViewAction',
-			),
-		);
-	}
-
-	/**
 	 * Initialize public template
 	 */
 	public function init() 
@@ -74,7 +55,7 @@ class SiteController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','login','logout','sendemail'),
+				'actions'=>array('index','login','logout'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -94,27 +75,14 @@ class SiteController extends Controller
 	 * when an action is not explicitly requested by users.
 	 */
 	public function actionIndex()
-	{		 
-		// renders the view file 'protected/views/site/index.php'
-		// using the default layout 'protected/views/layouts/main.php'
-
-		//$this->ownerId = 2;
-		$setting = OmmuSettings::model()->findByPk(1,array(
-			'select' => 'online, construction_date',
-		));
-		//$this->redirect(Yii::app()->createUrl('project/site/index'));
-
-		if($setting->online == 0) {
-			//
-		} else {
-			//
-		}
+	{
+		$news = OmmuPages::model()->findByPk(6);
 		
 		$this->pageTitle = 'Home';
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('front_index', array(
-			'setting'=>$setting,
+			'news'=>$news,
 		));
 	}
 
@@ -180,13 +148,5 @@ class SiteController extends Controller
 	{
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
-	}
-
-	/**
-	 * Logs out the current user and redirect to homepage.
-	 */
-	public function actionSendEmail()
-	{
-		SupportMailSetting::sendEmail('putra.sudaryanto@gmail.com', 'Putra Sudaryanto', 'testing', 'testing', 1);	
 	}
 }

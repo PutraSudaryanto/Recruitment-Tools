@@ -9,22 +9,21 @@
  * @contact (+62)856-299-4114
  *
  */
-	$model = OmmuPages::model()->findByPk(6);
 ?>
 
-<?php if($model->media_show == 1) {
-	$images = Yii::app()->request->baseUrl.'/public/page/'.$model->media;
+<?php if($news->media_show == 1) {
+	$images = Yii::app()->request->baseUrl.'/public/page/'.$news->media;
 	if($this->adsSidebar == true) {
-		if($model->media_type == 1)
+		if($news->media_type == 1)
 			echo '<img class="largemag" src="'.Utility::getTimThumb($images, 600, 900, 3).'" alt="">';
 		else
 			echo '<img class="mediummag" src="'.Utility::getTimThumb($images, 270, 500, 3).'" alt="">';
 	} else {
-		if($model->media_type == 1)
+		if($news->media_type == 1)
 			echo '<img class="largemag" src="'.Utility::getTimThumb($images, 1280, 1024, 3).'" alt="">';
 		else
 			echo '<img class="mediummag" src="'.Utility::getTimThumb($images, 270, 500, 3).'" alt="">';
 	}
 }?>
 
-<?php echo Phrase::trans($model->name, 2) != Utility::hardDecode(Phrase::trans($model->desc, 2)) ? Utility::cleanImageContent(Phrase::trans($model->desc, 2)) : '';?>
+<?php echo Phrase::trans($news->name, 2) != Utility::hardDecode(Phrase::trans($news->desc, 2)) ? Utility::cleanImageContent(Phrase::trans($news->desc, 2)) : '';?>
