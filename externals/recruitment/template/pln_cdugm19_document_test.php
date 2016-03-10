@@ -48,7 +48,10 @@
 		<table style="width: 100%; border: 1px solid red;">
 	<?php }?>	
 		<tr>
-			<td colspan="8">
+			<td colspan="4" style="width: 50%;">
+			logo
+			</td>
+			<td colspan="4" style="width: 50%;">
 			logo
 			</td>
 		</tr>
@@ -71,6 +74,7 @@
 		</tr>
 	<?php if($i%2 == 0) {?>
 		</table>
+		<br/>
 		<table style="width: 100%; border: 1px solid red;">
 	<?php }
 	if($i == $documentCount) {?>
