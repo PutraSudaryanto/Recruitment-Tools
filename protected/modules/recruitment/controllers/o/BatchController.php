@@ -253,31 +253,37 @@ class BatchController extends Controller
 		
 		$model = RecruitmentSessionUser::model()->findAll($criteria);
 		if($model != null) {
+			$i = 0;
 			foreach($model as $key => $val) {
+				$i++;
 				//if($val->id == '57') {
-					$search		= array(
+					$search = array(
 						'{$baseURL}', 
 						'{$displayname}', '{$test_number}', '{$major}',
 						'{$batch_day}', '{$batch_data}','{$batch_month}', '{$batch_year}',
 						'{$session_date}', '{$session_time_start}', '{$session_time_finish}');
-					$replace	= array(
+					$replace = array(
 						Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl,
 						$val->user->displayname, strtoupper($val->eventUser->test_number), $val->eventUser->major,
 						Utility::getLocalDayName($val->session->session_date, false), date('d', strtotime($val->session->session_date)), Utility::getLocalMonthName($val->session->session_date), date('Y', strtotime($val->session->session_date)),
 						$val->session->session_name, $val->session->session_time_start, $val->session->session_time_finish);
-					$message = file_get_contents(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/pln_cdugm19_body_email.php');
+					$template = 'mail_pln_cdugm19';
+					$message = file_get_contents(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');
 					$message = str_ireplace($search, $replace, $message);
 					$session = new RecruitmentSessionUser();
 					$attachment = $session->getPdf($val);
 					SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, 'UNDANGAN PANGGILAN TES PT PLN (Persero) | CAREER DAYS UGM 19', $message, 1, null, $attachment);
-				//}				
+				//}
+				if($i%50 == 0) {
+					$event = $val->session->session_name.' '.$val->session->viewBatch->session_name.' '.$val->session->recruitment->event_name;
+					SupportMailSetting::sendEmail('putra.sudaryanto@gmail.com', 'Putra Sudaryanto', 'Send Email '.$event.' ('.$i.')', $event, 1, null, $attachment);
+				}
 			}
 		}
 		
-		ob_end_flush();
-		
 		Yii::app()->user->setFlash('success', 'RecruitmentSessions success updated.');
-		$this->redirect(array('manage'));
+		$this->redirect(array('manage'));		
+		ob_end_flush();
 	}
 	
 	/**

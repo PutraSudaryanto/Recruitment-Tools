@@ -345,7 +345,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		Yii::import('ext.html2pdf.parsingHTML');	// classe de parsing HTML
 		Yii::import('ext.html2pdf.styleHTML');		// classe de gestion des styles
 		
-		$template = 'pln_cdugm19';
+		$template = 'pdf_pln_cdugm19';
 		include(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');		
 		$content  = ob_get_clean();
 		$fileName = '';
