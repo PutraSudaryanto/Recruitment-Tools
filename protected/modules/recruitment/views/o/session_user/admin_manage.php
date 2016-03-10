@@ -88,7 +88,7 @@
 						),
 						'url' => 'Yii::app()->controller->createUrl("delete",array("id"=>$data->primaryKey))')
 				),
-				'template' => '{update}|{delete}',
+				'template' => '{delete}',
 			));
 
 			$this->widget('application.components.system.OGridView', array(

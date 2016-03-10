@@ -276,13 +276,14 @@ class BatchController extends Controller
 							$val->user->displayname, strtoupper($val->eventUser->test_number), $val->eventUser->major,
 							Utility::getLocalDayName($val->session->session_date, false), date('d', strtotime($val->session->session_date)), Utility::getLocalMonthName($val->session->session_date), date('Y', strtotime($val->session->session_date)),
 							$val->session->session_name, $val->session->session_time_start, $val->session->session_time_finish);
-						$template = 'mail_pln_cdugm19';
+						$template = 'pln_cdugm19_mail';
 						$message = file_get_contents(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');
 						$message = str_ireplace($search, $replace, $message);
 						$session = new RecruitmentSessionUser();
 						$attachment = $session->getPdf($val);
 						if(SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, $batch->blasting_subject, $message, 1, null, $attachment))
 							RecruitmentSessionUser::model()->updateByPk($val->id, array('sendemail_status'=>1));
+						
 						if($i%50 == 0) {
 							$event = $val->session->session_name.' '.$val->session->viewBatch->session_name.' '.$val->session->recruitment->event_name;
 							SupportMailSetting::sendEmail(SupportMailSetting::getInfo(1,'mail_contact'), 'Ommu Support', 'Send Email Blast: '.$event.' ('.$i.')', $event, 1, null, $attachment);

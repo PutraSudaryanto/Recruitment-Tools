@@ -263,6 +263,7 @@ class RecruitmentSessionUser extends CActiveRecord
 				'value' => '$data->session->session_name',
 			);
 			$this->defaultColumns[] = 'session_seat';
+			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
 				'value' => '$data->creation->displayname',
@@ -293,6 +294,7 @@ class RecruitmentSessionUser extends CActiveRecord
 					),
 				), true),
 			);
+			*/
 			$this->defaultColumns[] = array(
 				'header' => 'Send Email',
 				'value' => 'CHtml::link("Send Email", Yii::app()->controller->createUrl("o/sessionuser/sendemail",array("id"=>$data->id)))',
@@ -364,7 +366,7 @@ class RecruitmentSessionUser extends CActiveRecord
 	/**
 	 * Create pdf, save to disk and return the name with path
 	 */
-	public function getPdf($model, $developerMode=true) 
+	public function getPdf($model, $preview=false, $template=null, $path=null, $documentName=null) 
 	{
 		ini_set('max_execution_time', 0);
 		ob_start();
@@ -374,7 +376,9 @@ class RecruitmentSessionUser extends CActiveRecord
 		Yii::import('ext.html2pdf.parsingHTML');	// classe de parsing HTML
 		Yii::import('ext.html2pdf.styleHTML');		// classe de gestion des styles
 		
-		$template = 'pdf_pln_cdugm19';
+		if($template == null)
+			$template = 'pln_cdugm19_pdf';
+		
 		include(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');		
 		$content  = ob_get_clean();
 		$fileName = '';
@@ -391,8 +395,14 @@ class RecruitmentSessionUser extends CActiveRecord
 
 			// envoie du PDF
 			
-			$fileName = YiiBase::getPathOfAlias('webroot.public.recruitment.user_pdf').'/'.time().'_'.Utility::getUrlTitle($model->eventUser->test_number.' '.$model->user->displayname).'.pdf';
-			if($developerMode == true)
+			if($path == null)
+				$path = YiiBase::getPathOfAlias('webroot.public.recruitment.user_pdf');
+			if($documentName == null)
+				$documentName = Utility::getUrlTitle($model->eventUser->test_number.' '.$model->user->displayname);
+			
+			$fileName = $path.'/'.time().'_'.$documentName.'.pdf';
+			
+			if($preview == false)
 				$html2pdf->Output($fileName, 'F');
 			else
 				$html2pdf->Output($fileName);
