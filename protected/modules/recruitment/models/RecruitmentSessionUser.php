@@ -39,6 +39,7 @@ class RecruitmentSessionUser extends CActiveRecord
 	public $defaultColumns = array();
 	
 	// Variable Search
+	public $email_search;
 	public $user_search;
 	public $session_search;
 	public $creation_search;
@@ -77,7 +78,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, publish, user_id, event_user_id, session_id, session_seat, creation_date, creation_id,
-				user_search, session_search, creation_search', 'safe', 'on'=>'search'),
+				email_search, user_search, session_search, creation_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -110,6 +111,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			'session_seat' => 'Session Seat',
 			'creation_date' => 'Creation Date',
 			'creation_id' => 'Creation',
+			'email_search' => 'Email',
 			'user_search' => 'User',
 			'session_search' => 'Session',
 			'creation_search' => 'Creation',
@@ -169,7 +171,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		$criteria->with = array(
 			'user' => array(
 				'alias'=>'user',
-				'select'=>'displayname'
+				'select'=>'email, displayname'
 			),
 			'session' => array(
 				'alias'=>'session',
@@ -180,6 +182,7 @@ class RecruitmentSessionUser extends CActiveRecord
 				'select'=>'displayname'
 			),
 		);
+		$criteria->compare('user.email',strtolower($this->email_search), true);
 		$criteria->compare('user.displayname',strtolower($this->user_search), true);
 		$criteria->compare('session.session_name',strtolower($this->session_search), true);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
@@ -248,6 +251,10 @@ class RecruitmentSessionUser extends CActiveRecord
 				'value' => '$data->user->displayname',
 			);
 			$this->defaultColumns[] = array(
+				'name' => 'email_search',
+				'value' => '$data->user->email',
+			);
+			$this->defaultColumns[] = array(
 				'name' => 'session_search',
 				'value' => '$data->session->session_name',
 			);
@@ -281,6 +288,14 @@ class RecruitmentSessionUser extends CActiveRecord
 						'showButtonPanel' => true,
 					),
 				), true),
+			);
+			$this->defaultColumns[] = array(
+				'header' => 'Send Email',
+				'value' => 'CHtml::link("Send Email", Yii::app()->controller->createUrl("o/sessionuser/sendemail",array("id"=>$data->id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
 			);
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(

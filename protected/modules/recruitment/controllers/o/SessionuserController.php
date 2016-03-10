@@ -10,6 +10,7 @@
  * TOC :
  *	Index
  *	Manage
+ *	SendEmail
  *	Add
  *	Edit
  *	RunAction
@@ -85,7 +86,7 @@ class SessionuserController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','add','edit','runaction','delete','publish'),
+				'actions'=>array('manage','sendemail','add','edit','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -136,6 +137,39 @@ class SessionuserController extends Controller
 			'columns' => $columns,
 		));
 	}	
+	
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionSendEmail($id) 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		$model=$this->loadModel($id);
+		
+		$search = array(
+			'{$baseURL}', 
+			'{$displayname}', '{$test_number}', '{$major}',
+			'{$model_day}', '{$model_data}','{$model_month}', '{$model_year}',
+			'{$session_date}', '{$session_time_start}', '{$session_time_finish}');
+		$replace = array(
+			Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl,
+			$model->user->displayname, strtoupper($model->eventUser->test_number), $model->eventUser->major,
+			Utility::getLocalDayName($model->session->session_date, false), date('d', strtotime($model->session->session_date)), Utility::getLocalMonthName($model->session->session_date), date('Y', strtotime($model->session->session_date)),
+			$model->session->session_name, $model->session->session_time_start, $model->session->session_time_finish);
+		$template = 'mail_pln_cdugm19';
+		$message = file_get_contents(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');
+		$message = str_ireplace($search, $replace, $message);
+		$session = new RecruitmentSessionUser();
+		$attachment = $session->getPdf($model);
+		SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->session->blasting_subject, $message, 1, null, $attachment);
+		
+		Yii::app()->user->setFlash('success', 'Send Email success.');
+		$this->redirect(array('manage'));
+		
+		ob_end_flush();
+	}
 	
 	/**
 	 * Creates a new model.
