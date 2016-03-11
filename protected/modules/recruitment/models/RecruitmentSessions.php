@@ -27,6 +27,7 @@
  * @property string $parent_id
  * @property string $session_name
  * @property string $session_info
+ * @property string $session_code
  * @property string $session_date
  * @property string $session_time_start
  * @property string $session_time_finish
@@ -78,18 +79,18 @@ class RecruitmentSessions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('publish, session_name', 'required'),
+			array('publish, session_name, session_code', 'required'),
 			array('recruitment_id, session_info', 'required', 'on'=>'sessionForm'),
 			array('parent_id', 'required', 'on'=>'batchForm'),
 			array('blasting_subject', 'required', 'on'=>'blastForm'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('recruitment_id, parent_id, creation_id, modified_id', 'length', 'max'=>11),
-			array('session_name', 'length', 'max'=>32),
+			array('session_name, session_code', 'length', 'max'=>32),
 			array('blasting_subject', 'length', 'max'=>64),
 			array('session_date, session_time_start, session_time_finish', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, session_date, session_time_start, session_time_finish, blasting_subject, blasting_status, creation_date, creation_id, modified_date, modified_id,
+			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, session_code, session_date, session_time_start, session_time_finish, blasting_subject, blasting_status, creation_date, creation_id, modified_date, modified_id,
 				recruitment_search, session_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -123,6 +124,7 @@ class RecruitmentSessions extends CActiveRecord
 			'parent_id' => 'Parent',
 			'session_name' => 'Session Name',
 			'session_info' => 'Session Info',
+			'session_code' => 'Session Code',
 			'session_date' => 'Session Date',
 			'session_time_start' => 'Time Start',
 			'session_time_finish' => 'Time Finish',
@@ -184,6 +186,7 @@ class RecruitmentSessions extends CActiveRecord
 		}
 		$criteria->compare('t.session_name',strtolower($this->session_name),true);
 		$criteria->compare('t.session_info',strtolower($this->session_info),true);
+		$criteria->compare('t.session_code',strtolower($this->session_code),true);
 		if($this->session_date != null && !in_array($this->session_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.session_date)',date('Y-m-d', strtotime($this->session_date)));
 		$criteria->compare('t.session_time_start',strtolower($this->session_time_start),true);
@@ -266,6 +269,7 @@ class RecruitmentSessions extends CActiveRecord
 			$this->defaultColumns[] = 'parent_id';
 			$this->defaultColumns[] = 'session_name';
 			$this->defaultColumns[] = 'session_info';
+			$this->defaultColumns[] = 'session_code';
 			$this->defaultColumns[] = 'session_date';
 			$this->defaultColumns[] = 'session_time_start';
 			$this->defaultColumns[] = 'session_time_finish';
@@ -300,6 +304,7 @@ class RecruitmentSessions extends CActiveRecord
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
 			$this->defaultColumns[] = 'session_name';
+			$this->defaultColumns[] = 'session_code';
 			if($controller == 'o/batch') {
 				$this->defaultColumns[] = array(
 					'name' => 'session_search',
@@ -359,14 +364,25 @@ class RecruitmentSessions extends CActiveRecord
 					'type' => 'raw',
 				);
 			}
-			$this->defaultColumns[] = array(
-				'header' => 'Users',
-				'value' => 'CHtml::link($controller == "o/session" ? $data->view->users." User" : $data->viewBatch->users." User", Yii::app()->controller->createUrl("o/sessionuser/manage",array("session"=>$data->session_id)))',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'type' => 'raw',
-			);
+			if($controller == 'o/session') {
+				$this->defaultColumns[] = array(
+					'header' => 'Users',
+					'value' => 'CHtml::link($data->view->users." User", Yii::app()->controller->createUrl("o/sessionuser/manage",array("session"=>$data->session_id)))',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);
+			} else {
+				$this->defaultColumns[] = array(
+					'header' => 'Users',
+					'value' => 'CHtml::link($data->viewBatch->users." User", Yii::app()->controller->createUrl("o/sessionuser/manage",array("session"=>$data->session_id)))',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);				
+			}
 			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',

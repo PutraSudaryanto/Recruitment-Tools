@@ -122,6 +122,21 @@ if(isset($_GET['protocol']) && $_GET['protocol'] == 'script') {
  
 	<?php //begin.Header ?>
 	<header>
+		<div class="container clearix">
+			<div class="account-menu">
+				<ul class="clearfix">
+					<?php if(Yii::app()->user->isGuest) {
+						if(empty(Yii::app()->user->user_id)) {?>
+						<li <?php echo $currentAction == 'site/login' ? 'class="active"' : ''?>><a href="<?php echo Yii::app()->controller->createUrl('site/login');?>">Sign In</a></li>
+						<?php } else {?>
+						<li><a href="<?php echo Yii::app()->controller->createUrl('site/logout');?>">Logout</a></li>
+						<?php }
+					} else {?>
+						<li><a href="<?php echo Yii::app()->createUrl('site/logout');?>">Logout</a></li>
+					<?php }?>
+				</ul>
+			</div>
+		</div>
 	</header>
 	<?php //end.Header ?>
 	
@@ -136,7 +151,6 @@ if(isset($_GET['protocol']) && $_GET['protocol'] == 'script') {
 	<?php //begin.Footer ?>
 	<footer>
 		<div class="container">
-			aaaaaaaaaaaa
 		</div>
 	</footer>
 	<?php //end.Footer ?>

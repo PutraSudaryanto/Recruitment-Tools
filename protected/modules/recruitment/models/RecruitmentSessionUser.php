@@ -157,9 +157,28 @@ class RecruitmentSessionUser extends CActiveRecord
 			$criteria->compare('t.event_user_id',$_GET['eventuser']);
 		else
 			$criteria->compare('t.event_user_id',$this->event_user_id);
-		if(isset($_GET['session']))
-			$criteria->compare('t.session_id',$_GET['session']);
-		else
+		if(isset($_GET['session'])) {
+			$session = RecruitmentSessions::model()->findByPk($_GET['session'],array(
+				'select' => 'session_id, parent_id'
+			));
+			if($session->parent_id == 0) {
+				$batch = RecruitmentSessions::model()->findAll(array(
+					'condition' => 'publish = :publish AND parent_id = :parent',
+					'params' => array(
+						':publish' => 1,
+						':parent' => $_GET['session'],
+					),
+				));
+				$items = array();
+				if($batch != null) {
+					foreach($batch as $key => $val)
+						$items[] = $val->session_id;
+				}
+				$criteria->addInCondition('t.session_id',$items);
+				
+			} else 
+				$criteria->compare('t.session_id',$_GET['session']);			
+		} else
 			$criteria->compare('t.session_id',$this->session_id);
 		$criteria->compare('t.session_seat',strtolower($this->session_seat),true);
 		$criteria->compare('t.sendemail_status',strtolower($this->sendemail_status),true);
@@ -462,6 +481,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		ob_end_flush();
 		return $fileName;
 	}
+	
 
 	/**
 	 * before validate attributes

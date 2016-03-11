@@ -20,20 +20,21 @@
 	} else {
 		if($controller == 'site') {
 			$class = $module;
-			if($action == 'index')
-				$class = 'main';
+			if($action == 'login')
+				$class = 'login';
 		} else
 			$class = $module.'-'.$controller;
 	}
 ?>
 <?php //echo $this->dialogDetail == true ? (empty($this->dialogWidth) ? 'class="boxed clearfix"' : 'class="clearfix"') : 'class="clearfix"';?>
 
-<?php if($this->dialogDetail == false && $this->pageTitleShow == true) {?>
-	<h1><?php echo CHtml::encode($this->pageTitle); ?></h1>
-<?php }?>
-
 <div id="<?php echo $class;?>" class="box-wrap">
-	<?php echo $content;?>
+	<?php if($this->dialogDetail == false && $this->pageTitleShow == true) {?>
+		<h1><?php echo CHtml::encode($this->pageTitle); ?></h1>
+	<?php }?>
+	<div class="box-content">
+		<?php echo $content;?>
+	</div>	
 </div>
 
 <?php $this->endContent(); ?>
