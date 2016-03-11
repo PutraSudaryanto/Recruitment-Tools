@@ -76,12 +76,24 @@ class SiteController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$this->pageTitle = 'Home';
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('front_index');
+	}
+
+	/**
+	 * This is the default 'index' action that is invoked
+	 * when an action is not explicitly requested by users.
+	 */
+	public function actionAbout()
+	{
 		$news = OmmuPages::model()->findByPk(6);
 		
 		$this->pageTitle = 'Home';
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('front_index', array(
+		$this->render('front_about', array(
 			'news'=>$news,
 		));
 	}
