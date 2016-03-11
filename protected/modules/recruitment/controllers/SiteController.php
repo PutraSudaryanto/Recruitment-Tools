@@ -125,12 +125,15 @@ class SiteController extends Controller
 		));
 
 		$model=$this->loadModel($id);
+		$session = $model->sessionPublish;
 
-		$this->pageTitle = 'View Recruitments';
+		$this->pageTitleShow = true;
+		$this->pageTitle = $model->event_name;
 		$this->pageDescription = '';
 		$this->pageMeta = $setting->meta_keyword;
 		$this->render('front_view',array(
 			'model'=>$model,
+			'session'=>$session,
 		));
 	}
 
@@ -142,7 +145,8 @@ class SiteController extends Controller
 	{
 		$news = OmmuPages::model()->findByPk(6);
 		
-		$this->pageTitle = 'Home';
+		$this->pageTitleShow = true;
+		$this->pageTitle = 'About';
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('front_about', array(

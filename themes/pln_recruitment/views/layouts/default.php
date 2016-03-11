@@ -151,7 +151,6 @@ if(isset($_GET['protocol']) && $_GET['protocol'] == 'script') {
 	<?php //begin.Footer ?>
 	<footer>
 		<div class="container">
-			aaaaaaaaaaaa
 		</div>
 	</footer>
 	<?php //end.Footer ?>
