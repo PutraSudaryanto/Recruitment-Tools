@@ -73,7 +73,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('publish, user_id, event_user_id, session_id, session_seat', 'required'),
-			array('publish, creation_id, sendemail_status', 'numerical', 'integerOnly'=>true),
+			array('id, publish, creation_id, sendemail_status', 'numerical', 'integerOnly'=>true),
 			array('user_id, event_user_id, session_id', 'length', 'max'=>11),
 			array('session_seat', 'length', 'max'=>32),
 			// The following rule is used by search().
@@ -481,6 +481,36 @@ class RecruitmentSessionUser extends CActiveRecord
 		ob_end_flush();
 		return $fileName;
 	}
+	
+	/**
+	 * 
+	 * @param type $sessionid
+	 * @param type $type
+	 * @param type $w
+	 * @param type $h
+	 */
+	public function generateBarcodeParticipant($sessionid, $typeBarcode = 'upca', $widthBarcode=2, $hightBarcode=30) {
+		
+		$criteria=new CDbCriteria;            
+		$criteria->compare('t.publish',1);
+		$criteria->compare('t.session_id', $sessionid);    
+
+		$model = RecruitmentSessionUser::model()->findAll($criteria);
+		
+		Yii::import('ext.php-barcodes.DNS1DBarcode');	
+		foreach($model as $val) {			
+			$text = str_pad($val->session->recruitment_id, 2, '0', STR_PAD_LEFT).''.str_pad($val->session_id, 3, '0', STR_PAD_LEFT).''.str_pad($val->user_id, 6, '0', STR_PAD_LEFT);
+			
+			$barcode = new DNS1DBarcode();
+			$pathFolder = YiiBase::getPathOfAlias('webroot.public.recruitment.user_barcode_'.$typeBarcode).'/';
+			if(!file_exists($pathFolder)){
+							mkdir($pathFolder, 0777);
+							chmod($pathFolder, 0777);
+			}
+			$barcode->save_path=$pathFolder;
+			$barcode->getBarcodePNGPath($text, $typeBarcode, $widthBarcode, $hightBarcode);               
+		}
+	}
 
 	/**
 	 * before validate attributes
@@ -491,38 +521,4 @@ class RecruitmentSessionUser extends CActiveRecord
 		}
 		return true;
 	}
-        
-        /**
-         * 
-         * @param type $sessionid
-         * @param type $type
-         * @param type $w
-         * @param type $h
-         */
-        public function generateBarcodeParticipant($sessionid, $typeBarcode = 'upca', $widthBarcode=2, $hightBarcode=30) {
-            
-            $criteria=new CDbCriteria;            
-            $criteria->compare('t.publish',1);
-            $criteria->compare('t.session_id', $sessionid);    
-
-            $model = RecruitmentSessionUser::model()->findAll($criteria);
-            
-            
-            Yii::import('ext.php-barcodes.DNS1DBarcode');	
-            foreach($model as $val) {
-                
-                $text = str_pad($val->session->recruitment_id, 2, '0', STR_PAD_LEFT).''.str_pad($val->session_id, 3, '0', STR_PAD_LEFT).''.str_pad($val->user_id, 6, '0', STR_PAD_LEFT);
-               
-                $barcode = new DNS1DBarcode();               
-                
-                $pathFolder = YiiBase::getPathOfAlias('webroot.public.recruitment.user_barcode_'.$typeBarcode).'/';
-                if(!file_exists($pathFolder)){
-                                mkdir($pathFolder, 0777);
-                                chmod($pathFolder, 0777);
-                }
-                $barcode->save_path=$pathFolder;
-                $barcode->getBarcodePNGPath($text, $typeBarcode, $widthBarcode, $hightBarcode);               
-            }
-        }
-
 }
