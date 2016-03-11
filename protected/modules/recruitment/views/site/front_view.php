@@ -54,7 +54,7 @@
 	foreach($session as $key => $val) {
 		$i++;?>
 		
-		<div class="sep <?php echo !in_array($val->session_date, array('0000-00-00','1970-01-01')) ? (date('Y-m-d', strtotime($val->session_date)) == date('Y-m-d') ? 'active' : (date('Y-m-d', strtotime($val->session_date)) < date('Y-m-d') ? 'done' : 'active')) : ''?>">
+		<div class="sep <?php echo !in_array($val->session_date, array('0000-00-00','1970-01-01')) ? (date('Y-m-d', strtotime($val->session_date)) == date('Y-m-d') ? 'active' : (date('Y-m-d', strtotime($val->session_date)) < date('Y-m-d') ? 'done' : '')) : ''?>">
 			<h3>
 				<strong><?php echo $i;?></strong>
 				<?php echo $val->session_name;?>
