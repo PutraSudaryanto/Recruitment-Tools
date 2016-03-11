@@ -359,14 +359,25 @@ class RecruitmentSessions extends CActiveRecord
 					'type' => 'raw',
 				);
 			}
-			$this->defaultColumns[] = array(
-				'header' => 'Users',
-				'value' => 'CHtml::link($controller == "o/session" ? $data->view->users." User" : $data->viewBatch->users." User", Yii::app()->controller->createUrl("o/sessionuser/manage",array("session"=>$data->session_id)))',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'type' => 'raw',
-			);
+			if($controller == 'o/session') {
+				$this->defaultColumns[] = array(
+					'header' => 'Users',
+					'value' => 'CHtml::link($data->view->users." User", Yii::app()->controller->createUrl("o/sessionuser/manage",array("session"=>$data->session_id)))',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);
+			} else {
+				$this->defaultColumns[] = array(
+					'header' => 'Users',
+					'value' => 'CHtml::link($data->viewBatch->users." User", Yii::app()->controller->createUrl("o/sessionuser/manage",array("session"=>$data->session_id)))',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);				
+			}
 			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
