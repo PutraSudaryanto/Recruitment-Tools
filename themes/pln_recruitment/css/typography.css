@@ -33,7 +33,7 @@ input, button, select, textarea,
 table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, details, figcaption, figure, footer, header,
 hgroup, nav, section {
-	color: #6e768f; 
+	color: #9fa5b8; 
 	font-size: 13px; 
 	line-height: 18px;
 	font-weight: 400;
@@ -48,11 +48,12 @@ h1, h2, h3, h4, h5, h6 {
 	margin: 10px 0;
 	font-family: inherit;
 	font-family: 'Open Sans', Helvetica, Arial, sans-serif;
-	font-weight: 700;
+	font-weight: 600;
 	line-height: 1;
 	color: inherit;
 	text-transform: capitalize;
 	text-rendering: optimizelegibility;
+	color: #6e768f;
 }
 
 h1, h2, h3 {line-height: 40px;}

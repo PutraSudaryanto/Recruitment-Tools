@@ -44,6 +44,9 @@ input, button, select, textarea {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 	margin: 0;
 	vertical-align: middle;
 	resize: none;
@@ -169,13 +172,13 @@ input[type="url"],
 input[type="search"],
 input[type="tel"],
 input[type="color"] {
-	border-top: solid 1px #c3cbd4;
-	border-right: solid 1px #c3cbd4;
-	border-bottom: solid 1px #c3cbd4;
-	border-left: solid 1px #c3cbd4;
+	border-top: solid 1px #d7d9e0;
+	border-right: solid 1px #d7d9e0;
+	border-bottom: solid 1px #d7d9e0;
+	border-left: solid 1px #d7d9e0;
 	background: #fff;
 	padding: 7px 8px 7px 8px;
-	color: #666;
+	color: #6e768f;
 }
 select {
 	padding: 5px 5px 5px 8px;
@@ -230,8 +233,8 @@ input[type="button"],
 input[type="reset"],
 input[type="submit"],
 a.button {
-	background: #02779e;
-	border: 1px solid #016a8d;
+	border: 1px solid #54aca9;
+	background: #5fcac6;
 	padding: 7px 20px;
 	color: #fff !important;
 }
@@ -256,7 +259,9 @@ button:hover,
 input[type="button"]:hover,
 input[type="reset"]:hover,
 input[type="submit"]:hover,
-a.button:hover {}
+a.button:hover {
+	background: #54aca9;
+}
 button:active,
 input[type="button"]:active,
 input[type="reset"]:active,

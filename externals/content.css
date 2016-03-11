@@ -28,30 +28,26 @@
 	padding: 0 0 0 0;
 }
 #login form div.clearfix .errorMessage {
-	padding: 8px 0 0 0;
-	font-size: 15px;
-	line-height: 15px;
+	padding: 10px 0 0 0;
+	font-size: 14px;
+	line-height: 14px;
 	color: #ff0000;
 }
 #login form input[type="text"],
 #login form input[type="password"],
 #login form input[type="submit"] {
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
 	width: 100%;
 	padding: 15px 20px;
 	font-size: 16px;
 	line-height: 21px;
 	font-weight: 300;
 }
-#login form input[type="text"],
-#login form input[type="password"] {
-	background: #f9f9f9;
-}
 #login form input[type="submit"] {
+	color: #fff;
 	text-transform: uppercase;
+	font-weight: 600;
 }
+
 
 /* =Main
 -------------------------------------------------------------- */
