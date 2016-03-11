@@ -84,8 +84,8 @@ class RecruitmentUsers extends CActiveRecord
 				newPassword, confirmPassword', 'required', 'on'=>'adminform'),
 			array('enabled, modified_id', 'numerical', 'integerOnly'=>true),
 			array('creation_ip, update_ip, lastlogin_ip', 'length', 'max'=>20),
-			array('salt, email, password', 'length', 'max'=>32),
-			array('displayname', 'length', 'max'=>64),
+			array('salt, password', 'length', 'max'=>32),
+			array('displayname, email', 'length', 'max'=>64),
 			array('email,
 				newPassword, confirmPassword, oldPhoto', 'safe'),
 			array('

@@ -318,11 +318,11 @@ class BatchController extends Controller
             $criteria->compare('t.publish',1);
             $criteria->compare('t.session_id', $sessionid);           
             $criteria->order = 'session_seat ASC';
-            //$criteria->limit = 4;
+            //$criteria->limit = 8;
 
             $model = RecruitmentSessionUser::model()->findAll($criteria);
             
-            RecruitmentSessionUser::model()->generateBarcodeParticipant($sessionid, $barcodetype, 2, 40);
+            RecruitmentSessionUser::model()->generateBarcodeParticipant($model, $barcodetype, 2, 40);
             
             $this->layout = false;
             $this->render('print_participant_card',array(

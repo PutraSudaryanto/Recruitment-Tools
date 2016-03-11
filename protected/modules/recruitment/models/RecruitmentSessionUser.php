@@ -480,14 +480,7 @@ class RecruitmentSessionUser extends CActiveRecord
          * @param type $w
          * @param type $h
          */
-        public function generateBarcodeParticipant($sessionid, $typeBarcode = 'upca', $widthBarcode=2, $hightBarcode=30) {
-            
-            $criteria=new CDbCriteria;            
-            $criteria->compare('t.publish',1);
-            $criteria->compare('t.session_id', $sessionid);    
-
-            $model = RecruitmentSessionUser::model()->findAll($criteria);
-            
+        public function generateBarcodeParticipant($model, $typeBarcode = 'upca', $widthBarcode=2, $hightBarcode=30) {
             
             Yii::import('ext.php-barcodes.DNS1DBarcode');	
             foreach($model as $val) {
@@ -501,8 +494,12 @@ class RecruitmentSessionUser extends CActiveRecord
                                 mkdir($pathFolder, 0777);
                                 chmod($pathFolder, 0777);
                 }
-                $barcode->save_path=$pathFolder;
-                $barcode->getBarcodePNGPath($text, $typeBarcode, $widthBarcode, $hightBarcode);               
+                if(!file_exists($pathFolder.$text.'.png')){
+                    $barcode->save_path=$pathFolder;
+                    $barcode->getBarcodePNGPath($text, $typeBarcode, $widthBarcode, $hightBarcode);       
+                }
+                
+                       
             }
         }
 

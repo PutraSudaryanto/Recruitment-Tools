@@ -1,42 +1,44 @@
 <style type="text/css">
 	/* Global */
-	html {width: 240mm; height:280mm;}
+	html {width: 795px; height:280mm;}
 	html, body, table, tr, td, div{margin: 0; padding: 0; font-family: arial, tahoma; font-size: 14px;}
-	table {margin: 10px; float: left; width: 100mm; height: 135mm; border: 0; border-spacing: 0; border-collapse: collapse;}
+	table {margin: 10px;  width: 100mm; height: 135mm; border: 0; border-spacing: 0; border-collapse: collapse;}
 	table tr td {padding: 5px;border: 1px solid #000; width: 30%; text-align: center;}
 	table table {margin: 0; float: none; width: auto; height: auto;}
 	table table tr td {border: none; vertical-align: top; text-align: left; padding: 5px 0 0 0; width: auto;}
 	table table tr td.barcode {text-align: center;}
 	table tr.title td {height: 40px;}
 	table tr.score td {height: 50px;}
+        div.box {float: left; border-bottom: 1px dashed #000;}
+        div.box:nth-child(2n+1){border-right: 1px dashed #000;}
 </style>
 
 <page backtop="0mm" backbottom="0mm" backleft="0mm" backright="0mm">
 <?php foreach($models as $model) { ?>       
     
        
-
+<div class="box">
 	<table>
 		<tr>
-			<td colspan="3">
-				<img  src="<?php echo Yii::app()->baseUrl.'/externals/recruitment/images/'?>recruit-pln.png" alt="">
+                    <td colspan="3" style="">
+				<img style="width: 350px;" src="<?php echo Yii::app()->baseUrl.'/externals/recruitment/images/'?>recruit-pln.png" alt="">
 			</td>
 		</tr>
 		<tr>
 			<td style="height: 241px;" rowspan="2">
 				<table width="100%">
 					<tr>
-						<td colspan="3" style="height: 115px; text-align: center;vertical-align:middle;">FOTO<br/>3 X 4</td>
+						<td colspan="3" style="height: 135px; text-align: center;vertical-align:middle;">FOTO<br/>3 X 4</td>
 					</tr>
 					<tr>
-						<td>BATCH</td>
-						<td>&nbsp;:&nbsp;</td>
-						<td><?php echo $model->session->session_name ?></td>
+						<td style="font-size:11px;">BATCH</td>
+						<td style="font-size:11px;">&nbsp;:&nbsp;</td>
+						<td style="font-size:11px;"><?php echo $model->session->session_name ?></td>
 					</tr>
 					<tr>
-						<td>NO MEJA</td>
-						<td>&nbsp;:&nbsp;</td>
-						<td><?php echo $model->session_seat; ?></td>
+						<td style="font-size:12px;">NO MEJA</td>
+						<td style="font-size:12px;">&nbsp;:&nbsp;</td>
+						<td style="font-size:12px;"><?php echo $model->session_seat; ?></td>
 					</tr>
 				</table>
 			</td>
@@ -93,6 +95,7 @@
 			<td></td>
 		</tr>
 	</table>
+    </div>
 	
 
 <?php } ?>
