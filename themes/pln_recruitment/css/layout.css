@@ -86,10 +86,29 @@ header .account-menu ul li.active a {
 .body {
 	padding: 0 0 50px 0;
 }
+.body h1 {
+	padding: 20px 30px 20px 30px;
+	margin: 0 0 20px 0;
+	text-transform: uppercase;
+	font-size: 20px;
+	line-height: 22px;
+	font-weight: 600;
+	border-bottom: 1px solid #c9d0e1;
+}
 .body .container {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
+}
+.body .box-wrap {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: #fff;
+	border: 1px solid #c9d0e1;
+}
+.body .box-content {
+	padding: 30px 30px 40px 30px;	
 }
 
 /* =Content
