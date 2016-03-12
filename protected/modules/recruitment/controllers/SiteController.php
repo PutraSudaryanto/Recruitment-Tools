@@ -14,6 +14,7 @@
  *	Login
  *	Logout
  *	Manage
+ *	Scanner
  *
  *	LoadModel
  *	performAjaxValidation
@@ -70,7 +71,7 @@ class SiteController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage'),
+				'actions'=>array('manage','scanner'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level)',
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
@@ -248,6 +249,18 @@ class SiteController extends Controller
 			'model'=>$model,
 			'columns' => $columns,
 		));
+	}
+
+	/**
+	 * Manages all models.
+	 */
+	public function actionScanner() 
+	{
+
+		$this->pageTitle = 'Scanner';
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('front_scanner');
 	}
 
 	/**

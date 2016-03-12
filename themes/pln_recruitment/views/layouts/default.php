@@ -123,6 +123,12 @@ if(isset($_GET['protocol']) && $_GET['protocol'] == 'script') {
 	<?php //begin.Header ?>
 	<header>
 		<div class="container clearix">
+			<div class="mainmenu">
+				<ul class="clearfix">
+					<li <?php echo $currentAction == 'site/index' ? 'class="active"' : ''?>><a href="<?php echo Yii::app()->controller->createUrl('site/index');?>" title="Home">Home</a></li>
+					<li <?php echo $currentAction == 'site/scanner' ? 'class="active"' : ''?>><a href="<?php echo Yii::app()->controller->createUrl('site/scanner');?>" title="Scanner">Scanner</a></li>
+				</ul>
+			</div>
 			<div class="account-menu">
 				<ul class="clearfix">
 					<?php if(Yii::app()->user->isGuest) {
