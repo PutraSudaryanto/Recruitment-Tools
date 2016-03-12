@@ -337,7 +337,7 @@ class SessionuserController extends Controller
 		$criteria->compare('t.session_id',$session);		
 		$model = RecruitmentSessionUser::model()->findAll($criteria);
 		
-		$template = 'pln_cdugm19_document_test';
+		$template = 'document_test';
 		$path = YiiBase::getPathOfAlias('webroot.public.recruitment.document_test');
 		$documentName = Utility::getUrlTitle('documenttest'.$batch->session_name.' '.$batch->viewBatch->session_name);
 		$document = new RecruitmentSessionUser();
@@ -356,7 +356,7 @@ class SessionuserController extends Controller
 		
 		$batch = RecruitmentSessions::model()->findByPk($session);
 		
-		$template = 'pln_cdugm19_entrycard';
+		$template = 'entrycard';
 		$path = YiiBase::getPathOfAlias('webroot.public.recruitment.document_entrycard');
 		$documentName = Utility::getUrlTitle('entrycard_'.$batch->session_name.' '.$batch->viewBatch->session_name);		
 		$document = new RecruitmentSessionUser();
