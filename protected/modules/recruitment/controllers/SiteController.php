@@ -90,6 +90,7 @@ class SiteController extends Controller
 	 */
 	public function actionIndex() 
 	{
+		$this->redirect(array('manage'));
 		$setting = RecruitmentSetting::model()->findByPk(1,array(
 			'select' => 'meta_description, meta_keyword',
 		));
@@ -243,7 +244,7 @@ class SiteController extends Controller
 		$this->pageTitle = 'Recruitments Manage';
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_manage',array(
+		$this->render('front_manage',array(
 			'model'=>$model,
 			'columns' => $columns,
 		));
