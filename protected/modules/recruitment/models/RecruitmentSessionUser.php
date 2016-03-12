@@ -32,6 +32,8 @@
  * @property integer $creation_id
  * @property string $sendemail_date
  * @property integer $sendemail_id
+ * @property string $printcard_date
+ * @property integer $printcard_id
  *
  * The followings are the available model relations:
  * @property OmmuRecruitmentUsers $user
@@ -80,7 +82,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			array('session_seat', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, publish, user_id, event_user_id, session_id, session_seat, sendemail_status, creation_date, creation_id, sendemail_date, sendemail_id,
+			array('id, publish, user_id, event_user_id, session_id, session_seat, sendemail_status, creation_date, creation_id, sendemail_date, sendemail_id, printcard_date, printcard_id,
 				email_search, user_search, session_search, creation_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -121,6 +123,8 @@ class RecruitmentSessionUser extends CActiveRecord
 			'creation_search' => 'Creation',
 			'sendemail_date' => 'Sendemail Date',
 			'sendemail_id' => 'Sendemail',
+			'printcard_date' => 'Printcard Date',
+			'printcard_id' => 'Printcard',
 		);
 	}
 
@@ -198,6 +202,12 @@ class RecruitmentSessionUser extends CActiveRecord
 			$criteria->compare('t.sendemail_id',$_GET['sendemail']);
 		else
 			$criteria->compare('t.sendemail_id',$this->sendemail_id);
+		if($this->printcard_date != null && !in_array($this->printcard_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.printcard_date)',date('Y-m-d', strtotime($this->printcard_date)));
+		if(isset($_GET['printcard']))
+			$criteria->compare('t.printcard_id',$_GET['printcard']);
+		else
+			$criteria->compare('t.printcard_id',$this->printcard_id);
 		
 		// Custom Search
 		$criteria->with = array(
@@ -259,6 +269,8 @@ class RecruitmentSessionUser extends CActiveRecord
 			$this->defaultColumns[] = 'creation_id';
 			$this->defaultColumns[] = 'sendemail_date';
 			$this->defaultColumns[] = 'sendemail_id';
+			$this->defaultColumns[] = 'printcard_date';
+			$this->defaultColumns[] = 'printcard_id';
 		}
 
 		return $this->defaultColumns;
@@ -326,6 +338,14 @@ class RecruitmentSessionUser extends CActiveRecord
 				), true),
 			);
 			*/
+			$this->defaultColumns[] = array(
+				'header' => 'Print Card',
+				'value' => 'CHtml::link("Print Card", Yii::app()->controller->createUrl("o/sessionuser/printcard",array("id"=>$data->id)), array("target"=>"_blank"))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
+			);
 			$this->defaultColumns[] = array(
 				'header' => 'Send Email',
 				'value' => 'CHtml::link("Send Email", Yii::app()->controller->createUrl("o/sessionuser/sendemail",array("id"=>$data->id)))',
@@ -499,11 +519,12 @@ class RecruitmentSessionUser extends CActiveRecord
 	 * before validate attributes
 	 */
 	protected function beforeValidate() {
+		$controller = strtolower(Yii::app()->controller->id);
+		$currentAction = strtolower(Yii::app()->controller->id.'/'.Yii::app()->controller->action->id);
+		
 		if(parent::beforeValidate()) {			
 			if($this->isNewRecord)
 				$this->creation_id = Yii::app()->user->id;
-			else
-				$this->sendemail_id = Yii::app()->user->id;
 		}
 		return true;
 	}

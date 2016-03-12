@@ -11,6 +11,7 @@
  *	Index
  *	Manage
  *	SendEmail
+ *	PrintCard
  *	DocumentTest
  *	EntryCard
  *	Add
@@ -88,7 +89,7 @@ class SessionuserController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','sendemail','documenttest','entrycard','add','edit','runaction','delete','publish'),
+				'actions'=>array('manage','sendemail','printcard','documenttest','entrycard','add','edit','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -165,11 +166,33 @@ class SessionuserController extends Controller
 		$message = str_ireplace($search, $replace, $message);
 		$session = new RecruitmentSessionUser();
 		$attachment = $session->getPdf($model);
-		if(SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->session->blasting_subject, $message, 1, null, $attachment))
-			RecruitmentSessionUser::model()->updateByPk($model->id, array('sendemail_status'=>1));
+		if(SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->session->blasting_subject, $message, 1, null, $attachment)) {
+			RecruitmentSessionUser::model()->updateByPk($model->id, array(
+				'sendemail_status'=>1, 
+				'sendemail_id'=>Yii::app()->user->id,
+			));
+		}
 		
 		Yii::app()->user->setFlash('success', 'Send Email success.');
 		$this->redirect(Yii::app()->controller->createUrl('manage', array('session'=>$model->session_id)));
+		
+		ob_end_flush();
+	}
+
+	/**
+	 * Manages all models.
+	 */
+	public function actionPrintCard($id) 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();			
+		$model=$this->loadModel($id);
+		
+		echo $model->getPdf($model, true);
+		RecruitmentSessionUser::model()->updateByPk($model->id, array(
+			'printcard_date'=>date('Y-m-d H:i:s'), 
+			'printcard_id'=>Yii::app()->user->id,
+		));
 		
 		ob_end_flush();
 	}
