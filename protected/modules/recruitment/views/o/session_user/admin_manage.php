@@ -60,8 +60,10 @@
 	?>
 	</div>
 	<?php //begin.Messages ?>
-        <a class="button" href="<?php echo Yii::app()->createUrl('recruitment/o/batch/PrintParticipantCard', array('sessionid'=>$_GET['session'], 'barcodetype'=>'upca')) ?>" target="_blank">Print Kartu Peserta</a>
-
+        <a class="button" href="<?php echo Yii::app()->createUrl('recruitment/o/batch/PrintParticipantCard', array('sessionid'=>$_GET['session'], 'barcodetype'=>'upca')) ?>" target="_blank">Print Semua Kartu Peserta</a>
+       
+        <form target="_blank" action="<?php echo Yii::app()->controller->createUrl('manage')?>" method="POST">
+        <input type="hidden" name="session" value="<?php echo $_GET['session'] ?>" />
 	<div class="boxed">
 		<?php //begin.Grid Item ?>
 		<?php 
@@ -102,4 +104,8 @@
 		?>
 		<?php //end.Grid Item ?>
 	</div>
+        <?php echo CHtml::submitButton('Print Undangan Terpilih', array('name'=>'invitation_card')); ?>  
+       
+	<?php echo CHtml::submitButton('Print Kartu Peserta Terpilih', array('name'=>'participant_card')); ?>
+        </form>
 </div>

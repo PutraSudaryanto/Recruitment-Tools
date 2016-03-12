@@ -114,12 +114,43 @@ class SessionuserController extends Controller
 	 * Manages all models.
 	 */
 	public function actionManage() 
-	{
+	{            
+                
+		if(isset($_POST['invitation_card'])){
+                     
+			if($_POST['select_id'] != null) {
+                                
+                                $listId = implode(',', $_POST['select_id']);
+                                
+                                $model = RecruitmentSessionUser::model()->findAll(array(
+                                    'condition' => "id IN ($listId)"
+                                ));
+                                
+                                $fileName = time().'_all_in_one_print';
+                                
+                                $session = new RecruitmentSessionUser();
+                                $downloadFile = $session->getPdfInvitationAllInOne($model, false, null, null, $fileName);
+                                
+                                $this->redirect(array('../public/recruitment/user_pdf/'.$fileName.'.pdf'));
+			}
+		}
+                
+		if(isset($_POST['participant_card'])){
+			if($_POST['select_id'] != null){
+				$listId = implode(',', $_POST['select_id']);
+                                //recruitment/o/batch/PrintParticipantCard/sessionid/7/barcodetype/upca
+                                $url = Yii::app()->createUrl('recruitment/o/batch/PrintParticipantCard', 
+                                        array('sessionid'=>$_POST['session'], 'barcodetype'=>'upca', 'listid'=>$listId));
+				$this->redirect($url);
+			}
+		}
+            
 		$model=new RecruitmentSessionUser('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['RecruitmentSessionUser'])) {
 			$model->attributes=$_GET['RecruitmentSessionUser'];
 		}
+                
 
 		$columnTemp = array();
 		if(isset($_GET['GridColumn'])) {

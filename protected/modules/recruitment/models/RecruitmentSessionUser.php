@@ -256,15 +256,14 @@ class RecruitmentSessionUser extends CActiveRecord
 	 * Set default columns to display
 	 */
 	protected function afterConstruct() {
-		if(count($this->defaultColumns) == 0) {
-			/*
+		if(count($this->defaultColumns) == 0) {			
 			$this->defaultColumns[] = array(
 				'class' => 'CCheckBoxColumn',
 				'name' => 'id',
 				'selectableRows' => 2,
-				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
+				'checkBoxHtmlOptions' => array('name' => 'select_id[]')
 			);
-			*/
+			
 			$this->defaultColumns[] = array(
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
@@ -439,6 +438,60 @@ class RecruitmentSessionUser extends CActiveRecord
 	/**
 	 * Create pdf, save to disk and return the name with path
 	 */
+	public function getPdfInvitationAllInOne($models, $preview=false, $template=null, $path=null, $documentName=null, $page=null) 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		
+		Yii::import('ext.html2pdf.HTML2PDF');
+		Yii::import('ext.html2pdf._mypdf.MyPDF');	// classe mypdf
+		Yii::import('ext.html2pdf.parsingHTML');	// classe de parsing HTML
+		Yii::import('ext.html2pdf.styleHTML');		// classe de gestion des styles
+		
+		if($template == null)
+			$template = 'pln_cdugm19_pdf_invitation_all_in_one';
+		
+		include(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');		
+		$content  = ob_get_clean();
+		$fileName = '';
+		
+		try {
+			// initialisation de HTML2PDF
+			if($page == null)
+				$page = 'P';
+			$html2pdf = new HTML2PDF($page,'A4','en', false, 'ISO-8859-15', array(0, 0, 0, 0));
+
+			// affichage de la page en entier
+			$html2pdf->pdf->SetDisplayMode('fullpage');
+
+			// conversion
+			$html2pdf->writeHTML($content);
+			
+			if($path == null)
+				$path = YiiBase::getPathOfAlias('webroot.public.recruitment.user_pdf');
+			if($documentName == null)
+				$documentName = 'all_in_one_print';
+			
+			$fileName = $path.'/'.$documentName.'.pdf';
+			
+			if($preview == false)
+				$html2pdf->Output($fileName, 'F');
+			else
+				$html2pdf->Output($fileName);
+			@chmod($fileName, 0777);
+			
+		} catch(HTML2PDF_exception $e) {
+			echo $e;
+		}
+		
+		ob_end_flush();
+		return $fileName;
+	}
+        
+        
+	/**
+	 * Create pdf, save to disk and return the name with path
+	 */
 	public function getPdfParticipantCard($models, $developerMode=true) 
 	{
 		ini_set('max_execution_time', 0);
@@ -521,6 +574,7 @@ class RecruitmentSessionUser extends CActiveRecord
                 
                        
             }
-        }
+        }       
+    
 
 }

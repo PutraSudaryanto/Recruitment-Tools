@@ -315,6 +315,11 @@ class BatchController extends Controller
         public function actionPrintParticipantCard($sessionid, $barcodetype) {
             $criteria=new CDbCriteria;
             
+            if(isset($_GET['listid'])) {
+                $arrId = explode(',', $_GET['listid']);
+                $criteria->addInCondition('t.id', $arrId);
+            }            
+            
             $criteria->compare('t.publish',1);
             $criteria->compare('t.session_id', $sessionid);           
             $criteria->order = 'session_seat ASC';
