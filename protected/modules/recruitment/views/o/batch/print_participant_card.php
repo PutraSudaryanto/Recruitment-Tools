@@ -58,7 +58,7 @@
 					<tr>
 						<td>BIDANG</td>
 						<td>&nbsp;:&nbsp;</td>
-						<td><?php echo $model->eventUser->major; ?></td>
+						<td><?php echo $model->user->major; ?></td>
 					</tr>
 					<tr>
 						<td class="barcode" colspan="3">

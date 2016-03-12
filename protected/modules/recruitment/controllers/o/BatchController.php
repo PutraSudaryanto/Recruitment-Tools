@@ -184,7 +184,7 @@ class BatchController extends Controller
 								'select' => 'user_id, email',
 							));
 							if($user == null)
-								$userId = RecruitmentUsers::insertUser($email, $password, $displayname);
+								$userId = RecruitmentUsers::insertUser($email, $password, $displayname, $major);
 							else
 								$userId = $user->user_id;
 							
@@ -198,7 +198,7 @@ class BatchController extends Controller
 							));
 							//echo $model->recruitment_id.' '.$userId.' '.$test_number.' '.$password.' '.$major;
 							if($eventUser == null)
-								$eventUserId = RecruitmentEventUser::insertUser($model->recruitment_id, $userId, $test_number, $password, $major);
+								$eventUserId = RecruitmentEventUser::insertUser($model->recruitment_id, $userId, $test_number, $password);
 							else
 								$eventUserId = $eventUser->event_user_id;
 							
@@ -273,7 +273,7 @@ class BatchController extends Controller
 							'{$session_date}', '{$session_time_start}', '{$session_time_finish}');
 						$replace = array(
 							Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl,
-							$val->user->displayname, strtoupper($val->eventUser->test_number), $val->eventUser->major,
+							$val->user->displayname, strtoupper($val->eventUser->test_number), $val->user->major,
 							Utility::getLocalDayName($val->session->session_date, false), date('d', strtotime($val->session->session_date)), Utility::getLocalMonthName($val->session->session_date), date('Y', strtotime($val->session->session_date)),
 							$val->session->session_name, $val->session->session_time_start, $val->session->session_time_finish);
 						$template = 'pln_cdugm19_mail';

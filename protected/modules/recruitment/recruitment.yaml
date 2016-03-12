@@ -23,6 +23,10 @@ plugin_menu		:
 				urlRules: {siteType: 0, userLevel: 1,2}
 				urlPath: {url: o/batch/manage, attr: -, icon: -}
 				
+	- urlTitle: Scanner
+		urlRules: {siteType: 0, userLevel: 1,2}
+		urlPath: {url: o/scanner/manage, attr: -, icon: -}
+				
 	- urlTitle: Users
 		urlRules: {siteType: 0, userLevel: 1,2}
 		urlPath: {url: o/users/manage, attr: -, icon: -}
