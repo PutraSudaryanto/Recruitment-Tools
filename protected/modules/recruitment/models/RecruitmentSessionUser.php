@@ -34,6 +34,8 @@
  * @property integer $sendemail_id
  * @property string $printcard_date
  * @property integer $printcard_id
+ * @property string $scanner_date
+ * @property integer $scanner_id
  *
  * The followings are the available model relations:
  * @property OmmuRecruitmentUsers $user
@@ -82,7 +84,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			array('session_seat', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, publish, user_id, event_user_id, session_id, session_seat, sendemail_status, creation_date, creation_id, sendemail_date, sendemail_id, printcard_date, printcard_id,
+			array('id, publish, user_id, event_user_id, session_id, session_seat, sendemail_status, creation_date, creation_id, sendemail_date, sendemail_id, printcard_date, printcard_id, scanner_date, scanner_id,
 				email_search, user_search, session_search, creation_search, present', 'safe', 'on'=>'search'),
 		);
 	}
@@ -125,6 +127,8 @@ class RecruitmentSessionUser extends CActiveRecord
 			'sendemail_id' => 'Sendemail',
 			'printcard_date' => 'Printcard Date',
 			'printcard_id' => 'Printcard',
+			'scanner_date' => 'Scanner Date',
+			'scanner_id' => 'Scanner',
 		);
 	}
 
@@ -208,6 +212,12 @@ class RecruitmentSessionUser extends CActiveRecord
 			$criteria->compare('t.printcard_id',$_GET['printcard']);
 		else
 			$criteria->compare('t.printcard_id',$this->printcard_id);
+		if($this->scanner_date != null && !in_array($this->scanner_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.scanner_date)',date('Y-m-d', strtotime($this->scanner_date)));
+		if(isset($_GET['scanner']))
+			$criteria->compare('t.scanner_id',$_GET['scanner_id']);
+		else
+			$criteria->compare('t.scanner_id',$this->scanner_id);
 		
 		// Custom Search
 		$criteria->with = array(
@@ -271,6 +281,8 @@ class RecruitmentSessionUser extends CActiveRecord
 			$this->defaultColumns[] = 'sendemail_id';
 			$this->defaultColumns[] = 'printcard_date';
 			$this->defaultColumns[] = 'printcard_id';
+			$this->defaultColumns[] = 'scanner_date';
+			$this->defaultColumns[] = 'scanner_id';
 		}
 
 		return $this->defaultColumns;
@@ -464,8 +476,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		
 		ob_end_flush();
 		return $fileName;
-	}
-        
+	}        
         
 	/**
 	 * Create pdf, save to disk and return the name with path
@@ -565,8 +576,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		
 		ob_end_flush();
 		return $fileName;
-	}
-	
+	}	
 
 	/**
 	 * before validate attributes
@@ -581,36 +591,30 @@ class RecruitmentSessionUser extends CActiveRecord
 		}
 		return true;
 	}
-        
-        /**
-         * 
-         * @param type $sessionid
-         * @param type $type
-         * @param type $w
-         * @param type $h
-         */
-        public function generateBarcodeParticipant($model, $typeBarcode = 'upca', $widthBarcode=2, $hightBarcode=30) {
-            
-            Yii::import('ext.php-barcodes.DNS1DBarcode');	
-            foreach($model as $val) {
-                
-                $text = str_pad($val->session->recruitment_id, 2, '0', STR_PAD_LEFT).''.str_pad($val->session_id, 3, '0', STR_PAD_LEFT).''.str_pad($val->user_id, 6, '0', STR_PAD_LEFT);
-               
-                $barcode = new DNS1DBarcode();               
-                
-                $pathFolder = YiiBase::getPathOfAlias('webroot.public.recruitment.user_barcode_'.$typeBarcode).'/';
-                if(!file_exists($pathFolder)){
-                                mkdir($pathFolder, 0777);
-                                chmod($pathFolder, 0777);
-                }
-                if(!file_exists($pathFolder.$text.'.png')){
-                    $barcode->save_path=$pathFolder;
-                    $barcode->getBarcodePNGPath($text, $typeBarcode, $widthBarcode, $hightBarcode);       
-                }
-                
-                       
-            }
-        }       
-    
+	
+	/**
+	 * 
+	 * @param type $sessionid
+	 * @param type $type
+	 * @param type $w
+	 * @param type $h
+	 */
+	public function generateBarcodeParticipant($model, $typeBarcode = 'upca', $widthBarcode=2, $hightBarcode=30) 
+	{
+		Yii::import('ext.php-barcodes.DNS1DBarcode');	
+		foreach($model as $val) {
+			$text = str_pad($val->session->recruitment_id, 2, '0', STR_PAD_LEFT).''.str_pad($val->session_id, 3, '0', STR_PAD_LEFT).''.str_pad($val->user_id, 6, '0', STR_PAD_LEFT);
+			$barcode = new DNS1DBarcode();               			
+			$pathFolder = YiiBase::getPathOfAlias('webroot.public.recruitment.user_barcode_'.$typeBarcode).'/';
+			if(!file_exists($pathFolder)) {
+				mkdir($pathFolder, 0777);
+				chmod($pathFolder, 0777);
+			}
+			if(!file_exists($pathFolder.$text.'.png')) {
+				$barcode->save_path=$pathFolder;
+				$barcode->getBarcodePNGPath($text, $typeBarcode, $widthBarcode, $hightBarcode);       
+			}
+		}
+	}
 
 }
