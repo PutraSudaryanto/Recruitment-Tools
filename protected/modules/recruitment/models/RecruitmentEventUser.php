@@ -75,19 +75,15 @@ class RecruitmentEventUser extends CActiveRecord
 		return array(
 			array('publish, recruitment_id, user_id, test_number', 'required'),
 			array('publish', 'numerical', 'integerOnly'=>true),
-			array('newPassword, confirmPassword', 'required', 'on'=>'formAdd'),
+			array('
+				newPassword, confirmPassword', 'required', 'on'=>'formAdd'),
 			array('recruitment_id, user_id, creation_id', 'length', 'max'=>11),
 			array('salt, test_number, password', 'length', 'max'=>32),
 			//array('test_number', 'match', 'pattern' => '/^[a-zA-Z0-9_.-]{0,25}$/', 'message' => Yii::t('other', 'Nama user hanya boleh berisi karakter, angka dan karakter (., -, _)')),
-<<<<<<< HEAD
 			array('test_number,
 				newPassword, confirmPassword', 'safe'),
 			array('
 				newPassword', 'compare', 'compareAttribute' => 'confirmPassword', 'message' => 'Kedua password tidak sama2.'),
-=======
-			array('test_number, major, newPassword, confirmPassword', 'safe'),
-			array('newPassword', 'compare', 'compareAttribute' => 'confirmPassword', 'message' => 'Kedua password tidak sama2.'),
->>>>>>> 216ad996a28e0ef98a1292c835ea470f25a9e844
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('event_user_id, publish, recruitment_id, user_id, salt, test_number, password, creation_date, creation_id,
@@ -421,7 +417,7 @@ class RecruitmentEventUser extends CActiveRecord
 	protected function beforeSave() {
 		if(parent::beforeSave()) {
 			$this->test_number = strtolower($this->test_number);
-                        $this->password = self::hashPassword($this->salt, $this->newPassword);
+			$this->password = self::hashPassword($this->salt, $this->newPassword);
 		}
 		return true;	
 	}
