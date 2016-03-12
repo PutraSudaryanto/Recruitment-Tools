@@ -30,6 +30,8 @@
  * @property string $sendemail_status
  * @property string $creation_date
  * @property integer $creation_id
+ * @property string $sendemail_date
+ * @property integer $sendemail_id
  *
  * The followings are the available model relations:
  * @property OmmuRecruitmentUsers $user
@@ -78,7 +80,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			array('session_seat', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, publish, user_id, event_user_id, session_id, session_seat, sendemail_status, creation_date, creation_id,
+			array('id, publish, user_id, event_user_id, session_id, session_seat, sendemail_status, creation_date, creation_id, sendemail_date, sendemail_id,
 				email_search, user_search, session_search, creation_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -117,6 +119,8 @@ class RecruitmentSessionUser extends CActiveRecord
 			'user_search' => 'User',
 			'session_search' => 'Session',
 			'creation_search' => 'Creation',
+			'sendemail_date' => 'Sendemail Date',
+			'sendemail_id' => 'Sendemail',
 		);
 	}
 
@@ -188,6 +192,12 @@ class RecruitmentSessionUser extends CActiveRecord
 			$criteria->compare('t.creation_id',$_GET['creation']);
 		else
 			$criteria->compare('t.creation_id',$this->creation_id);
+		if($this->sendemail_date != null && !in_array($this->sendemail_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.sendemail_date)',date('Y-m-d', strtotime($this->sendemail_date)));
+		if(isset($_GET['sendemail']))
+			$criteria->compare('t.sendemail_id',$_GET['sendemail']);
+		else
+			$criteria->compare('t.sendemail_id',$this->sendemail_id);
 		
 		// Custom Search
 		$criteria->with = array(
@@ -247,6 +257,8 @@ class RecruitmentSessionUser extends CActiveRecord
 			$this->defaultColumns[] = 'sendemail_status';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
+			$this->defaultColumns[] = 'sendemail_date';
+			$this->defaultColumns[] = 'sendemail_id';
 		}
 
 		return $this->defaultColumns;
@@ -487,40 +499,39 @@ class RecruitmentSessionUser extends CActiveRecord
 	 * before validate attributes
 	 */
 	protected function beforeValidate() {
-		if(parent::beforeValidate()) {
-			$this->creation_id = Yii::app()->user->id;
+		if(parent::beforeValidate()) {			
+			if($this->isNewRecord)
+				$this->creation_id = Yii::app()->user->id;
+			else
+				$this->sendemail_id = Yii::app()->user->id;
 		}
 		return true;
 	}
-        
-        /**
-         * 
-         * @param type $sessionid
-         * @param type $type
-         * @param type $w
-         * @param type $h
-         */
-        public function generateBarcodeParticipant($model, $typeBarcode = 'upca', $widthBarcode=2, $hightBarcode=30) {
-            
-            Yii::import('ext.php-barcodes.DNS1DBarcode');	
-            foreach($model as $val) {
-                
-                $text = str_pad($val->session->recruitment_id, 2, '0', STR_PAD_LEFT).''.str_pad($val->session_id, 3, '0', STR_PAD_LEFT).''.str_pad($val->user_id, 6, '0', STR_PAD_LEFT);
-               
-                $barcode = new DNS1DBarcode();               
-                
-                $pathFolder = YiiBase::getPathOfAlias('webroot.public.recruitment.user_barcode_'.$typeBarcode).'/';
-                if(!file_exists($pathFolder)){
-                                mkdir($pathFolder, 0777);
-                                chmod($pathFolder, 0777);
-                }
-                if(!file_exists($pathFolder.$text.'.png')){
-                    $barcode->save_path=$pathFolder;
-                    $barcode->getBarcodePNGPath($text, $typeBarcode, $widthBarcode, $hightBarcode);       
-                }
-                
-                       
-            }
-        }
+
+	/**
+	 * 
+	 * @param type $sessionid
+	 * @param type $type
+	 * @param type $w
+	 * @param type $h
+	 */
+	public function generateBarcodeParticipant($model, $typeBarcode = 'upca', $widthBarcode=2, $hightBarcode=30) {
+		
+		Yii::import('ext.php-barcodes.DNS1DBarcode');	
+		foreach($model as $val) {
+			
+			$text = str_pad($val->session->recruitment_id, 2, '0', STR_PAD_LEFT).''.str_pad($val->session_id, 3, '0', STR_PAD_LEFT).''.str_pad($val->user_id, 6, '0', STR_PAD_LEFT);		   
+			$barcode = new DNS1DBarcode();
+			$pathFolder = YiiBase::getPathOfAlias('webroot.public.recruitment.user_barcode_'.$typeBarcode).'/';
+			if(!file_exists($pathFolder)) {
+				mkdir($pathFolder, 0777);
+				chmod($pathFolder, 0777);
+			}
+			if(!file_exists($pathFolder.$text.'.png')) {
+				$barcode->save_path=$pathFolder;
+				$barcode->getBarcodePNGPath($text, $typeBarcode, $widthBarcode, $hightBarcode);       
+			}
+		}
+	}
 
 }
