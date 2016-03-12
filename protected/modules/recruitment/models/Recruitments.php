@@ -335,7 +335,7 @@ class Recruitments extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'finish_date',
-				'value' => '$data->finish_date != "1970-01-01" ? Utility::dateFormat($data->finish_date) : "Permanent"',
+				'value' => '$data->finish_date != "1970-01-01" ? Utility::dateFormat($data->finish_date) : "Selesai"',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

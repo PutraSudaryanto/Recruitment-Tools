@@ -141,28 +141,62 @@ class ScannerController extends Controller
 	 */
 	public function actionManage() 
 	{
-		$model=new Recruitments('search');
-		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Recruitments'])) {
-			$model->attributes=$_GET['Recruitments'];
+		if($_POST['barcodeField'] != '') {
+			$barcode = $_POST['barcodeField'];
+			$eventId = (int)substr($barcode,0,2);
+			$batchId = (int)substr($barcode,2,3);
+			$userId = (int)substr($barcode,5,6);
+			//echo $eventId.' '.$batchId.' '.$userId;
+			
+			$eventUser = RecruitmentEventUser::model()->find(array(
+				'condition' => 'publish= :publish AND recruitment_id= :recruitment AND user_id= :user',
+				'params'    => array(
+					':publish' => 1,
+					':recruitment' => $eventId,
+					':user' => $userId,
+				),
+			));		
 		}
-
-		$columnTemp = array();
-		if(isset($_GET['GridColumn'])) {
-			foreach($_GET['GridColumn'] as $key => $val) {
-				if($_GET['GridColumn'][$key] == 1) {
-					$columnTemp[] = $key;
-				}
-			}
+		if($_POST['testnumberField'] != '') {
+			$eventUser = RecruitmentEventUser::model()->find(array(
+				'condition' => 'publish= :publish AND test_number= :test_number',
+				'params'    => array(
+					':publish' => 1,
+					':test_number' => strtolower(trim($_POST['testnumberField'])),
+				),
+			));
+			$eventId = $eventUser->recruitment_id;
+			$userId = $eventUser->user_id;
 		}
-		$columns = $model->getGridColumn($columnTemp);
-
-		$this->pageTitle = 'Recruitments Manage';
+		
+		$event = Recruitments::model()->findByPk($eventId);
+		$user = RecruitmentUsers::model()->findByPk($userId);
+		
+		$sessionActive = RecruitmentSessionUser::model()->find(array(
+			'with' => array(
+				'session' => array(
+					'alias'=>'session',
+				),
+			),
+			'condition' => 't.publish= :tpublish AND t.user_id= :user AND session.publish= :spublish AND session.session_date= :session_date AND session.recruitment_id= :recruitment',
+			'params'=> array(
+				':tpublish' => 1,
+				':user' => $userId,
+				':spublish' => 1,
+				':session_date' => date('Y-m-d'),
+				//':session_date' => '2016-03-14',
+				':recruitment' => $eventId,
+			),
+		));
+		
+		$this->pageTitle = 'Scanner';
 		$this->pageDescription = '';
 		$this->pageMeta = '';
-		$this->render('admin_manage',array(
-			'model'=>$model,
-			'columns' => $columns,
+		$this->render('admin_manage', array(
+			'event'=>$event,
+			'user'=>$user,
+			'eventUser'=>$eventUser,
+			'sessionActive'=>$sessionActive,
 		));
 	}
 
