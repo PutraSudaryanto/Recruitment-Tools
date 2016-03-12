@@ -195,15 +195,24 @@ class ScannerController extends Controller
 			));
 		}
 		
-		$this->pageTitle = 'Scanner';
-		$this->pageDescription = '';
-		$this->pageMeta = '';
-		$this->render('admin_manage', array(
-			'event'=>$event,
-			'user'=>$user,
-			'eventUser'=>$eventUser,
-			'sessionActive'=>$sessionActive,
-		));
+		if(!Yii::app()->request->isAjaxRequest) {
+			$this->pageTitle = 'Scanner';
+			$this->pageDescription = '';
+			$this->pageMeta = '';
+			$this->render('admin_manage', array(
+				'event'=>$event,
+				'user'=>$user,
+				'eventUser'=>$eventUser,
+				'sessionActive'=>$sessionActive,
+			));
+		} else {
+			$this->renderPartial('admin_manage', array(
+				'event'=>$event,
+				'user'=>$user,
+				'eventUser'=>$eventUser,
+				'sessionActive'=>$sessionActive,
+			));
+		}
 	}
 
 	/**
