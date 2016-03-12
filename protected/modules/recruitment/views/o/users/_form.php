@@ -42,7 +42,7 @@
 		<div class="clearfix">
 			<?php echo $form->labelEx($model,'email'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'email',array('maxlength'=>32)); ?>
+				<?php echo $form->textField($model,'email',array('maxlength'=>64)); ?>
 				<?php echo $form->error($model,'email'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
