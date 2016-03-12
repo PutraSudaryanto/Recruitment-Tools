@@ -63,7 +63,7 @@
 		Kepada Yth.<br/>
 		Sdr/ i. <?php echo $model->user->displayname; ?><br/>
 		<?php echo strtoupper($model->eventUser->test_number); ?><br/>
-		<?php echo $model->event->major; ?>
+		<?php echo $model->user->major; ?>
 	</div>
 			</td>
 			<td style="width: 50%; vertical-align: top; text-align: right; padding-right: 20px; padding-top: 30px;">
