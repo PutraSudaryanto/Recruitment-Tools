@@ -188,6 +188,12 @@ class ScannerController extends Controller
 				':recruitment' => $eventId,
 			),
 		));
+		if($sessionActive != null) {
+			RecruitmentSessionUser::model()->updateByPk($sessionActive->id, array(
+				'scanner_date'=>date('Y-m-d H:i:s'),
+				'scanner_id'=>Yii::app()->user->id,
+			));
+		}
 		
 		$this->pageTitle = 'Scanner';
 		$this->pageDescription = '';

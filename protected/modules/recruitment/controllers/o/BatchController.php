@@ -285,7 +285,7 @@ class BatchController extends Controller
 							RecruitmentSessionUser::model()->updateByPk($val->id, array(
 								'sendemail_status'=>1, 
 								'sendemail_id'=>Yii::app()->user->id,
-							));							
+							));
 						}
 						
 						if($i%50 == 0) {
