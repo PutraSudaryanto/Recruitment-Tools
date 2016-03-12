@@ -22,6 +22,9 @@ plugin_menu		:
 			- urlTitle: Batch
 				urlRules: {siteType: 0, userLevel: 1,2}
 				urlPath: {url: o/batch/manage, attr: -, icon: -}
+			- urlTitle: Event User
+				urlRules: {siteType: 0, userLevel: 1,2}
+				urlPath: {url: o/eventuser/manage, attr: -, icon: -}
 				
 	- urlTitle: Scanner
 		urlRules: {siteType: 0, userLevel: 1,2}

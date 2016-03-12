@@ -71,7 +71,7 @@ class SiteController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','scanner'),
+				'actions'=>array('manage','scanner','ScannerInput', 'getdatabarcode'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level)',
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
@@ -262,6 +262,64 @@ class SiteController extends Controller
 		$this->pageMeta = '';
 		$this->render('front_scanner');
 	}
+        
+        
+        
+	/**
+	 * Manages all models.
+	 */
+	public function actionScannerInput() 
+	{
+
+		$this->pageTitle = 'Scanner';
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('front_scanner_input');
+	}
+        
+	/**
+	 * Manages all models.
+	 */
+	public function actionGetDataBarcode() 
+	{
+
+		$this->pageTitle = 'Scanner';
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+                
+                //$text = str_pad($model->session->recruitment_id, 2, '0', STR_PAD_LEFT).''.str_pad($model->session_id, 3, '0', STR_PAD_LEFT).''.str_pad($model->user_id, 6, '0', STR_PAD_LEFT); 
+                //sample : 01007001660
+                $code = '01007001660';
+                if(isset($_POST['autocode'])) {
+                    $sessionId = (int) substr($_POST['autocode'], 2, 3);
+                    $userId = (int) substr($_POST['autocode'], 5, 6);
+                }
+                if(isset($_POST['code'])) {
+                    $sessionId = (int) substr($_POST['code'], 2, 3);
+                    $userId = (int) substr($_POST['code'], 5, 6);
+                }
+                
+                $model = RecruitmentSessionUser::model()->findByAttributes(array('user_id'=>$userId, 'session_id'=>$sessionId));
+                $result = array();
+                if($model != null) {
+                    
+                    RecruitmentSessionUser::model()->updateAll(array('present'=>1), 'user_id = '.$userId.' AND session_id = '.$sessionId);
+                    
+                    $result['found'] = 1;
+                    $result['sessionid'] = $sessionId;
+                    $result['userid'] = $userId;
+                    $result['message'] = $this->renderPartial('_view_data_barcode', array('model'=>$model), true, true);
+                    
+                }else {                    
+                    
+                    $result['found'] = 0;
+                    $result['sessionid'] = $sessionId;
+                    $result['userid'] = $userId;
+                    $result['message'] = '<span style="color:red;font-size:18px">Data tidak ditemukan</font>';
+                }
+                
+               echo CJSON::encode($result);
+	}
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
@@ -286,5 +344,6 @@ class SiteController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-	}
+	}        
+  
 }
