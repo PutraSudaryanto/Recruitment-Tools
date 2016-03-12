@@ -12,6 +12,7 @@
  *	Manage
  *	SendEmail
  *	PrintCard
+ *	RekapAbsensi
  *	DocumentTest
  *	EntryCard
  *	Add
@@ -89,7 +90,7 @@ class SessionuserController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','sendemail','printcard','documenttest','entrycard','add','edit','runaction','delete','publish'),
+				'actions'=>array('manage','sendemail','printcard','rekapabsensi','documenttest','entrycard','add','edit','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -292,6 +293,31 @@ class SessionuserController extends Controller
 			'printcard_date'=>date('Y-m-d H:i:s'), 
 			'printcard_id'=>Yii::app()->user->id,
 		));
+		
+		ob_end_flush();
+	}
+
+	/**
+	 * Manages all models.
+	 */
+	public function actionRekapAbsensi($session) 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		
+		$batch = RecruitmentSessions::model()->findByPk($session);
+		
+		$criteria=new CDbCriteria;
+		$criteria->compare('t.publish',1);
+		$criteria->compare('t.session_id',$session);
+		//$criteria->limit = 10;
+		$model = RecruitmentSessionUser::model()->findAll($criteria);
+		
+		$template = 'rekap_absensi';
+		$path = YiiBase::getPathOfAlias('webroot.public.recruitment.document_test');
+		$documentName = Utility::getUrlTitle('rekapabsensi'.$batch->session_name.' '.$batch->viewBatch->session_name);
+		$document = new RecruitmentSessionUser();
+		echo $document->getPdf($model, true, $template, $path, $documentName);
 		
 		ob_end_flush();
 	}

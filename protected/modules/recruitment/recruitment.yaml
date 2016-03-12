@@ -91,3 +91,7 @@ content_menu	:
 	- urlTitle: Download Entry Card
 		urlRules: {recruitment, o/sessionuser, manage, siteType: 0, userLevel: 1,2}
 		urlPath: {url: o/sessionuser/entrycard, attr: session=$_GET*session, icon: -}
+
+	- urlTitle: Download Rekap Absensi
+		urlRules: {recruitment, o/sessionuser, manage, siteType: 0, userLevel: 1,2}
+		urlPath: {url: o/sessionuser/rekapabsensi, attr: session=$_GET*session, icon: -}

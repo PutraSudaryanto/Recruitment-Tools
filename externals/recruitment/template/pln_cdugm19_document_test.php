@@ -107,7 +107,7 @@
 					<tr>
 						<td>BIDANG</td>
 						<td>&nbsp;:&nbsp;</td>
-						<td><?php echo strtoupper($val->eventUser->major); ?></td>
+						<td><?php echo strtoupper($val->user->major); ?></td>
 					</tr>
 				</table>
 			</td>
