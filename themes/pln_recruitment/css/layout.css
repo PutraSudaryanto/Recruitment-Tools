@@ -54,6 +54,7 @@ header {
 }
 header .mainmenu {
 	float: left;
+	display: none;
 }
 header .mainmenu ul,
 header .account-menu ul {
@@ -112,6 +113,7 @@ header .mainmenu ul li.active:hover a {
 /* Account Menu */
 header .account-menu {
 	float: right;
+	display: none;
 }
 
 header .account-menu ul li a {

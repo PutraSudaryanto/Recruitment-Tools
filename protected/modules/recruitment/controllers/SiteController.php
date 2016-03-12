@@ -91,7 +91,7 @@ class SiteController extends Controller
 	 */
 	public function actionIndex() 
 	{
-		$this->redirect(array('manage'));
+		$this->redirect(array('about'));
 		$setting = RecruitmentSetting::model()->findByPk(1,array(
 			'select' => 'meta_description, meta_keyword',
 		));
