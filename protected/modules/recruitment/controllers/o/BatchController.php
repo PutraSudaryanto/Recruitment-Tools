@@ -281,8 +281,12 @@ class BatchController extends Controller
 						$message = str_ireplace($search, $replace, $message);
 						$session = new RecruitmentSessionUser();
 						$attachment = $session->getPdf($val);
-						if(SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, $batch->blasting_subject, $message, 1, null, $attachment))
-							RecruitmentSessionUser::model()->updateByPk($val->id, array('sendemail_status'=>1));
+						if(SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, $batch->blasting_subject, $message, 1, null, $attachment)) {
+							RecruitmentSessionUser::model()->updateByPk($val->id, array(
+								'sendemail_status'=>1, 
+								'sendemail_id'=>Yii::app()->user->id,
+							));							
+						}
 						
 						if($i%50 == 0) {
 							$event = $val->session->session_name.' '.$val->session->viewBatch->session_name.' '.$val->session->recruitment->event_name;
