@@ -24,11 +24,15 @@ $(document).ready(function() {
 		var barcode = $(this).find('input[name="barcodeField"]').val();
 		var testnumber = $(this).find('input[name="testnumberField"]').val();
 		
+		loadingShow();
+		
 		$.ajax({
 			type: method,
 			url: url,
 			data: { barcodeField: barcode, testnumberField: testnumber},
 			success: function(response) {
+				loadingHidden();
+				
 				$('.search-result #result').html(response);
 				clearInput('form[action="'+url+'"]');
 				$('input[name="barcodeField"]').focus();
