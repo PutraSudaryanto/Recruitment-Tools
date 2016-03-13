@@ -39,40 +39,89 @@ header {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
-	width: 900px;
+	width: 950px;
 	margin: 0 auto;
+}
+.search-form,
+.grid-form {
+	display: none;
 }
 
 /* =Header
 -------------------------------------------------------------- */
 header {
-	padding: 30px 0 30px 0;
+	padding: 30px 0 15px 0;
 }
-
-/* Account Menu */
-header .account-menu {
-	float: right;
+header .mainmenu {
+	float: left;
+	display: none;
 }
+header .mainmenu ul,
 header .account-menu ul {
 	display: block;
 	margin: 0 0 0 0;
 	padding: 0 0 0 0;
 	list-style: none;
 }
+header .mainmenu ul li,
 header .account-menu ul li {
 	float: left;
+	margin: 0 15px 0 0;
 }
+header .mainmenu ul li {
+	position: relative;
+}
+header .mainmenu ul li:before {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	position: absolute;
+	left: 0;
+	bottom: -1px;
+	content: '';
+	border-bottom: 2px solid #54aca9;
+}
+header .mainmenu ul li:hover:before,
+header .mainmenu ul li.active:before,
+header .mainmenu ul li.active:hover:before {
+	display: block;
+	width: 100%;	
+}
+header .mainmenu ul li:last-child,
+header .account-menu ul li:last-child {
+	margin: 0 0 0 0;
+}
+header .mainmenu ul li a,
+header .account-menu ul li a {
+	display: block;
+	padding: 10px 15px;
+	text-transform: uppercase;
+	font-weight: 600;
+	text-decoration: none;	
+}
+header .mainmenu ul li a {
+	border: 1px solid transparent;
+	border-bottom: 1px solid #c9d0e1;
+	padding: 10px 15px 10px 5px;
+}
+header .mainmenu ul li:hover a,
+header .mainmenu ul li.active a,
+header .mainmenu ul li.active:hover a {
+	color: #333;
+}
+
+/* Account Menu */
+header .account-menu {
+	float: right;
+	display: none;
+}
+
 header .account-menu ul li a {
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
-	display: block;
-	text-transform: uppercase;
 	border: 1px solid #c9d0e1;
-	padding: 10px 15px;
 	color: #a5abc5;
-	font-weight: 600;
-	text-decoration: none;
 }
 header .account-menu ul li a:hover,
 header .account-menu ul li.active a {

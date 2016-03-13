@@ -122,7 +122,7 @@ class RecruitmentUsers extends CActiveRecord
 			'salt' => 'Salt',
 			'email' => 'Email',
 			'password' => 'Password',
-			'displayname' => 'Displayname',
+			'displayname' => 'Display Name',
 			'photos' => 'Photos',
 			'creation_date' => 'Creation Date',
 			'creation_ip' => 'Creation Ip',
