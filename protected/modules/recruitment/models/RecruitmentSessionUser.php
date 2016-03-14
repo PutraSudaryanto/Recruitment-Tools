@@ -320,7 +320,13 @@ class RecruitmentSessionUser extends CActiveRecord
 				'name' => 'session_search',
 				'value' => '$data->session->session_name',
 			);
-			$this->defaultColumns[] = 'session_seat';
+			$this->defaultColumns[] = array(
+				'name' => 'session_seat',
+				'value' => '$data->session_seat',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+			);
 			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',

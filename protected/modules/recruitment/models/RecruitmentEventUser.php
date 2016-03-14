@@ -44,6 +44,7 @@ class RecruitmentEventUser extends CActiveRecord
 	// Variable Search
 	public $recruitment_search;
 	public $user_search;
+	public $email_search;
 	public $creation_search;
 
 	/**
@@ -87,7 +88,7 @@ class RecruitmentEventUser extends CActiveRecord
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('event_user_id, publish, recruitment_id, user_id, salt, test_number, password, creation_date, creation_id,
-				recruitment_search, user_search, creation_search', 'safe', 'on'=>'search'),
+				recruitment_search, user_search, email_search, creation_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -124,6 +125,7 @@ class RecruitmentEventUser extends CActiveRecord
 			'confirmPassword' => 'Confirm Password',
 			'recruitment_search' => 'Recruitment',
 			'user_search' => 'User',
+			'email_search' => 'Email',
 			'creation_search' => 'Creation',
 		);
 	}
@@ -183,7 +185,7 @@ class RecruitmentEventUser extends CActiveRecord
 			),
 			'user' => array(
 				'alias'=>'user',
-				'select'=>'displayname'
+				'select'=>'email, displayname'
 			),
 			'creation' => array(
 				'alias'=>'creation',
@@ -192,6 +194,7 @@ class RecruitmentEventUser extends CActiveRecord
 		);
 		$criteria->compare('recruitment.event_name',strtolower($this->recruitment_search), true);
 		$criteria->compare('user.displayname',strtolower($this->user_search), true);
+		$criteria->compare('user.email',strtolower($this->email_search), true);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 
 		if(!isset($_GET['RecruitmentEventUser_sort']))
@@ -262,7 +265,12 @@ class RecruitmentEventUser extends CActiveRecord
 				'name' => 'user_search',
 				'value' => '$data->user->displayname',
 			);
+			$this->defaultColumns[] = array(
+				'name' => 'email_search',
+				'value' => '$data->user->email',
+			);
 			$this->defaultColumns[] = 'test_number';
+			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
 				'value' => '$data->creation->displayname',
@@ -293,6 +301,7 @@ class RecruitmentEventUser extends CActiveRecord
 					),
 				), true),
 			);
+			*/
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'publish',

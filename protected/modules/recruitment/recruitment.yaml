@@ -11,7 +11,11 @@ db_table_name	:
  
 db_sql_filename	: 
 
-plugin_menu		:
+plugin_menu		:				
+	- urlTitle: Scanner
+		urlRules: {siteType: 0, userLevel: 1,2}
+		urlPath: {url: o/scanner/manage, attr: -, icon: -}
+		
 	- urlTitle: Event
 		urlRules: {siteType: 0, userLevel: 1,2}
 		urlPath: {url: o/admin/manage, attr: -, icon: -}
@@ -22,17 +26,17 @@ plugin_menu		:
 			- urlTitle: Batch
 				urlRules: {siteType: 0, userLevel: 1,2}
 				urlPath: {url: o/batch/manage, attr: -, icon: -}
-			- urlTitle: Event User
-				urlRules: {siteType: 0, userLevel: 1,2}
-				urlPath: {url: o/eventuser/manage, attr: -, icon: -}
-				
-	- urlTitle: Scanner
-		urlRules: {siteType: 0, userLevel: 1,2}
-		urlPath: {url: o/scanner/manage, attr: -, icon: -}
 				
 	- urlTitle: Users
 		urlRules: {siteType: 0, userLevel: 1,2}
 		urlPath: {url: o/users/manage, attr: -, icon: -}
+		submenu :
+			- urlTitle: Event User
+				urlRules: {siteType: 0, userLevel: 1,2}
+				urlPath: {url: o/eventuser/manage, attr: -, icon: -}
+			- urlTitle: Session User
+				urlRules: {siteType: 0, userLevel: 1,2}
+				urlPath: {url: o/sessionuser/manage, attr: -, icon: -}
 				
 	- urlTitle: Setting
 		urlRules: {siteType: 0, userLevel: 1,2}
@@ -101,7 +105,7 @@ content_menu	:
 		submenu :
 			- urlTitle: Rekap Absensi
 				urlRules: {recruitment, o/sessionuser, manage, siteType: 0, userLevel: 1,2}
-				urlPath: {url: o/sessionuser/rekapabsensi, attr: session=$_GET*session, icon: -}
+				urlPath: {url: o/sessionuser/absenrecap, attr: session=$_GET*session, icon: -}
 			- urlTitle: Reset Absensi
 				urlRules: {recruitment, o/sessionuser, manage, siteType: 0, userLevel: 1,2}
-				urlPath: {url: o/sessionuser/resetabsensi, attr: session=$_GET*session, icon: -}
+				urlPath: {url: o/sessionuser/absenreset, attr: session=$_GET*session, icon: -}
