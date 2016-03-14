@@ -95,7 +95,7 @@ class RecruitmentSessions extends CActiveRecord
 			array('recruitment_id, parent_id, document_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('session_name, session_code', 'length', 'max'=>32),
 			array('blasting_subject', 'length', 'max'=>64),
-			array('session_date, session_time_start, session_time_finish,
+			array('session_date, session_time_start, session_time_finish, blasting_subject, blasting_status,
 				pageItem', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
@@ -322,8 +322,7 @@ class RecruitmentSessions extends CActiveRecord
 	 */
 	protected function afterConstruct() {
 		if(count($this->defaultColumns) == 0) {
-			$controller = strtolower(Yii::app()->controller->id);
-			
+			$controller = strtolower(Yii::app()->controller->id);			
 			/*
 			$this->defaultColumns[] = array(
 				'class' => 'CCheckBoxColumn',
@@ -563,18 +562,18 @@ class RecruitmentSessions extends CActiveRecord
 		$controller = strtolower(Yii::app()->controller->id);
 		$currentAction = strtolower(Yii::app()->controller->id.'/'.Yii::app()->controller->action->id);
 		
-		if($currentAction == 'o/session/blast') {
+		if(!$this->isNewRecord) {
 			$data = self::getSession($this->session_id, null, 'data');
 			if($data != null) {
 				foreach($data as $val) {
 					$batch = self::model()->findByPk($val->session_id);
 					$batch->session_date = $this->session_date;
-					if($this->blasting_status == 1) {
+					if($currentAction == 'o/session/blast') {
 						if($val->blasting_subject == '')
 							$batch->blasting_subject = $this->blasting_subject;
-						$batch->blasting_status = $this->blasting_status;
+						$batch->blasting_status = 1;
 					}
-					$batch->update();
+					$batch->save();			
 				}
 			}
 		}

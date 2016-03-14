@@ -146,6 +146,7 @@ class ScannerController extends Controller
 			$eventId = (int)substr($barcode,0,2);
 			$batchId = (int)substr($barcode,2,3);
 			$userId = (int)substr($barcode,5,6);
+			$scanner = substr($barcode,11,1);
 			//echo $eventId.' '.$batchId.' '.$userId;
 			
 			$eventUser = RecruitmentEventUser::model()->find(array(
@@ -189,10 +190,19 @@ class ScannerController extends Controller
 			),
 		));
 		if($sessionActive != null) {
-			RecruitmentSessionUser::model()->updateByPk($sessionActive->id, array(
-				'scanner_status'=>1,
-				'scanner_id'=>Yii::app()->user->id,
-			));
+			if($scanner != null) {
+				RecruitmentSessionUser::model()->updateByPk($sessionActive->id, array(
+					'scanner_status'=>1,
+					'scanner_field'=>1,
+					'scanner_id'=>Yii::app()->user->id,
+				));
+				
+			} else {
+				RecruitmentSessionUser::model()->updateByPk($sessionActive->id, array(
+					'scanner_status'=>1,
+					'scanner_id'=>Yii::app()->user->id,
+				));
+			}
 		}
 		
 		if(!Yii::app()->request->isAjaxRequest) {
