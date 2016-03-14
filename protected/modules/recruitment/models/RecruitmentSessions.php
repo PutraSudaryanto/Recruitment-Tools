@@ -35,6 +35,9 @@
  * @property integer $blasting_status
  * @property string $blasting_date
  * @property string $blasting_id
+ * @property string $documents
+ * @property string $document_date
+ * @property integer $document_id
  * @property string $creation_date
  * @property string $creation_id
  * @property string $modified_date
@@ -86,13 +89,13 @@ class RecruitmentSessions extends CActiveRecord
 			array('parent_id', 'required', 'on'=>'batchForm'),
 			array('blasting_subject', 'required', 'on'=>'blastForm'),
 			array('publish', 'numerical', 'integerOnly'=>true),
-			array('recruitment_id, parent_id, creation_id, modified_id', 'length', 'max'=>11),
+			array('recruitment_id, parent_id, document_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('session_name, session_code', 'length', 'max'=>32),
 			array('blasting_subject', 'length', 'max'=>64),
 			array('session_date, session_time_start, session_time_finish', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, session_code, session_date, session_time_start, session_time_finish, blasting_subject, blasting_status, blasting_date, blasting_id, creation_date, creation_id, modified_date, modified_id,
+			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, session_code, session_date, session_time_start, session_time_finish, blasting_subject, blasting_status, blasting_date, blasting_id, documents, document_date, document_id, creation_date, creation_id, modified_date, modified_id,
 				recruitment_search, session_search, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -133,7 +136,10 @@ class RecruitmentSessions extends CActiveRecord
 			'blasting_subject' => 'Blasting Subject',
 			'blasting_status' => 'Blasting',
 			'blasting_date' => 'Blasting Date',
-			'blasting_id' => 'Blasting Id',
+			'blasting_id' => 'Blasting',
+			'documents' => 'Documents',
+			'document_date' => 'Documents Date',
+			'document_id' => 'Documents',
 			'creation_date' => 'Creation Date',
 			'creation_id' => 'Creation',
 			'modified_date' => 'Modified Date',
@@ -203,6 +209,13 @@ class RecruitmentSessions extends CActiveRecord
 			$criteria->compare('t.blasting_id',$_GET['blasting']);
 		else
 			$criteria->compare('t.blasting_id',$this->blasting_id);
+		$criteria->compare('t.documents',strtolower($this->documents),true);
+		if($this->document_date != null && !in_array($this->document_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.document_date)',date('Y-m-d', strtotime($this->document_date)));
+		if(isset($_GET['document']))
+			$criteria->compare('t.document_id',$_GET['document']);
+		else
+			$criteria->compare('t.document_id',$this->document_id);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if(isset($_GET['creation']))
@@ -287,6 +300,9 @@ class RecruitmentSessions extends CActiveRecord
 			$this->defaultColumns[] = 'blasting_status';
 			$this->defaultColumns[] = 'blasting_date';
 			$this->defaultColumns[] = 'blasting_id';
+			$this->defaultColumns[] = 'documents';
+			$this->defaultColumns[] = 'document_date';
+			$this->defaultColumns[] = 'document_id';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
 			$this->defaultColumns[] = 'modified_date';

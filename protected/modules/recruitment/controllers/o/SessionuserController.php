@@ -301,26 +301,64 @@ class SessionuserController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionDocumentTest($session) 
+	public function actionDocumentTest($session, $pageitem=null) 
 	{
 		ini_set('max_execution_time', 0);
 		ob_start();
 		
-		$batch = RecruitmentSessions::model()->findByPk($session);
+		$batch = RecruitmentSessions::model()->findByPk($session);		
+		$itemCount = $batch->viewBatch->users;
 		
-		$criteria=new CDbCriteria;
-		$criteria->compare('t.publish',1);
-		$criteria->compare('t.session_id',$session);	
-		$criteria->limit = 10;
-		$model = RecruitmentSessionUser::model()->findAll($criteria);
-		
-		$template = 'document_test';
-		$path = YiiBase::getPathOfAlias('webroot.public.recruitment.document_test');
-		$documentName = Utility::getUrlTitle('document_test_'.$batch->session_name.' '.$batch->viewBatch->session_name.' '.$batch->recruitment->event_name);
-		$document = new RecruitmentSessionUser();
-		echo $document->getPdf($model, true, $template, $path, $documentName, 'L');
+		if(isset($_POST['pageItem'])) {
+			if($_POST['pageItem'] != '') {
+				$pageitem = $_POST['pageItem'];				
+				$pageSize = $pageitem >= $itemCount ? $itemCount : $pageitem ;
+				$pageCount = $itemCount >= $pageSize ? ($itemCount%$pageSize === 0 ? (int)($itemCount/$pageSize) : (int)($itemCount/$pageSize)+1) : 1;
+				
+				$template = 'document_test';
+				$path = YiiBase::getPathOfAlias('webroot.public.recruitment.document_test');
+				
+				$documentArray = array();
+				for ($i = 1; $i <= $pageCount; $i++) {
+					$offset = (int)($i-1)*$pageSize;
+				
+					$criteria=new CDbCriteria;
+					$criteria->compare('t.publish',1);
+					$criteria->compare('t.session_id',$session);	
+					$criteria->limit = $pageSize;
+					$criteria->offset = $offset;
+					$model = RecruitmentSessionUser::model()->findAll($criteria);
+					
+					$documentName = Utility::getUrlTitle('document_test_'.$batch->session_name.' '.$batch->viewBatch->session_name.' '.$batch->recruitment->event_name.'_'.str_pad($i, 3, '0', STR_PAD_LEFT));
+					$document = new RecruitmentSessionUser();
+					$fileName = $document->getPdf($model, false, $template, $path, $documentName, 'L', false);
+					array_push($documentArray, $fileName);
+				}
+				RecruitmentSessions::model()->updateByPk($session, array(
+					'documents'=>implode(',', $documentArray),
+					'document_id'=>Yii::app()->user->id,
+				));
+				
+				Yii::app()->user->setFlash('success', 'Generate Document Test Success.');
+				$this->redirect(Yii::app()->controller->createUrl('documenttest', array('session'=>$session)));
+				
+			} else
+				Yii::app()->user->setFlash('errorPageItem', 'Page Item cannot be blank.');
+		}
 		
 		ob_end_flush();
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage', array('session'=>$session));
+		$this->dialogWidth = 600;
+
+		$this->pageTitle = 'Download Document Test';
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('/o/session_user/admin_document',array(
+			'batch'=>$batch,
+			'itemCount'=>$itemCount,
+		));
 	}
 
 	/**
@@ -336,7 +374,7 @@ class SessionuserController extends Controller
 		$criteria=new CDbCriteria;
 		$criteria->compare('t.publish',1);
 		$criteria->compare('t.session_id',$session);
-		//$criteria->limit = 10;
+		//$criteria->limit = 4;
 		$model = RecruitmentSessionUser::model()->findAll($criteria);
 		
 		$template = 'entry_card';

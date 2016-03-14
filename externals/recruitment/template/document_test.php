@@ -9,25 +9,19 @@
 	article, aside, details, figcaption, figure, footer, header,
 	hgroup, nav, section {
 		color: #111; 
-		font-size: 18px; 
-		line-height: 24px;
+		font-size: 15px; 
+		line-height: 20px;
 		font-weight: 400;
 	}
 	html {width: 297; height: 210mm;}	
 	a {color: blue;}
-	table.event td {
-		vertical-align: top;
-		padding-top: 0;
-		padding-bottom: 5px;
-		padding-right: 10px;
-	}
 	table.list {
 		border-spacing: 0;
 		border-collapse: collapse;
 	}
 	table.list th {
 		border: none;
-		padding: 8px 0;
+		padding: 0 20px 20px 20px;
 		border-bottom: 1px solid #000;
 	}
 	table.list td {
@@ -36,24 +30,27 @@
 		vertical-align: middle;
 		text-align: center;
 	}
-	table.list .title-score td {
-		padding: 3px;
-		width: 100px;
+	table.list td.user {
+		padding: 10px 10px 10px 10px;		
 	}
-	table.list .score td {
-		text-align: left;
-		height: 60px;
-		font-size: 14px;
-		vertical-align: top;
-		padding: 5px;
-	}
-	table.user {
-	}
-	table.user td {
+	table.list td.user table td {
+		padding: 0 10px 2px 0;
 		border: none;
 		text-align: left;
-		padding: 5px 0;
+		font-size: 18px;
+		line-height: 18px;
 	}
+	table.list tr.title-score td {
+		padding: 7px 10px;
+	}
+	table.list tr.score td {
+		vertical-align: top;
+		text-align: left;
+		padding-top: 5px;
+		font-size: 13px;
+		line-height: 17px;
+	}
+	
 	div.copyright,
 	div.copyright * {
 		font-size: 12px;
@@ -70,30 +67,40 @@
 	}
 </style>
 
-<page backtop="10mm" backbottom="10mm" backleft="12mm" backright="12mm" style="font-size: 12pt">
+<page backtop="5mm" backbottom="5mm" backleft="10mm" backright="10mm" style="font-size: 12pt">
 <div class="member-card">
 	
 <?php if($model != null) {
+	$session = $model[0]->session->recruitment->view->sessions;
+	$column = 2+$session;
+	if($column%2 == 0)
+		$LColspan = $RColspan = $column/2;
+	else {
+		$LColspan = (int)($column/2);
+		$RColspan = $LColspan+1;
+	}
+	$sessionPublish = $model[0]->session->recruitment->sessionPublish;
+	
 	$i = 0;
-	$documentCount = count($model);
+	$document = count($model);
 	foreach($model as $key => $val) {
 	$i++;
 	if($i == 1) {?>
-		<table class="list" style="width: 100%;">
+		<table class="list" style="width: 100%; border: 1px solid #ff0000;">
 	<?php }?>
 		<tr>
-			<th colspan="4" style="width: 50%;">
-				<img src="<?php echo YiiBase::getPathOfAlias('webroot'); ?>/externals/recruitment/images/pln-logo.png" />
+			<th colspan="<?php echo $LColspan;?>" style="width: 50%;">
+				<img style="height: 100px;" src="<?php echo YiiBase::getPathOfAlias('webroot.externals.recruitment.images').'/'?>logo_pln.png" alt="">
 			</th>
-			<th colspan="4" style="width: 50%; text-align: right;">
-				<img src="<?php echo YiiBase::getPathOfAlias('webroot'); ?>/externals/recruitment/images/logo-ecc.png" />
+			<th colspan="<?php echo $RColspan;?>" style="width: 50%; text-align: right;">
+				<img style="height: 100px;" src="<?php echo YiiBase::getPathOfAlias('webroot.externals.recruitment.images').'/'?>ecc_logo.jpg" alt="">
 			</th>
 		</tr>
 		<tr>
 			<td rowspan="3"><?php echo $val->session_seat; ?></td>
-			<td rowspan="3" style="width: 50px;"><span>FOTO<br/>3 x 4</span></td>
-			<td colspan="6" style="text-align: left;">
-				<table class="user">
+			<td rowspan="3" style="width: 80px;"><span>FOTO<br/>3 x 4</span></td>
+			<td colspan="<?php echo $session;?>" class="user" style="text-align: left;">
+				<table>
 					<tr>
 						<td>NAMA</td>
 						<td>&nbsp;:&nbsp;</td>
@@ -113,29 +120,28 @@
 			</td>
 		</tr>
 		<tr class="title-score">
-			<td>TES<br/>INTELEGENSI</td>
-			<td>TES<br/>AKD-ING</td>
-			<td>PSIKOTES</td>
-			<td>TES FISIK</td>
-			<td>TES LAB & <br/>PENUNJANG</td>
-			<td>WAWANCARA</td>
+			<?php foreach($sessionPublish as $key => $row) {?>
+				<td style=""><?php echo strtoupper($row->session_code);?></td>
+			<?php }?>
 		</tr>
 		<tr class="score">
-			<td>Tanggal :</td>
-			<td>Tanggal :</td>
-			<td>Tanggal :</td>
-			<td>Tanggal :</td>
-			<td>Tanggal :</td>
-			<td>Tanggal :</td>
+			<?php foreach($sessionPublish as $key => $row) {
+				$date = !in_array($row->session_date, array('0000-00-00','1970-01-01')) ? date('d', strtotime($row->session_date))." ".Utility::getLocalMonthName($row->session_date)." ".date('Y', strtotime($row->session_date)) : '';?>
+				<td style="width: 30px; height: 60px;">Tanggal : <?php echo $date;?></td>
+			<?php }?>
 		</tr>
+		<?php if($i%2 != 0) {?>
 		<tr>
-			<td colspan="8" style="border: none;">&nbsp;</td>
+			<td colspan="8" style="height: 30px; vertical-align: middle; text-align: center; color: #bbb; padding-top: 10px; border: none;">
+				-----------------------------------------------------------------------------------------------------------------------
+			</td>
 		</tr>
+		<?php }?>
 	<?php if($i%2 == 0) {?>
 		</table>
-		<table class="list" style="width: 100%;">
+		<table class="list" style="width: 100%; border: 1px solid #ff0000;">
 	<?php }
-	if($i == $documentCount) {?>
+	if($i == $document) {?>
 		</table>
 	<?php }
 	}

@@ -438,7 +438,7 @@ class RecruitmentSessionUser extends CActiveRecord
 	/**
 	 * Create pdf, save to disk and return the name with path
 	 */
-	public function getPdf($model, $preview=false, $template=null, $path=null, $documentName=null, $page=null) 
+	public function getPdf($model, $preview=false, $template=null, $path=null, $documentName=null, $page=null, $returnIsPath=true)
 	{
 		ini_set('max_execution_time', 0);
 		ob_start();
@@ -482,20 +482,24 @@ class RecruitmentSessionUser extends CActiveRecord
 			} else
 				@chmod($path, 0755, true);
 			
-			$fileName = $path.'/'.time().'_'.$documentName.'.pdf';
+			$fileName = time().'_'.$documentName.'.pdf';
+			$filePath = $path.'/'.$fileName;
 			
 			if($preview == false)
-				$html2pdf->Output($fileName, 'F');
+				$html2pdf->Output($filePath, 'F');
 			else
-				$html2pdf->Output($fileName);
-			@chmod($fileName, 0777);
+				$html2pdf->Output($filePath);
+			@chmod($filePath, 0777);
 			
 		} catch(HTML2PDF_exception $e) {
 			echo $e;
 		}
 		
 		ob_end_flush();
-		return $fileName;
+		if($returnIsPath == true)
+			return $filePath;
+		else
+			return $fileName;
 	}        
         
 	/**
