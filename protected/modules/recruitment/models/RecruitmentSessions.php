@@ -81,8 +81,8 @@ class RecruitmentSessions extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('publish, session_name, session_code', 'required'),
-			array('recruitment_id, session_info', 'required', 'on'=>'sessionForm'),
+			array('publish, session_name', 'required'),
+			array('recruitment_id, session_info, session_code', 'required', 'on'=>'sessionForm'),
 			array('parent_id', 'required', 'on'=>'batchForm'),
 			array('blasting_subject', 'required', 'on'=>'blastForm'),
 			array('publish', 'numerical', 'integerOnly'=>true),
@@ -316,7 +316,9 @@ class RecruitmentSessions extends CActiveRecord
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
 			$this->defaultColumns[] = 'session_name';
-			$this->defaultColumns[] = 'session_code';
+			if($controller == 'o/session') {
+				$this->defaultColumns[] = 'session_code';
+			}
 			if($controller == 'o/batch') {
 				$this->defaultColumns[] = array(
 					'name' => 'session_search',

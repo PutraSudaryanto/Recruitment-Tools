@@ -1,93 +1,93 @@
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\timthumb.php" "D:\htdocs\_project_ommu_platform\timthumb.php"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\timthumb.php" "D:\htdocs\_project_ommu_platform\timthumb.php"
 -------
 install
 =======
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\install" "D:\htdocs\_project_ommu_platform\install"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\install" "D:\htdocs\_project_ommu_platform\install"
 -------
 libraries
 =======
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\libraries" "D:\htdocs\_project_ommu_platform\libraries"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\libraries" "D:\htdocs\_project_ommu_platform\libraries"
 -------
 protected
 =======
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\.htaccess" "D:\htdocs\_project_ommu_platform\protected\.htaccess"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\yiic" "D:\htdocs\_project_ommu_platform\protected\yiic"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\yiic.bat" "D:\htdocs\_project_ommu_platform\protected\yiic.bat"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\yiic.php" "D:\htdocs\_project_ommu_platform\protected\yiic.php"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\.htaccess" "D:\htdocs\_project_ommu_platform\protected\.htaccess"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\yiic" "D:\htdocs\_project_ommu_platform\protected\yiic"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\yiic.bat" "D:\htdocs\_project_ommu_platform\protected\yiic.bat"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\yiic.php" "D:\htdocs\_project_ommu_platform\protected\yiic.php"
 -------	
 protected\components
 =======
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\components\Controller.php" "D:\htdocs\_project_ommu_platform\protected\components\Controller.php"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\components\OauthIdentity.php" "D:\htdocs\_project_ommu_platform\protected\components\OauthIdentity.php"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\components\UserIdentity.php" "D:\htdocs\_project_ommu_platform\protected\components\UserIdentity.php"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\components\admin" "D:\htdocs\_project_ommu_platform\protected\components\admin"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\components\plugin" "D:\htdocs\_project_ommu_platform\protected\components\plugin"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\components\system" "D:\htdocs\_project_ommu_platform\protected\components\system"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\components\Controller.php" "D:\htdocs\_project_ommu_platform\protected\components\Controller.php"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\components\OauthIdentity.php" "D:\htdocs\_project_ommu_platform\protected\components\OauthIdentity.php"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\components\UserIdentity.php" "D:\htdocs\_project_ommu_platform\protected\components\UserIdentity.php"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\components\admin" "D:\htdocs\_project_ommu_platform\protected\components\admin"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\components\plugin" "D:\htdocs\_project_ommu_platform\protected\components\plugin"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\components\system" "D:\htdocs\_project_ommu_platform\protected\components\system"
 -------
 protected\controllers
 =======
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\controllers" "D:\htdocs\_project_ommu_platform\protected\controllers"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\controllers" "D:\htdocs\_project_ommu_platform\protected\controllers"
 -------
 protected\extensions
 =======
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\extensions" "D:\htdocs\_project_ommu_platform\protected\extensions"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\extensions" "D:\htdocs\_project_ommu_platform\protected\extensions"
 -------
 protected\models
 =======
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\models\core" "D:\htdocs\_project_ommu_platform\protected\models\core"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\models\core" "D:\htdocs\_project_ommu_platform\protected\models\core"
 -------
 protected\ommu
 =======
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\ommu" "D:\htdocs\_project_ommu_platform\protected\ommu"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\ommu" "D:\htdocs\_project_ommu_platform\protected\ommu"
 -------
 protected\vendors
 =======
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\vendors" "D:\htdocs\_project_ommu_platform\protected\vendors"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\vendors" "D:\htdocs\_project_ommu_platform\protected\vendors"
 -------
 protected\views
 =======
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\views" "D:\htdocs\_project_ommu_platform\protected\views"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\views" "D:\htdocs\_project_ommu_platform\protected\views"
 -------
 themes
 =======
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\themes\ommu" "D:\htdocs\_project_ommu_bootstrap\themes\backend-end\ommu"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\externals\content.css" "D:\htdocs\_client_ecc_pln_cdugm19\themes\pln_recruitment\css\content.css"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\themes\ommu" "D:\htdocs\_project_ommu_bootstrap\themes\backend-end\ommu"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\externals\content.css" "D:\htdocs\_project_oos_recruitment_tool\themes\pln_recruitment\css\content.css"
 
 -------
 protected\modules
 =======
 ///users\\\
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\externals\users" "D:\htdocs\_project_ommu_module_users\externals\users"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\users.yaml" "D:\htdocs\_project_ommu_module_users\modules\users\users.yaml"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\LICENSE" "D:\htdocs\_project_ommu_module_users\modules\users\LICENSE"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\UsersModule.php" "D:\htdocs\_project_ommu_module_users\modules\users\UsersModule.php"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\assets" "D:\htdocs\_project_ommu_module_users\modules\users\assets"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\components" "D:\htdocs\_project_ommu_module_users\modules\users\components"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\models" "D:\htdocs\_project_ommu_module_users\modules\users\models"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\externals\users" "D:\htdocs\_project_ommu_module_users\externals\users"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\users.yaml" "D:\htdocs\_project_ommu_module_users\modules\users\users.yaml"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\LICENSE" "D:\htdocs\_project_ommu_module_users\modules\users\LICENSE"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\UsersModule.php" "D:\htdocs\_project_ommu_module_users\modules\users\UsersModule.php"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\assets" "D:\htdocs\_project_ommu_module_users\modules\users\assets"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\components" "D:\htdocs\_project_ommu_module_users\modules\users\components"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\models" "D:\htdocs\_project_ommu_module_users\modules\users\models"
 --
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\controllers\o" "D:\htdocs\_project_ommu_module_users\modules\users\controllers\o"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\controllers\AdminController.php" "D:\htdocs\_project_ommu_module_users\modules\users\controllers\AdminController.php"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\controllers\ForgotController.php" "D:\htdocs\_project_ommu_module_users\modules\users\controllers\ForgotController.php"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\controllers\VerifyController.php" "D:\htdocs\_project_ommu_module_users\modules\users\controllers\VerifyController.php"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\controllers\o" "D:\htdocs\_project_ommu_module_users\modules\users\controllers\o"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\controllers\AdminController.php" "D:\htdocs\_project_ommu_module_users\modules\users\controllers\AdminController.php"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\controllers\ForgotController.php" "D:\htdocs\_project_ommu_module_users\modules\users\controllers\ForgotController.php"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\controllers\VerifyController.php" "D:\htdocs\_project_ommu_module_users\modules\users\controllers\VerifyController.php"
 --
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\views\o" "D:\htdocs\_project_ommu_module_users\modules\users\views\o"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\views\admin" "D:\htdocs\_project_ommu_module_users\modules\users\views\admin"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\views\forgot" "D:\htdocs\_project_ommu_module_users\modules\users\views\forgot"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\users\views\verify" "D:\htdocs\_project_ommu_module_users\modules\users\views\verify"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\views\o" "D:\htdocs\_project_ommu_module_users\modules\users\views\o"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\views\admin" "D:\htdocs\_project_ommu_module_users\modules\users\views\admin"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\views\forgot" "D:\htdocs\_project_ommu_module_users\modules\users\views\forgot"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\views\verify" "D:\htdocs\_project_ommu_module_users\modules\users\views\verify"
 
 ///support\\\
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\externals\support" "D:\htdocs\_project_ommu_module_support\externals\support"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\support\support.yaml" "D:\htdocs\_project_ommu_module_support\modules\support\support.yaml"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\support\LICENSE" "D:\htdocs\_project_ommu_module_support\modules\support\LICENSE"
-mklink /H "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\support\SupportModule.php" "D:\htdocs\_project_ommu_module_support\modules\support\SupportModule.php"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\support\assets" "D:\htdocs\_project_ommu_module_support\modules\support\assets"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\support\components" "D:\htdocs\_project_ommu_module_support\modules\support\components"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\support\models" "D:\htdocs\_project_ommu_module_support\modules\support\models"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\externals\support" "D:\htdocs\_project_ommu_module_support\externals\support"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\support.yaml" "D:\htdocs\_project_ommu_module_support\modules\support\support.yaml"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\LICENSE" "D:\htdocs\_project_ommu_module_support\modules\support\LICENSE"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\SupportModule.php" "D:\htdocs\_project_ommu_module_support\modules\support\SupportModule.php"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\assets" "D:\htdocs\_project_ommu_module_support\modules\support\assets"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\components" "D:\htdocs\_project_ommu_module_support\modules\support\components"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\models" "D:\htdocs\_project_ommu_module_support\modules\support\models"
 --
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\support\controllers\o" "D:\htdocs\_project_ommu_module_support\modules\support\controllers\o"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\controllers\o" "D:\htdocs\_project_ommu_module_support\modules\support\controllers\o"
 --
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\support\views\o" "D:\htdocs\_project_ommu_module_support\modules\support\views\o"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\views\o" "D:\htdocs\_project_ommu_module_support\modules\support\views\o"
 
 ///recruitment\\\
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\externals\recruitment" "D:\htdocs\_project_ommu_module_others\ecc.ft.ugm.ac.id\externals\recruitment"
-mklink /J "D:\htdocs\_client_ecc_pln_cdugm19\protected\modules\recruitment" "D:\htdocs\_project_ommu_module_others\ecc.ft.ugm.ac.id\modules\recruitment"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\externals\recruitment" "D:\htdocs\_project_ommu_module_others\ecc.ft.ugm.ac.id\externals\recruitment"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\recruitment" "D:\htdocs\_project_ommu_module_others\ecc.ft.ugm.ac.id\modules\recruitment"
