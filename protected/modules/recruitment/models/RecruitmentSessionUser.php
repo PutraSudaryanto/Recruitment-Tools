@@ -296,13 +296,15 @@ class RecruitmentSessionUser extends CActiveRecord
 	 * Set default columns to display
 	 */
 	protected function afterConstruct() {
-		if(count($this->defaultColumns) == 0) {			
+		if(count($this->defaultColumns) == 0) {		
+			/*
 			$this->defaultColumns[] = array(
 				'class' => 'CCheckBoxColumn',
 				'name' => 'id',
 				'selectableRows' => 2,
-				'checkBoxHtmlOptions' => array('name' => 'select_id[]')
+				'checkBoxHtmlOptions' => array('name' => 'trash_id[]')
 			);
+			*/
 			
 			$this->defaultColumns[] = array(
 				'header' => 'No',
@@ -503,106 +505,6 @@ class RecruitmentSessionUser extends CActiveRecord
 	}        
         
 	/**
-	 * Create pdf, save to disk and return the name with path
-	 */
-	public function getPdfInvitationAllInOne($models, $preview=false, $template=null, $path=null, $documentName=null, $page=null) 
-	{
-		ini_set('max_execution_time', 0);
-		ob_start();
-		
-		Yii::import('ext.html2pdf.HTML2PDF');
-		Yii::import('ext.html2pdf._mypdf.MyPDF');	// classe mypdf
-		Yii::import('ext.html2pdf.parsingHTML');	// classe de parsing HTML
-		Yii::import('ext.html2pdf.styleHTML');		// classe de gestion des styles
-		
-		if($template == null)
-			$template = 'pln_cdugm19_pdf_invitation_all_in_one';
-		
-		include(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');		
-		$content  = ob_get_clean();
-		$fileName = '';
-		
-		try {
-			// initialisation de HTML2PDF
-			if($page == null)
-				$page = 'P';
-			$html2pdf = new HTML2PDF($page,'A4','en', false, 'ISO-8859-15', array(0, 0, 0, 0));
-
-			// affichage de la page en entier
-			$html2pdf->pdf->SetDisplayMode('fullpage');
-
-			// conversion
-			$html2pdf->writeHTML($content);
-			
-			if($path == null)
-				$path = YiiBase::getPathOfAlias('webroot.public.recruitment.user_pdf');
-			if($documentName == null)
-				$documentName = 'all_in_one_print';
-			
-			$fileName = $path.'/'.$documentName.'.pdf';
-			
-			if($preview == false)
-				$html2pdf->Output($fileName, 'F');
-			else
-				$html2pdf->Output($fileName);
-			@chmod($fileName, 0777);
-			
-		} catch(HTML2PDF_exception $e) {
-			echo $e;
-		}
-		
-		ob_end_flush();
-		return $fileName;
-	}
-        
-        
-	/**
-	 * Create pdf, save to disk and return the name with path
-	 */
-	public function getPdfParticipantCard($models, $developerMode=true) 
-	{
-		ini_set('max_execution_time', 0);
-		ob_start();
-		
-		Yii::import('ext.html2pdf.HTML2PDF');
-		Yii::import('ext.html2pdf._mypdf.MyPDF');	// classe mypdf
-		Yii::import('ext.html2pdf.parsingHTML');	// classe de parsing HTML
-		Yii::import('ext.html2pdf.styleHTML');		// classe de gestion des styles
-		
-		$template = 'pln_cdugm19_participant_card';
-		include(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');		
-		$content  = ob_get_clean();
-		$fileName = '';
-		
-		try {
-			// initialisation de HTML2PDF
-			$html2pdf = new HTML2PDF('P','A4','en', false, 'ISO-8859-15', array(0, 0, 0, 0));
-
-			// affichage de la page en entier
-			$html2pdf->pdf->SetDisplayMode('fullpage');
-
-			// conversion
-			$html2pdf->writeHTML($content);
-
-			// envoie du PDF
-			
-			//$fileName = YiiBase::getPathOfAlias('webroot.public.recruitment.user_pdf').'/'.time().'_'.Utility::getUrlTitle($model->eventUser->test_number.' '.$model->user->displayname).'_participant_card.pdf';
-			$fileName = YiiBase::getPathOfAlias('webroot.public.recruitment.user_pdf').'/'.time().'_'.'_participant_cardxx.pdf';
-			if($developerMode == true)
-				$html2pdf->Output($fileName, 'F');
-			else
-				$html2pdf->Output($fileName);
-			@chmod($fileName, 0777);
-			
-		} catch(HTML2PDF_exception $e) {
-			echo $e;
-		}
-		
-		ob_end_flush();
-		return $fileName;
-	}	
-
-	/**
 	 * before validate attributes
 	 */
 	protected function beforeValidate() {
@@ -615,30 +517,4 @@ class RecruitmentSessionUser extends CActiveRecord
 		}
 		return true;
 	}
-	
-	/**
-	 * 
-	 * @param type $sessionid
-	 * @param type $type
-	 * @param type $w
-	 * @param type $h
-	 */
-	public function generateBarcodeParticipant($model, $typeBarcode = 'upca', $widthBarcode=2, $hightBarcode=30) 
-	{
-		Yii::import('ext.php-barcodes.DNS1DBarcode');	
-		foreach($model as $val) {
-			$text = str_pad($val->session->recruitment_id, 2, '0', STR_PAD_LEFT).''.str_pad($val->session_id, 3, '0', STR_PAD_LEFT).''.str_pad($val->user_id, 6, '0', STR_PAD_LEFT);
-			$barcode = new DNS1DBarcode();               			
-			$pathFolder = YiiBase::getPathOfAlias('webroot.public.recruitment.user_barcode_'.$typeBarcode).'/';
-			if(!file_exists($pathFolder)) {
-				mkdir($pathFolder, 0777);
-				chmod($pathFolder, 0777);
-			}
-			if(!file_exists($pathFolder.$text.'.png')) {
-				$barcode->save_path=$pathFolder;
-				$barcode->getBarcodePNGPath($text, $typeBarcode, $widthBarcode, $hightBarcode);       
-			}
-		}
-	}
-
 }

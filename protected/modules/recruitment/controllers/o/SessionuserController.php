@@ -117,109 +117,12 @@ class SessionuserController extends Controller
 	 * Manages all models.
 	 */
 	public function actionManage() 
-	{            
-                
-                if(!isset($_GET['session'])) {
-                    $redirectUrl = Yii::app()->createUrl('recruitment/o/session/manage');
-                    $this->redirect($redirectUrl);
-                }
-                    
-		if(isset($_POST['invitation_card'])){
-                     
-			if($_POST['select_id'] != null) {
-                                
-                                $listId = implode(',', $_POST['select_id']);
-                                
-                                $model = RecruitmentSessionUser::model()->findAll(array(
-                                    'condition' => "id IN ($listId)"
-                                ));
-                                
-                                $fileName = time().'_all_in_one_print';
-                                
-                                $session = new RecruitmentSessionUser();
-                                $downloadFile = $session->getPdfInvitationAllInOne($model, false, null, null, $fileName);
-                                
-                                $this->redirect(array('../public/recruitment/user_pdf/'.$fileName.'.pdf'));
-			}
-		}
-                
-		if(isset($_POST['participant_card'])){
-			if($_POST['select_id'] != null){
-				$listId = implode(',', $_POST['select_id']);
-                                //recruitment/o/batch/PrintParticipantCard/sessionid/7/barcodetype/upca
-                                $url = Yii::app()->createUrl('recruitment/o/batch/PrintParticipantCard', 
-                                        array('sessionid'=>$_POST['session'], 'barcodetype'=>'upca', 'listid'=>$listId));
-				$this->redirect($url);
-			}
-		}
-                
-                
-		if(isset($_POST['participant_scanned'])){
-			if($_POST['select_id'] != null){
-				$listId = implode(',', $_POST['select_id']);
-                                //recruitment/o/batch/PrintParticipantCard/sessionid/7/barcodetype/upca
-                                $url = Yii::app()->createUrl('recruitment/o/batch/PrintParticipantCard', 
-                                        array('sessionid'=>$_POST['session'], 'barcodetype'=>'upca', 'listid'=>$listId));
-				$this->redirect($url);
-			}
-		}
-            
+	{
 		$model=new RecruitmentSessionUser('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['RecruitmentSessionUser'])) {
 			$model->attributes=$_GET['RecruitmentSessionUser'];
 		}
-                
-                
-                if(isset($_POST['recap_participant_scanned'])) 
-                {
-//                        echo $_POST['session'];
-//                        exit();
-                        
-                        $criteria=new CDbCriteria;
-                        $criteria->compare('t.publish',1);
-                        $criteria->compare('t.session_id', $_POST['session']);
-                        //$criteria->compare('t.present', 1);
-                        
-                        $recaps =  RecruitmentSessionUser::model()->findAll($criteria);
-
-                        if($recaps != null) {
-                                $data[] = array(
-                                        'No',
-                                        'NAMA',
-                                        'NO TES',
-                                        'BIDANG',
-                                        'BATCH',
-                                        'NO MEJA',
-                                        'HADIR',
-                                );
-
-                                foreach($recaps as $row){                               
-
-                                        $detailMember = array (
-                                                        $i++,
-                                                        $row->user->displayname,
-                                                        strtoupper($row->eventUser->test_number),
-                                                        $row->eventUser->major,
-                                                        $row->session->session_name,
-                                                        $row->session_seat,
-                                                        $row->present,
-
-                                                );
-                                        $data[] = $detailMember;
-
-                                }
-
-                                Yii::import('application.extensions.phpexcel.JPhpExcel');
-                                $xls = new JPhpExcel('UTF-8', false, 'My Test Sheet');
-                                $xls->addArray($data);
-                                $xls->generateXML(time().'_Rekap absensi');
-                        }else
-                            echo 'data kosong';
-                        
-                        Yii::app()->end;
-		}
-                
 
 		$columnTemp = array();
 		if(isset($_GET['GridColumn'])) {
@@ -230,10 +133,8 @@ class SessionuserController extends Controller
 			}
 		}
 		$columns = $model->getGridColumn($columnTemp);
-
-                $sesionUser = RecruitmentSessionUser::model()->findByAttributes(array('session_id'=>$_GET['session']));
                 
-		$this->pageTitle = 'Recruitment Session Users - '. $sesionUser->session->session_name;
+		$this->pageTitle = 'Recruitment Session Users';
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('/o/session_user/admin_manage',array(

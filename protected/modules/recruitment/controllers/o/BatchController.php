@@ -88,7 +88,7 @@ class BatchController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','import','add','edit','view','runaction','delete','publish','PrintParticipantCard'),
+				'actions'=>array('manage','import','add','edit','view','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -314,34 +314,6 @@ class BatchController extends Controller
 			'batch'=>$batch,
 		));
 	}
-        
-        
-        public function actionPrintParticipantCard($sessionid, $barcodetype) {
-            $criteria=new CDbCriteria;
-            
-            if(isset($_GET['listid'])) {
-                $arrId = explode(',', $_GET['listid']);
-                $criteria->addInCondition('t.id', $arrId);
-            }            
-            
-            $criteria->compare('t.publish',1);
-            $criteria->compare('t.session_id', $sessionid);           
-            $criteria->order = 'session_seat ASC';
-            //$criteria->limit = 8;
-
-            $model = RecruitmentSessionUser::model()->findAll($criteria);
-            
-            RecruitmentSessionUser::model()->generateBarcodeParticipant($model, $barcodetype, 2, 40);
-            
-            $this->layout = false;
-            $this->render('print_participant_card',array(
-			'models'=>$model,
-			'typeBarcode'=>  strtolower($barcodetype),
-		));
-        }
-        
-        
-        
       
 	
 	/**
