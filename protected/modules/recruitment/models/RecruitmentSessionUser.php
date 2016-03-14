@@ -80,13 +80,13 @@ class RecruitmentSessionUser extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('publish, user_id, event_user_id, session_id, session_seat', 'required'),
-			array('publish, creation_id, sendemail_status, present, scanner_status', 'numerical', 'integerOnly'=>true),
+			array('publish, creation_id, sendemail_status, scanner_status', 'numerical', 'integerOnly'=>true),
 			array('user_id, event_user_id, session_id', 'length', 'max'=>11),
 			array('session_seat', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id, publish, user_id, event_user_id, session_id, session_seat, sendemail_status, creation_date, creation_id, sendemail_date, sendemail_id, printcard_date, printcard_id, scanner_status, scanner_date, scanner_id,
-				email_search, user_search, session_search, creation_search, present', 'safe', 'on'=>'search'),
+				email_search, user_search, session_search, creation_search', 'safe', 'on'=>'search'),
 		);
 	}
 
