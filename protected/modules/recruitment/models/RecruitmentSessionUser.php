@@ -472,6 +472,16 @@ class RecruitmentSessionUser extends CActiveRecord
 			if($documentName == null)
 				$documentName = Utility::getUrlTitle($model->eventUser->test_number.' '.$model->user->displayname);
 			
+			// Generate path directory
+			if(!file_exists($path)) {
+				@mkdir($path, 0755, true);
+
+				// Add File in Article Folder (index.php)
+				$newFile = $path.'/index.php';
+				$FileHandle = fopen($newFile, 'w');
+			} else
+				@chmod($path, 0755, true);
+			
 			$fileName = $path.'/'.time().'_'.$documentName.'.pdf';
 			
 			if($preview == false)

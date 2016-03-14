@@ -310,12 +310,13 @@ class SessionuserController extends Controller
 		
 		$criteria=new CDbCriteria;
 		$criteria->compare('t.publish',1);
-		$criteria->compare('t.session_id',$session);		
+		$criteria->compare('t.session_id',$session);	
+		$criteria->limit = 10;
 		$model = RecruitmentSessionUser::model()->findAll($criteria);
 		
 		$template = 'document_test';
 		$path = YiiBase::getPathOfAlias('webroot.public.recruitment.document_test');
-		$documentName = Utility::getUrlTitle('documenttest'.$batch->session_name.' '.$batch->viewBatch->session_name);
+		$documentName = Utility::getUrlTitle('document_test_'.$batch->session_name.' '.$batch->viewBatch->session_name.' '.$batch->recruitment->event_name);
 		$document = new RecruitmentSessionUser();
 		echo $document->getPdf($model, true, $template, $path, $documentName, 'L');
 		
@@ -332,9 +333,15 @@ class SessionuserController extends Controller
 		
 		$batch = RecruitmentSessions::model()->findByPk($session);
 		
-		$template = 'entrycard';
+		$criteria=new CDbCriteria;
+		$criteria->compare('t.publish',1);
+		$criteria->compare('t.session_id',$session);
+		//$criteria->limit = 10;
+		$model = RecruitmentSessionUser::model()->findAll($criteria);
+		
+		$template = 'entry_card';
 		$path = YiiBase::getPathOfAlias('webroot.public.recruitment.document_entrycard');
-		$documentName = Utility::getUrlTitle('entrycard_'.$batch->session_name.' '.$batch->viewBatch->session_name);		
+		$documentName = Utility::getUrlTitle('entrycard_'.$batch->session_name.' '.$batch->viewBatch->session_name.' '.$batch->recruitment->event_name);		
 		$document = new RecruitmentSessionUser();
 		echo $document->getPdf($model, true, $template, $path, $documentName);
 		
@@ -357,9 +364,9 @@ class SessionuserController extends Controller
 		//$criteria->limit = 10;
 		$model = RecruitmentSessionUser::model()->findAll($criteria);
 		
-		$template = 'rekap_absensi';
-		$path = YiiBase::getPathOfAlias('webroot.public.recruitment.document_test');
-		$documentName = Utility::getUrlTitle('absen_recap'.$batch->session_name.' '.$batch->viewBatch->session_name);
+		$template = 'absen_recap';
+		$path = YiiBase::getPathOfAlias('webroot.public.recruitment.document_test');		
+		$documentName = Utility::getUrlTitle('absen_recap_'.$batch->session_name.' '.$batch->viewBatch->session_name.' '.$batch->recruitment->event_name);
 		$document = new RecruitmentSessionUser();
 		echo $document->getPdf($model, true, $template, $path, $documentName);
 		
