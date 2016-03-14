@@ -301,17 +301,28 @@ class SessionuserController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionDocumentTest($session, $pageitem=null) 
+	public function actionDocumentTest($session) 
 	{
 		ini_set('max_execution_time', 0);
 		ob_start();
 		
-		$batch = RecruitmentSessions::model()->findByPk($session);		
+		$batch = RecruitmentSessions::model()->findByPk($session);
+		if(isset($_GET['reset'])) {
+			if(RecruitmentSessions::model()->updateByPk($session, array('documents'=>'')))
+				$this->redirect(Yii::app()->controller->createUrl('documenttest', array('session'=>$session)));
+		}
+			
 		$itemCount = $batch->viewBatch->users;
-		
-		if(isset($_POST['pageItem'])) {
-			if($_POST['pageItem'] != '') {
-				$pageitem = $_POST['pageItem'];				
+
+		// Uncomment the following line if AJAX validation is needed
+		$this->performAjaxValidation($batch);
+
+		if(isset($_POST['RecruitmentSessions'])) {
+			$batch->attributes=$_POST['RecruitmentSessions'];
+			$batch->scenario = 'documentTestForm';
+			
+			if($batch->validate()) {
+				$pageitem = $batch->pageItem;
 				$pageSize = $pageitem >= $itemCount ? $itemCount : $pageitem ;
 				$pageCount = $itemCount >= $pageSize ? ($itemCount%$pageSize === 0 ? (int)($itemCount/$pageSize) : (int)($itemCount/$pageSize)+1) : 1;
 				
@@ -341,9 +352,7 @@ class SessionuserController extends Controller
 				
 				Yii::app()->user->setFlash('success', 'Generate Document Test Success.');
 				$this->redirect(Yii::app()->controller->createUrl('documenttest', array('session'=>$session)));
-				
-			} else
-				Yii::app()->user->setFlash('errorPageItem', 'Page Item cannot be blank.');
+			}
 		}
 		
 		ob_end_flush();

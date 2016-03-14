@@ -50,6 +50,7 @@
 class RecruitmentSessions extends CActiveRecord
 {
 	public $defaultColumns = array();
+	public $pageItem;
 	
 	// Variable Search
 	public $recruitment_search;
@@ -88,11 +89,14 @@ class RecruitmentSessions extends CActiveRecord
 			array('recruitment_id, session_info, session_code', 'required', 'on'=>'sessionForm'),
 			array('parent_id', 'required', 'on'=>'batchForm'),
 			array('blasting_subject', 'required', 'on'=>'blastForm'),
+			array('
+				pageItem', 'required', 'on'=>'documentTestForm'),
 			array('publish', 'numerical', 'integerOnly'=>true),
 			array('recruitment_id, parent_id, document_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('session_name, session_code', 'length', 'max'=>32),
 			array('blasting_subject', 'length', 'max'=>64),
-			array('session_date, session_time_start, session_time_finish', 'safe'),
+			array('session_date, session_time_start, session_time_finish,
+				pageItem', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('session_id, publish, recruitment_id, parent_id, session_name, session_info, session_code, session_date, session_time_start, session_time_finish, blasting_subject, blasting_status, blasting_date, blasting_id, documents, document_date, document_id, creation_date, creation_id, modified_date, modified_id,
@@ -144,6 +148,7 @@ class RecruitmentSessions extends CActiveRecord
 			'creation_id' => 'Creation',
 			'modified_date' => 'Modified Date',
 			'modified_id' => 'Modified',
+			'pageItem' => 'Page Item',
 			'recruitment_search' => 'Recruitment',
 			'session_search' => 'Session',
 			'creation_search' => 'Creation',

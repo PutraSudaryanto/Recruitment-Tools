@@ -38,14 +38,13 @@
 		
 		<?php if($batch->documents == '') {?>
 			<div class="clearfix">
-				<label>Page Item <span class="required">*</span></label>
+				<label><?php echo $batch->getAttributeLabel('pageItem');?> <span class="required">*</span></label>
 				<div class="desc">
-					<?php echo CHtml::textField('pageItem', '', array('class'=>'span-4'));?>
-					<?php if(Yii::app()->user->hasFlash('errorPageItem')) {
-						echo '<div class="errorMessage">'.Yii::app()->user->getFlash('errorPageItem').'</div>';
-					}?>
+					<?php echo $form->textField($batch,'pageItem', array('class'=>'span-4')); ?>
+					<?php echo $form->error($batch,'pageItem'); ?>
 				</div>
 			</div>
+			
 		<?php } else {?>
 			<div class="clearfix">
 				<label><?php echo $batch->getAttributeLabel('documents');?></label>
@@ -72,7 +71,13 @@
 	</fieldset>
 </div>
 <div class="dialog-submit">
-	<?php echo CHtml::submitButton($batch->documents == '' ? 'Generate Document' : 'Reset Document' ,array('onclick' => 'setEnableSave()')); ?>
+	<?php if($batch->documents == '')
+		echo CHtml::submitButton('Generate Document', array('onclick' => 'setEnableSave()'));
+	else {
+		$url = Yii::app()->controller->createUrl('documenttest', array('session'=>$batch->session_id, 'reset'=>'reset'));
+		echo CHtml::button('Reset Document', array('off_address'=>'', 'class'=>'active', 'onclick'=>'window.location.href=\''.$url.'\''));
+	} ?>
+	<?php  ?>
 	<?php echo CHtml::button(Phrase::trans(4,0), array('id'=>'closed')); ?>
 </div>
 <?php $this->endWidget(); ?>
