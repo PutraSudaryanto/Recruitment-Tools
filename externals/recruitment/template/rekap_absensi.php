@@ -78,12 +78,12 @@
 		<tr>
 			<td style="vertical-align: top; width: 30%;">Jumlah Peserta Hadir</td>
 			<td style="vertical-align: top; padding: 0 10px 0 0;">:</td>
-			<td style="vertical-align: top; width: 70%;"><?php echo $model[0]->session->viewBatch->user_attend;?></td>
+			<td style="vertical-align: top; width: 70%;"><?php echo $model[0]->session->viewBatch->user_scan;?></td>
 		</tr>
 		<tr>
 			<td style="vertical-align: top; width: 30%;">Jumlah Peserta Tidak Hadir</td>
 			<td style="vertical-align: top; padding: 0 10px 0 0;">:</td>
-			<td style="vertical-align: top; width: 70%;"><?php echo $model[0]->session->viewBatch->user_notattend;?></td>
+			<td style="vertical-align: top; width: 70%;"><?php echo $model[0]->session->viewBatch->user_notscan;?></td>
 		</tr>
 	</table>
 

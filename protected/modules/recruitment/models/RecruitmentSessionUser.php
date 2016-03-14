@@ -27,13 +27,14 @@
  * @property string $event_user_id
  * @property string $session_id
  * @property string $session_seat
- * @property string $sendemail_status
+ * @property integer $sendemail_status
  * @property string $creation_date
  * @property integer $creation_id
  * @property string $sendemail_date
  * @property integer $sendemail_id
  * @property string $printcard_date
  * @property integer $printcard_id
+ * @property integer $scanner_status
  * @property string $scanner_date
  * @property integer $scanner_id
  *
@@ -79,12 +80,12 @@ class RecruitmentSessionUser extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('publish, user_id, event_user_id, session_id, session_seat', 'required'),
-			array('publish, creation_id, sendemail_status, present', 'numerical', 'integerOnly'=>true),
+			array('publish, creation_id, sendemail_status, present, scanner_status', 'numerical', 'integerOnly'=>true),
 			array('user_id, event_user_id, session_id', 'length', 'max'=>11),
 			array('session_seat', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, publish, user_id, event_user_id, session_id, session_seat, sendemail_status, creation_date, creation_id, sendemail_date, sendemail_id, printcard_date, printcard_id, scanner_date, scanner_id,
+			array('id, publish, user_id, event_user_id, session_id, session_seat, sendemail_status, creation_date, creation_id, sendemail_date, sendemail_id, printcard_date, printcard_id, scanner_status, scanner_date, scanner_id,
 				email_search, user_search, session_search, creation_search, present', 'safe', 'on'=>'search'),
 		);
 	}
@@ -127,6 +128,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			'sendemail_id' => 'Sendemail',
 			'printcard_date' => 'Printcard Date',
 			'printcard_id' => 'Printcard',
+			'scanner_status' => 'Scanner Status',
 			'scanner_date' => 'Scanner Date',
 			'scanner_id' => 'Scanner',
 		);
@@ -212,6 +214,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			$criteria->compare('t.printcard_id',$_GET['printcard']);
 		else
 			$criteria->compare('t.printcard_id',$this->printcard_id);
+		$criteria->compare('t.scanner_status',strtolower($this->scanner_status),true);
 		if($this->scanner_date != null && !in_array($this->scanner_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.scanner_date)',date('Y-m-d', strtotime($this->scanner_date)));
 		if(isset($_GET['scanner']))
@@ -281,6 +284,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			$this->defaultColumns[] = 'sendemail_id';
 			$this->defaultColumns[] = 'printcard_date';
 			$this->defaultColumns[] = 'printcard_id';
+			$this->defaultColumns[] = 'scanner_status';
 			$this->defaultColumns[] = 'scanner_date';
 			$this->defaultColumns[] = 'scanner_id';
 		}

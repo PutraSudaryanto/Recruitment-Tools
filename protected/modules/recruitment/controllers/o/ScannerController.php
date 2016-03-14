@@ -190,7 +190,7 @@ class ScannerController extends Controller
 		));
 		if($sessionActive != null) {
 			RecruitmentSessionUser::model()->updateByPk($sessionActive->id, array(
-				'scanner_date'=>date('Y-m-d H:i:s'),
+				'scanner_status'=>1,
 				'scanner_id'=>Yii::app()->user->id,
 			));
 		}
