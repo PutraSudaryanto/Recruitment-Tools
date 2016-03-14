@@ -117,6 +117,7 @@ class RecruitmentSessions extends CActiveRecord
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 			'view' => array(self::BELONGS_TO, 'ViewRecruitmentSessions', 'session_id'),
 			'viewBatch' => array(self::BELONGS_TO, 'ViewRecruitmentSessionBatch', 'session_id'),
+			'batchPublish' => array(self::HAS_MANY, 'ViewRecruitmentSessionBatch', 'session_id'),
 			'users' => array(self::HAS_MANY, 'RecruitmentSessionUser', 'session_id'),
 		);
 	}

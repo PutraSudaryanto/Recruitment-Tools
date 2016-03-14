@@ -89,6 +89,7 @@ class ViewRecruitmentSessionBatch extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'session' => array(self::BELONGS_TO, 'RecruitmentSessions', 'session_id'),
+			'batch' => array(self::BELONGS_TO, 'RecruitmentSessions', 'batch_id'),
 		);
 	}
 

@@ -54,6 +54,7 @@
 
 <page backtop="10mm" backbottom="10mm" backleft="10mm" backright="10mm" style="font-size: 12pt">
 <div class="member-card">
+	<?php $batch = RecruitmentSessions::model()->findByPk($_GET['session']);?>
 	<table style="width: 100%;">
 		<tr>
 			<td colspan="3" style="width: 100%; vertical-align: top; padding-bottom: 20px; text-align: center; font-size: 20px; line-height: 20px; font-weight: bold;">
@@ -65,26 +66,38 @@
 			<td style="vertical-align: top; padding: 0 10px 0 0;">:</td>
 			<td style="vertical-align: top; width: 70%;"><?php echo $model[0]->session->viewBatch->session_name;?></td>
 		</tr>
+		<?php if($batch->parent_id != 0) {?>
 		<tr>
 			<td style="vertical-align: top; width: 30%;">Batch</td>
 			<td style="vertical-align: top; padding: 0 10px 0 0;">:</td>
 			<td style="vertical-align: top; width: 70%;"><?php echo $model[0]->session->session_name;?></td>
 		</tr>
+		<?php }?>
 		<tr>
 			<td style="vertical-align: top; width: 30%;">Waktu</td>
 			<td style="vertical-align: top; padding: 0 10px 0 0;">:</td>
-			<td style="vertical-align: top; width: 70%;"><?php echo Utility::dateFormat($model[0]->session->session_date).', '.date("H:i", strtotime($model[0]->session->session_time_start))." - ".date("H:i", strtotime($model[0]->session->session_time_finish)).' WIB';?></td>
+			<td style="vertical-align: top; width: 70%;">
+				<?php if($batch->parent_id == 0) {
+					$subBatch = $batch->batchPublish;
+					if($subBatch != null) {
+						foreach($subBatch as $key => $val) {?>
+							<strong><?php echo $val->batch_name;?></strong>, <?php echo Utility::dateFormat($val->batch->session_date).', '.date("H:i", strtotime($val->batch->session_time_start))." - ".date("H:i", strtotime($val->batch->session_time_finish)).' WIB';?><br/>
+					<?php }
+					}
+				} else
+					echo Utility::dateFormat($model[0]->session->session_date).', '.date("H:i", strtotime($model[0]->session->session_time_start))." - ".date("H:i", strtotime($model[0]->session->session_time_finish)).' WIB';?>
+			</td>
 		</tr>
 		<tr>
 			<td style="vertical-align: top; width: 30%;">Jumlah Peserta Hadir</td>
 			<td style="vertical-align: top; padding: 0 10px 0 0;">:</td>
-			<td style="vertical-align: top; width: 70%;"><?php echo $model[0]->session->viewBatch->user_scan;?></td>
+			<td style="vertical-align: top; width: 70%;"><?php echo $batch->parent_id == 0 ? $batch->view->user_scan : $batch->viewBatch->user_scan;?></td>
 		</tr>
 		<tr>
 			<td style="vertical-align: top; width: 30%;">Jumlah Peserta Tidak Hadir</td>
 			<td style="vertical-align: top; padding: 0 10px 0 0;">:</td>
-			<td style="vertical-align: top; width: 70%;"><?php echo $model[0]->session->viewBatch->user_notscan;?></td>
-		</tr>
+			<td style="vertical-align: top; width: 70%;"><?php echo $batch->parent_id == 0 ? $batch->view->user_notscan : $batch->viewBatch->user_notscan;?></td>
+		</tr>		
 	</table>
 
 	<?php if($model != null) {?>
@@ -94,6 +107,9 @@
 			<th><strong><?php echo strtoupper('No. Peserta'); ?></strong></th>
 			<th><strong><?php echo strtoupper('Nama'); ?></strong></th>
 			<th><strong><?php echo strtoupper('Bidang'); ?></strong></th>
+			<?php if($batch->parent_id == 0) {?>
+			<th><strong><?php echo strtoupper('Batch'); ?></strong></th>
+			<?php }?>
 			<th><strong><?php echo strtoupper('Keterangan'); ?></strong></th>
 		</tr>
 		<?php 
@@ -103,8 +119,11 @@
 		<tr <?php echo $i%2 == 0 ? 'class="even"' : '';?>>
 			<td class="center"><?php echo strtoupper($val->session_seat); ?></td>
 			<td><?php echo strtoupper($val->eventUser->test_number); ?></td>
-			<td style="width: 230px;"><?php echo strtoupper($val->user->displayname); ?></td>
+			<td style="<?php echo $batch->parent_id == 0 ? 'width: 160px;' : 'width: 230px;';?>"><?php echo strtoupper($val->user->displayname); ?></td>
 			<td><?php echo strtoupper($val->user->major); ?></td>
+			<?php if($batch->parent_id == 0) {?>
+			<td><?php echo strtoupper($val->session->session_name); ?></td>
+			<?php }?>
 			<td><?php echo !in_array($val->scanner_date, array('0000-00-00 00:00:00','1970-01-01 00:00:00')) ? 'Hadir' : 'Tidak Hadir'; ?></td>
 		</tr>
 		<?php }?>

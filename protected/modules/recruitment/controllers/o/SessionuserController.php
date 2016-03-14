@@ -328,8 +328,25 @@ class SessionuserController extends Controller
 		
 		$criteria=new CDbCriteria;
 		$criteria->compare('t.publish',1);
-		$criteria->compare('t.session_id',$session);
-		//$criteria->limit = 10;
+		if($batch->parent_id == 0) {
+			$subBatch = RecruitmentSessions::model()->findAll(array(
+				'condition' => 'publish = :publish AND parent_id = :parent',
+				'params' => array(
+					':publish' => 1,
+					':parent' => $session,
+				),
+			));
+			$items = array();
+			if($subBatch != null) {
+				foreach($subBatch as $key => $val)
+					$items[] = $val->session_id;
+			}
+			$criteria->addInCondition('t.session_id',$items);
+			
+		} else					
+			$criteria->compare('t.session_id',$session);
+		
+		//$criteria->limit = 4;
 		$model = RecruitmentSessionUser::model()->findAll($criteria);
 		
 		$template = 'absen_recap';
