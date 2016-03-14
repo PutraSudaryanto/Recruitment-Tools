@@ -182,7 +182,6 @@ class SessionController extends Controller
 					
 				} else
 					$criteria->compare('t.session_id',$sessionId);
-				$criteria->limit=4;
 				
 				$model = RecruitmentSessionUser::model()->findAll($criteria);
 				if($model != null) {
