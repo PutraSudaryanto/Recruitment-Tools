@@ -472,7 +472,17 @@ class RecruitmentUsers extends CActiveRecord
 			$this->password = self::hashPassword($this->salt, $this->newPassword);
 			
 			//upload new photo
-			$recruitment_path = "public/recruitment/user_photos";
+			$recruitment_path = "public/recruitment/user_photos";			
+			// Generate path directory
+			if(!file_exists($recruitment_path)) {
+				@mkdir($recruitment_path, 0755, true);
+
+				// Add File in Article Folder (index.php)
+				$newFile = $recruitment_path.'/index.php';
+				$FileHandle = fopen($newFile, 'w');
+			} else
+				@chmod($recruitment_path, 0755, true);
+			
 			$this->photos = CUploadedFile::getInstance($this, 'photos');
 			if($this->photos instanceOf CUploadedFile) {
 				$fileName = time().'_'.Utility::getUrlTitle($this->displayname).'.'.strtolower($this->photos->extensionName);

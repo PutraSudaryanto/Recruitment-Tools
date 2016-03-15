@@ -29,6 +29,13 @@
 )); ?>
 <div class="dialog-content">
 	<fieldset>
+
+		<?php //begin.Messages ?>
+		<div id="ajax-message">
+			<?php //echo $form->errorSummary($batch); ?>
+		</div>
+		<?php //begin.Messages ?>
+		
 		<div class="clearfix">
 			<label>Total Item</label>
 			<div class="desc">
