@@ -357,6 +357,62 @@ class SessionuserController extends Controller
 		
 		ob_end_flush();
 	}
+
+	/**
+	 * Deletes a particular model.
+	 * If deletion is successful, the browser will be redirected to the 'admin' page.
+	 * @param integer $id the ID of the model to be deleted
+	 */
+	public function actionAbsenReset($session) 
+	{
+		$model=RecruitmentSessions::model()->findByPk($session);
+		
+		if(Yii::app()->request->isPostRequest) {
+			// we only allow deletion via POST request
+			if(isset($session)) {				
+				$criteria=new CDbCriteria;
+				$criteria->compare('t.publish',1);
+				if($model->parent_id == 0) {
+					$batch = RecruitmentSessions::model()->findAll(array(
+						'condition' => 'publish = :publish AND parent_id = :parent',
+						'params' => array(
+							':publish' => 1,
+							':parent' => $session,
+						),
+					));
+					$items = array();
+					if($batch != null) {
+						foreach($batch as $key => $val)
+							$items[] = $val->session_id;
+					}
+					$criteria->addInCondition('t.session_id',$items);
+					
+				} else					
+					$criteria->compare('t.session_id',$session);
+				
+				$user = RecruitmentSessionUser::model()->findAll($criteria);
+				foreach($user as $key => $val)
+					RecruitmentSessionUser::model()->updateByPk($val->id, array('scanner_status'=>0,'scanner_field'=>0));
+				
+				echo CJSON::encode(array(
+					'type' => 5,
+					'get' => Yii::app()->controller->createUrl('manage'),
+					'id' => 'partial-recruitment-session-user',
+					'msg' => '<div class="errorSummary success"><strong>RecruitmentSessionUser success absen reset.</strong></div>',
+				));
+			}
+
+		} else {
+			$this->dialogDetail = true;
+			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage', array('session'=>$session));
+			$this->dialogWidth = 350;
+
+			$this->pageTitle = 'RecruitmentSessionUser Absen Reset.';
+			$this->pageDescription = '';
+			$this->pageMeta = '';
+			$this->render('/o/session_user/admin_absen_reset');
+		}
+	}
 	
 	/**
 	 * Creates a new model.
