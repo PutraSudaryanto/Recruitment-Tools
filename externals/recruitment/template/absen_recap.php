@@ -58,19 +58,19 @@
 	<table style="width: 100%;">
 		<tr>
 			<td colspan="3" style="width: 100%; vertical-align: top; padding-bottom: 20px; text-align: center; font-size: 20px; line-height: 20px; font-weight: bold;">
-				<?php echo strtoupper($model[0]->session->recruitment->event_name); ?>
+				<?php echo strtoupper($batch->recruitment->event_name); ?>
 			</td>
 		</tr>
 		<tr>
 			<td style="vertical-align: top; width: 30%;">Jenis Tes</td>
 			<td style="vertical-align: top; padding: 0 10px 0 0;">:</td>
-			<td style="vertical-align: top; width: 70%;"><?php echo $model[0]->session->viewBatch->session_name;?></td>
+			<td style="vertical-align: top; width: 70%;"><?php echo $batch->parent_id == 0 ? $batch->session_name : $batch->viewBatch->session_name;?></td>			
 		</tr>
 		<?php if($batch->parent_id != 0) {?>
 		<tr>
 			<td style="vertical-align: top; width: 30%;">Batch</td>
 			<td style="vertical-align: top; padding: 0 10px 0 0;">:</td>
-			<td style="vertical-align: top; width: 70%;"><?php echo $model[0]->session->session_name;?></td>
+			<td style="vertical-align: top; width: 70%;"><?php echo $batch->session_name;?></td>
 		</tr>
 		<?php }?>
 		<tr>
