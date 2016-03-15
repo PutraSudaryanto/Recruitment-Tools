@@ -42,7 +42,14 @@
 	<table style="width: 100%;">
 		<tr>
 			<td style="width: 50%; vertical-align: middle; padding-bottom: 20px;">
-				<img style="height: 100px;" src="<?php echo YiiBase::getPathOfAlias('webroot.externals.recruitment.images').'/'?>logo_pln.png" alt="">
+				<?php if($model->session->recruitment->event_logo == '')
+					$images = YiiBase::getPathOfAlias('webroot.public.recruitment').'/recruitment_default.png';
+				else {
+					$images = YiiBase::getPathOfAlias('webroot.public.recruitment').'/'.$model->session->recruitment->event_logo;
+					if(!file_exists($images))
+						$images = YiiBase::getPathOfAlias('webroot.public.recruitment').'/recruitment_default.png';
+				}?>
+				<img style="height: 100px;" src="<?php echo $images;?>" alt="">
 			</td>
 			<td style="width: 50%; vertical-align: middle; padding-bottom: 20px; padding-right: 20px; text-align: right;">
 				<img style="height: 100px;" src="<?php echo YiiBase::getPathOfAlias('webroot.externals.recruitment.images').'/'?>ecc_logo.jpg" alt="">
