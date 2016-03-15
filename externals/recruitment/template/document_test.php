@@ -71,7 +71,9 @@
 <div class="member-card">
 	
 <?php if($model != null) {
-	$session = $model[0]->session->recruitment->view->sessions;
+	$batch = RecruitmentSessions::model()->findByPk($_GET['session']);
+	
+	$session = $batch->recruitment->view->sessions;
 	$column = 2+$session;
 	if($column%2 == 0)
 		$LColspan = $RColspan = $column/2;
@@ -79,7 +81,7 @@
 		$LColspan = (int)($column/2);
 		$RColspan = $LColspan+1;
 	}
-	$sessionPublish = $model[0]->session->recruitment->sessionPublish;
+	$sessionPublish = $batch->recruitment->sessionPublish;
 	
 	$i = 0;
 	$document = count($model);
@@ -90,7 +92,14 @@
 	<?php }?>
 		<tr>
 			<th colspan="<?php echo $LColspan;?>" style="width: 50%;">
-				<img style="height: 100px;" src="<?php echo YiiBase::getPathOfAlias('webroot.externals.recruitment.images').'/'?>logo_pln.png" alt="">
+				<?php if($batch->recruitment->event_logo == '')
+					$images = YiiBase::getPathOfAlias('webroot.public.recruitment').'/recruitment_default.png';
+				else {
+					$images = YiiBase::getPathOfAlias('webroot.public.recruitment').'/'.$batch->recruitment->event_logo;
+					if(!file_exists($images))
+						$images = YiiBase::getPathOfAlias('webroot.public.recruitment').'/recruitment_default.png';
+				}?>
+				<img style="height: 100px;" src="<?php echo $images;?>" alt="">
 			</th>
 			<th colspan="<?php echo $RColspan;?>" style="width: 50%; text-align: right;">
 				<img style="height: 100px;" src="<?php echo YiiBase::getPathOfAlias('webroot.externals.recruitment.images').'/'?>ecc_logo.jpg" alt="">
