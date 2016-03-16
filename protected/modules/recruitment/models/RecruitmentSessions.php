@@ -325,7 +325,8 @@ class RecruitmentSessions extends CActiveRecord
 	 */
 	protected function afterConstruct() {
 		if(count($this->defaultColumns) == 0) {
-			$controller = strtolower(Yii::app()->controller->id);			
+			$controller = strtolower(Yii::app()->controller->id);
+
 			/*
 			$this->defaultColumns[] = array(
 				'class' => 'CCheckBoxColumn',
@@ -576,7 +577,7 @@ class RecruitmentSessions extends CActiveRecord
 							$batch->blasting_subject = $this->blasting_subject;
 						$batch->blasting_status = 1;
 					}
-					$batch->save();			
+					$batch->save();
 				}
 			}
 		}

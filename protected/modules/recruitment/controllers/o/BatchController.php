@@ -149,7 +149,8 @@ class BatchController extends Controller
 		ini_set('max_execution_time', 0);
 		ob_start();
 		
-		$path = 'public/recruitment/batch_excel';		
+		$path = 'public/recruitment/batch_excel';
+
 		// Generate path directory
 		if(!file_exists($path)) {
 			@mkdir($path, 0755, true);
