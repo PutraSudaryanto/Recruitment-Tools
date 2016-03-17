@@ -89,5 +89,5 @@ mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\con
 mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\views\o" "D:\htdocs\_project_ommu_module_support\modules\support\views\o"
 
 ///recruitment\\\
-mklink /J "D:\htdocs\_project_oos_recruitment_tool\externals\recruitment" "D:\htdocs\_project_ommu_module_others\ecc.ft.ugm.ac.id\externals\recruitment"
-mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\recruitment" "D:\htdocs\_project_ommu_module_others\ecc.ft.ugm.ac.id\modules\recruitment"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\externals\recruitment" "D:\htdocs\_project_ommu_module_recruitment\externals\recruitment"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\recruitment" "D:\htdocs\_project_ommu_module_recruitment\modules\recruitment"
