@@ -10,6 +10,8 @@
  * TOC :
  *	Index
  *	Manage
+ *	Import
+ *	Blast
  *	Add
  *	Edit
  *	View
@@ -86,7 +88,7 @@ class AdminController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','add','edit','view','runaction','delete','publish'),
+				'actions'=>array('manage','import','blast','add','edit','view','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -136,7 +138,179 @@ class AdminController extends Controller
 			'model'=>$model,
 			'columns' => $columns,
 		));
-	}	
+	}
+	
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionImport() 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		
+		$path = 'public/recruitment/event_excel';
+
+		// Generate path directory
+		if(!file_exists($path)) {
+			@mkdir($path, 0755, true);
+
+			// Add File in Article Folder (index.php)
+			$newFile = $path.'/index.php';
+			$FileHandle = fopen($newFile, 'w');
+		} else
+			@chmod($path, 0755, true);
+		
+		$error = array();
+		
+		if(isset($_GET['id'])) {
+			$eventId = $_GET['id'];
+			$url = Yii::app()->controller->createUrl('edit',array('id'=>$_GET['id']));			
+		} else {
+			$eventId = $_POST['recruitmentId'];
+			$url = Yii::app()->controller->createUrl('manage');
+		}
+		$model = Recruitments::getInfo($eventId);
+		
+		if(isset($_FILES['usersExcel'])) {
+			$fileName = CUploadedFile::getInstanceByName('usersExcel');
+			if(in_array(strtolower($fileName->extensionName), array('xls','xlsx')) && $eventId != '') {
+				$file = time().'_'.Utility::getUrlTitle($model->event_name).'.'.strtolower($fileName->extensionName);
+				if($fileName->saveAs($path.'/'.$file)) {
+					Yii::import('ext.excel_reader.OExcelReader');
+					$xls = new OExcelReader($path.'/'.$file);
+					
+					for ($row = 2; $row <= $xls->sheets[0]['numRows']; $row++) {
+						$no				= trim($xls->sheets[0]['cells'][$row][1]);
+						$test_number	= strtolower(trim($xls->sheets[0]['cells'][$row][2]));
+						$email			= strtolower(trim($xls->sheets[0]['cells'][$row][3]));
+						$password		= trim($xls->sheets[0]['cells'][$row][4]);
+						$displayname	= trim($xls->sheets[0]['cells'][$row][5]);
+						$major			= trim($xls->sheets[0]['cells'][$row][6]);
+						//echo $no.' '.$test_number.' '.$password.' '.$email.' '.$displayname.' '.$major;
+						
+						$user = RecruitmentUsers::model()->findByAttributes(array('email' => strtolower($email)), array(
+							'select' => 'user_id, email',
+						));
+						if($user == null)
+							$userId = RecruitmentUsers::insertUser($email, $password, $displayname, $major);
+						else
+							$userId = $user->user_id;
+						
+						if($test_number != '') {
+							$eventUser = RecruitmentEventUser::model()->find(array(
+								'select'    => 'event_user_id',
+								'condition' => 'recruitment_id= :recruitment AND user_id= :user AND test_number= :number',
+								'params'    => array(
+									':recruitment' => $model->recruitment_id,
+									':user' => $userId,
+									':number' => strtolower($test_number),
+								),
+							));
+						} else {
+							$eventUser = RecruitmentEventUser::model()->find(array(
+								'select'    => 'event_user_id',
+								'condition' => 'recruitment_id= :recruitment AND user_id= :user',
+								'params'    => array(
+									':recruitment' => $model->recruitment_id,
+									':user' => $userId,
+								),
+							));								
+						}
+						//echo $model->recruitment_id.' '.$userId.' '.$test_number.' '.$password.' '.$major;
+						if($eventUser == null)
+							RecruitmentEventUser::insertUser($model->recruitment_id, $userId, $test_number);
+					}
+					
+					Yii::app()->user->setFlash('success', 'Import Recruitment Event User Success.');
+					$this->redirect(array('manage'));
+					
+				} else
+					Yii::app()->user->setFlash('errorFile', 'Gagal menyimpan file.');
+			} else {
+				Yii::app()->user->setFlash('errorFile', 'Hanya file .xls dan .xlsx yang dibolehkan.');
+				if($eventId == '')
+					Yii::app()->user->setFlash('errorEvent', 'Recruitment Event cannot be blank.');
+			}
+		}
+
+		ob_end_flush();
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = $url;
+		$this->dialogWidth = 600;
+
+		$this->pageTitle = 'Import Recruitment Event User';
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_import',array(
+			'model'=>$model,
+			'eventFieldRender'=>isset($_GET['id']) ? true : false,
+		));
+	}
+	
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionBlast($id) 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		
+		$model = $this->loadModel($id);
+
+		// Uncomment the following line if AJAX validation is needed
+		$this->performAjaxValidation($model);
+
+		if(isset($_POST['Recruitments'])) {
+			$model->attributes=$_POST['Recruitments'];
+			$model->scenario = 'blastForm';
+			
+			if($model->save()) {
+				$criteria=new CDbCriteria;
+				$criteria->compare('t.publish',1);
+				$criteria->compare('t.recruitment_id',$id);
+				
+				$user = RecruitmentEventUser::model()->findAll($criteria);
+				if($user != null) {
+					$i = 0;
+					foreach($user as $key => $val) {
+						$i++;
+						$message = 'testing email';
+						if(SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, $model->blasting_subject, $message, 1, null, $attachment)) {
+							RecruitmentEventUser::model()->updateByPk($val->event_user_id, array(
+								'sendemail_status'=>1, 
+								'sendemail_id'=>Yii::app()->user->id,
+							));
+						}
+						
+						if($i%50 == 0) {
+							$event = $val->user->displayname.' '.$val->user->email.' '.$val->recruitment->event_name;
+							SupportMailSetting::sendEmail(SupportMailSetting::getInfo(1,'mail_contact'), 'Ommu Support', 'Send Email Blast: '.$event.' ('.$i.')', $event, 1, null, $attachment);
+						}
+					}
+				}
+				Recruitments::model()->updateByPk($id, array('blasting_status'=>1));
+		
+				Yii::app()->user->setFlash('success', 'Blasting success.');
+				$this->redirect(array('manage'));
+			}			
+		}
+		
+		ob_end_flush();
+		
+		$this->dialogDetail = true;
+		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
+		$this->dialogWidth = 600;
+
+		$this->pageTitle = 'Blasting';
+		$this->pageDescription = '';
+		$this->pageMeta = '';
+		$this->render('admin_blast',array(
+			'model'=>$model,
+		));
+	}
 	
 	/**
 	 * Creates a new model.
@@ -176,7 +350,7 @@ class AdminController extends Controller
 				
 			if($model->save()) {
 				Yii::app()->user->setFlash('success', 'Recruitments success created.');
-				$this->redirect(array('manage'));
+				$this->redirect(Yii::app()->controller->createUrl('edit', array('id'=>$model->recruitment_id)));
 			}
 		}
 		
@@ -234,10 +408,6 @@ class AdminController extends Controller
 				$this->redirect(array('manage'));
 			}
 		}
-		
-		$this->dialogDetail = true;
-		$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
-		$this->dialogWidth = 600;	
 
 		$this->pageTitle = 'Update Recruitments';
 		$this->pageDescription = '';

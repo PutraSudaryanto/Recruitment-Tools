@@ -69,6 +69,12 @@
 				'header' => Phrase::trans(151,0),
 				'class'=>'CButtonColumn',
 				'buttons' => array(
+					'blast' => array(
+						'label' => 'Blating Email',
+						'options' => array(							
+							'class' => 'blast',
+						),
+						'url' => 'Yii::app()->controller->createUrl("blast",array("id"=>$data->primaryKey))'),
 					'view' => array(
 						'label' => 'view',
 						'options' => array(							
@@ -88,7 +94,7 @@
 						),
 						'url' => 'Yii::app()->controller->createUrl("delete",array("id"=>$data->primaryKey))')
 				),
-				'template' => '{update}|{delete}',
+				'template' => '{blast}|{update}|{delete}',
 			));
 
 			$this->widget('application.components.system.OGridView', array(

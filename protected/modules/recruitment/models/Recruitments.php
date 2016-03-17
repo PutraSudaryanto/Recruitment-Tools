@@ -29,6 +29,10 @@
  * @property integer $event_logo
  * @property string $start_date
  * @property string $finish_date
+ * @property string $blasting_subject
+ * @property integer $blasting_status
+ * @property string $blasting_date
+ * @property string $blasting_id
  * @property string $creation_date
  * @property string $creation_id
  * @property string $modified_date
@@ -76,15 +80,17 @@ class Recruitments extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('publish, event_name, event_desc, event_type, start_date, finish_date', 'required'),
+			array('blasting_subject', 'required', 'on'=>'blastForm'),
 			array('publish, event_type,
 				permanent', 'numerical', 'integerOnly'=>true),
-			array('event_name', 'length', 'max'=>32),
 			array('creation_id, modified_id', 'length', 'max'=>11),
-			array('event_logo, start_date, finish_date, 
+			array('event_name', 'length', 'max'=>32),
+			array('blasting_subject', 'length', 'max'=>64),
+			array('event_logo, start_date, finish_date, blasting_subject, blasting_status, 
 				permanent, oldEventLogo', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('recruitment_id, publish, event_name, event_desc, event_type, event_logo, start_date, finish_date, creation_date, creation_id, modified_date, modified_id,
+			array('recruitment_id, publish, event_name, event_desc, event_type, event_logo, start_date, finish_date, blasting_subject, blasting_status, blasting_date, blasting_id, creation_date, creation_id, modified_date, modified_id,
 				creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -122,6 +128,10 @@ class Recruitments extends CActiveRecord
 			'event_logo' => 'Event Logo',
 			'start_date' => 'Start Date',
 			'finish_date' => 'Finish Date',
+			'blasting_subject' => 'Blasting Subject',
+			'blasting_status' => 'Blasting',
+			'blasting_date' => 'Blasting Date',
+			'blasting_id' => 'Blasting Id',
 			'creation_date' => 'Creation Date',
 			'creation_id' => 'Creation',
 			'modified_date' => 'Modified Date',
@@ -170,6 +180,14 @@ class Recruitments extends CActiveRecord
 			$criteria->compare('date(t.start_date)',date('Y-m-d', strtotime($this->start_date)));
 		if($this->finish_date != null && !in_array($this->finish_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.finish_date)',date('Y-m-d', strtotime($this->finish_date)));
+		$criteria->compare('t.blasting_subject',strtolower($this->blasting_subject),true);
+		$criteria->compare('t.blasting_status',strtolower($this->blasting_status),true);
+		if($this->blasting_date != null && !in_array($this->blasting_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.blasting_date)',date('Y-m-d', strtotime($this->blasting_date)));
+		if(isset($_GET['blasting']))
+			$criteria->compare('t.blasting_id',$_GET['blasting']);
+		else
+			$criteria->compare('t.blasting_id',$this->blasting_id);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if(isset($_GET['creation']))
@@ -238,6 +256,10 @@ class Recruitments extends CActiveRecord
 			$this->defaultColumns[] = 'event_logo';
 			$this->defaultColumns[] = 'start_date';
 			$this->defaultColumns[] = 'finish_date';
+			$this->defaultColumns[] = 'blasting_subject';
+			$this->defaultColumns[] = 'blasting_status';
+			$this->defaultColumns[] = 'blasting_date';
+			$this->defaultColumns[] = 'blasting_id';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
 			$this->defaultColumns[] = 'modified_date';
@@ -393,6 +415,16 @@ class Recruitments extends CActiveRecord
 			*/
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(
+					'name' => 'blasting_status',
+					'value' => '$data->blasting_status == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);
+			}
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
 					'name' => 'publish',
 					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->recruitment_id)), $data->publish, 1)',
 					'htmlOptions' => array(
@@ -454,11 +486,17 @@ class Recruitments extends CActiveRecord
 	 * before validate attributes
 	 */
 	protected function beforeValidate() {
+		$controller = strtolower(Yii::app()->controller->id);
+		$currentAction = strtolower(Yii::app()->controller->id.'/'.Yii::app()->controller->action->id);
+		
 		if(parent::beforeValidate()) {
 			if($this->isNewRecord)
 				$this->creation_id = Yii::app()->user->id;		
-			else
+			else {
 				$this->modified_id = Yii::app()->user->id;
+				if($currentAction == 'o/admin/blast')
+					$this->blasting_id = Yii::app()->user->id;
+			}
 			
 			if(in_array(date('Y-m-d', strtotime($this->finish_date)), array('00-00-0000','01-01-1970')))
 				$this->permanent = 1;
