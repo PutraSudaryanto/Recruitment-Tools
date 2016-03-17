@@ -25,23 +25,33 @@ class RecruitmentUserIdentity extends CUserIdentity
 	 */
 	public function authenticate()
 	{
-		if(isset($_GET['event']))
-			$record = RecruitmentEventUser::model()->findByAttributes(array('test_number' => strtolower($this->username)));
-		else
+		if(isset($_GET['event'])) {
+			$record = RecruitmentEventUser::model()->findByAttributes(
+				array(
+					'recruitment_id' => $_GET['event'],
+					'test_number' => strtolower($this->username),
+				),
+				array('order'=>'event_user_id DESC')
+			);			
+		} else
 			$record = RecruitmentUsers::model()->findByAttributes(array('email' => strtolower($this->username)));
+		
+		if($record != null) {
+			$salt = isset($_GET['event']) ? $record->user->salt : $record->salt;
+			$password = isset($_GET['event']) ? $record->user->password : $record->password;
+			$passwordTemporary = isset($_GET['event']) ? $record->user->password_temporary : $record->password_temporary;
+			$creationDate = isset($_GET['event']) ? $record->user->creation_date : $record->creation_date;
+		}
 			
-		if($record === null) {
+		if($record === null)
 			$this->errorCode = self::ERROR_USERNAME_INVALID;
-		} else if($record->password !== RecruitmentUsers::hashPassword($record->salt,$this->password)) {
+		else if(($this->password != '' && $passwordTemporary !== $this->password) && (($passwordTemporary !== '' || $passwordTemporary === '') && $password !== RecruitmentUsers::hashPassword($salt,$this->password)))
 			$this->errorCode = self::ERROR_PASSWORD_INVALID;
-		} else {
+		else {
 			$this->setState('user_id', $record->user_id);
 			if(isset($_GET['event']))
 				$this->setState('recruitment_id', $record->recruitment_id);
-			if(isset($_GET['event']))
-				$this->setState('creation_date', $record->user->creation_date);
-			else
-				$this->setState('creation_date', $record->creation_date);
+			$this->setState('creation_date', $creationDate);
 			$this->setState('lastlogin_date', date('Y-m-d H:i:s'));
 			$this->errorCode = self::ERROR_NONE;
 		}

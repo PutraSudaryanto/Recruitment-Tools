@@ -64,24 +64,6 @@
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
 		</div>
-
-		<div class="clearfix">
-			<?php echo $form->labelEx($model,'newPassword'); ?>
-			<div class="desc">
-				<?php echo $form->passwordField($model,'newPassword',array('maxlength'=>32)); ?>
-				<?php echo $form->error($model,'newPassword'); ?>
-				<?php /*<div class="small-px silent"></div>*/?>
-			</div>
-		</div>
-
-		<div class="clearfix">
-			<?php echo $form->labelEx($model,'confirmPassword'); ?>
-			<div class="desc">
-				<?php echo $form->passwordField($model,'confirmPassword',array('maxlength'=>32)); ?>
-				<?php echo $form->error($model,'confirmPassword'); ?>
-				<?php /*<div class="small-px silent"></div>*/?>
-			</div>
-		</div>
 	</fieldset>
 </div>
 <div class="dialog-submit">

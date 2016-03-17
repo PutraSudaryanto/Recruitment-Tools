@@ -187,6 +187,7 @@ class SiteController extends Controller
 						// validate user input and redirect to the previous page if valid
 						if($model->validate() && $model->login()) {
 							RecruitmentUsers::model()->updateByPk(Yii::app()->user->user_id, array(
+								'password_temporary'=>'', 
 								'lastlogin_date'=>date('Y-m-d H:i:s'), 
 								'lastlogin_ip'=>$_SERVER['REMOTE_ADDR'],
 							));

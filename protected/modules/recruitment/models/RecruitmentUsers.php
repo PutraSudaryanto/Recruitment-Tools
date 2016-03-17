@@ -29,6 +29,7 @@
  * @property string $displayname
  * @property string $photos
  * @property string $major
+ * @property string $password_temporary
  * @property string $creation_date
  * @property string $creation_ip
  * @property string $update_date
@@ -87,7 +88,7 @@ class RecruitmentUsers extends CActiveRecord
 			array('creation_ip, update_ip, lastlogin_ip', 'length', 'max'=>20),
 			array('salt, password', 'length', 'max'=>32),
 			array('displayname, email', 'length', 'max'=>64),
-			array('email,
+			array('email, password_temporary,
 				newPassword, confirmPassword, oldPhoto', 'safe'),
 			array('
 				newPassword', 'compare', 'compareAttribute' => 'confirmPassword', 'message' => 'Kedua password tidak sama2.'),
@@ -126,6 +127,7 @@ class RecruitmentUsers extends CActiveRecord
 			'displayname' => 'Display Name',
 			'photos' => 'Photos',
 			'major' => 'Major',
+			'password_temporary' => 'Password Temporary',
 			'creation_date' => 'Creation Date',
 			'creation_ip' => 'Creation Ip',
 			'update_date' => 'Update Date',
@@ -170,6 +172,7 @@ class RecruitmentUsers extends CActiveRecord
 		$criteria->compare('t.displayname',strtolower($this->displayname),true);
 		$criteria->compare('t.photos',strtolower($this->photos),true);
 		$criteria->compare('t.major',strtolower($this->major),true);
+		$criteria->compare('t.password_temporary',strtolower($this->password_temporary),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		$criteria->compare('t.creation_ip',strtolower($this->creation_ip),true);
@@ -232,6 +235,7 @@ class RecruitmentUsers extends CActiveRecord
 			$this->defaultColumns[] = 'displayname';
 			$this->defaultColumns[] = 'photos';
 			$this->defaultColumns[] = 'major';
+			$this->defaultColumns[] = 'password_temporary';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_ip';
 			$this->defaultColumns[] = 'update_date';
@@ -428,7 +432,7 @@ class RecruitmentUsers extends CActiveRecord
 			
 			if($this->isNewRecord) {
 				$this->salt = self::getUniqueCode();
-				if($currentAction == 'o/batch/import') {
+				if(in_array($currentAction, array('o/batch/import','o/admin/import'))) {
 					if($this->newPassword == '')
 						$this->confirmPassword = $this->newPassword = self::getGeneratePassword();
 					else
@@ -439,7 +443,7 @@ class RecruitmentUsers extends CActiveRecord
 				
 			} else {
 				// Admin modify member
-				if(in_array($currentAction, array('o/admin/edit','o/member/edit'))) {
+				if($currentAction == 'o/users/edit') {
 					$this->modified_date = date('Y-m-d H:i:s');
 					$this->modified_id = Yii::app()->user->id;
 				} else {
@@ -448,8 +452,7 @@ class RecruitmentUsers extends CActiveRecord
 				}
 			}
 				
-			if($currentAction != 'o/batch/import') {
-				$this->oldPhoto = $this->photos;			
+			if(!in_array($currentAction, array('o/batch/import','o/admin/import'))) {
 				$photo = CUploadedFile::getInstance($this, 'photos');		
 				if($photo->name != '') {
 					$extension = pathinfo($photo->name, PATHINFO_EXTENSION);
@@ -470,6 +473,8 @@ class RecruitmentUsers extends CActiveRecord
 		if(parent::beforeSave()) {
 			$this->email = strtolower($this->email);
 			$this->password = self::hashPassword($this->salt, $this->newPassword);
+			if($this->isNewRecord)
+				$this->password_temporary = $this->newPassword;
 			
 			//upload new photo
 			$recruitment_path = "public/recruitment/user_photos";

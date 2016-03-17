@@ -300,7 +300,7 @@ class RecruitmentSessionUser extends CActiveRecord
 	 * Set default columns to display
 	 */
 	protected function afterConstruct() {
-		if(count($this->defaultColumns) == 0) {		
+		if(count($this->defaultColumns) == 0) {
 			/*
 			$this->defaultColumns[] = array(
 				'class' => 'CCheckBoxColumn',
@@ -367,7 +367,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			*/
 			$this->defaultColumns[] = array(
 				'header' => 'Print Card',
-				'value' => 'CHtml::link("Print Card", Yii::app()->controller->createUrl("o/sessionuser/printcard",array("id"=>$data->id)), array("target"=>"_blank"))',
+				'value' => 'CHtml::link("Print Card", Yii::app()->controller->createUrl("printcard",array("id"=>$data->id)), array("target"=>"_blank"))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -375,7 +375,7 @@ class RecruitmentSessionUser extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'header' => 'Send Email',
-				'value' => 'CHtml::link("Send Email", Yii::app()->controller->createUrl("o/sessionuser/sendemail",array("id"=>$data->id)))',
+				'value' => 'CHtml::link("Send Email", Yii::app()->controller->createUrl("sendemail",array("id"=>$data->id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),

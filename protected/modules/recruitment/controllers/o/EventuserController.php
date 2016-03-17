@@ -10,6 +10,7 @@
  * TOC :
  *	Index
  *	Manage
+ *	SendEmail
  *	Add
  *	Edit
  *	RunAction
@@ -85,7 +86,7 @@ class EventuserController extends Controller
 				//'expression'=>'isset(Yii::app()->user->level) && (Yii::app()->user->level != 1)',
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('manage','runaction','delete','publish'),
+				'actions'=>array('manage','sendemail','runaction','delete','publish'),
 				'users'=>array('@'),
 				'expression'=>'isset(Yii::app()->user->level) && in_array(Yii::app()->user->level, array(1,2))',
 			),
@@ -135,7 +136,31 @@ class EventuserController extends Controller
 			'model'=>$model,
 			'columns' => $columns,
 		));
-	}	
+	}
+	
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionSendEmail($id) 
+	{
+		ini_set('max_execution_time', 0);
+		ob_start();
+		$model=$this->loadModel($id);
+		
+		$message = 'testing email';
+		if(SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->recruitment->blasting_subject, $message, 1, null, $attachment)) {
+			RecruitmentEventUser::model()->updateByPk($model->event_user_id, array(
+				'sendemail_status'=>1, 
+				'sendemail_id'=>Yii::app()->user->id,
+			));
+		}
+		
+		Yii::app()->user->setFlash('success', 'Send Email success.');
+		$this->redirect(Yii::app()->controller->createUrl('manage', array('recruitment'=>$model->recruitment_id)));
+		
+		ob_end_flush();
+	}
 	
 	/**
 	 * Creates a new model.
@@ -150,7 +175,6 @@ class EventuserController extends Controller
 
 		if(isset($_POST['RecruitmentEventUser'])) {
 			$model->attributes=$_POST['RecruitmentEventUser'];
-			$model->scenario = 'formAdd';
 			
 			$jsonError = CActiveForm::validate($model);
 			if(strlen($jsonError) > 2) {

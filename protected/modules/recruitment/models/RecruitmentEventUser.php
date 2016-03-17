@@ -25,9 +25,10 @@
  * @property integer $publish
  * @property string $recruitment_id
  * @property string $user_id
- * @property string $salt
  * @property string $test_number
- * @property string $password
+ * @property integer $sendemail_status
+ * @property string $sendemail_date
+ * @property integer $sendemail_id
  * @property string $creation_date
  * @property string $creation_id
  *
@@ -38,8 +39,6 @@
 class RecruitmentEventUser extends CActiveRecord
 {
 	public $defaultColumns = array();
-	public $newPassword;
-	public $confirmPassword;
 	
 	// Variable Search
 	public $recruitment_search;
@@ -74,20 +73,16 @@ class RecruitmentEventUser extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('publish, recruitment_id, user_id, test_number', 'required'),
-			array('publish', 'numerical', 'integerOnly'=>true),
-			array('
-				newPassword, confirmPassword', 'required', 'on'=>'formAdd'),
+			array('publish, recruitment_id, user_id', 'required'),
+			array('test_number', 'required', 'on'=>'adminform'),
+			array('publish, sendemail_status', 'numerical', 'integerOnly'=>true),
 			array('recruitment_id, user_id, creation_id', 'length', 'max'=>11),
-			array('salt, test_number, password', 'length', 'max'=>32),
+			array('test_number', 'length', 'max'=>32),
 			//array('test_number', 'match', 'pattern' => '/^[a-zA-Z0-9_.-]{0,25}$/', 'message' => Yii::t('other', 'Nama user hanya boleh berisi karakter, angka dan karakter (., -, _)')),
-			array('test_number,
-				newPassword, confirmPassword', 'safe'),
-			array('
-				newPassword', 'compare', 'compareAttribute' => 'confirmPassword', 'message' => 'Kedua password tidak sama2.'),
+			array('test_number', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('event_user_id, publish, recruitment_id, user_id, salt, test_number, password, creation_date, creation_id,
+			array('event_user_id, publish, recruitment_id, user_id, test_number, sendemail_status, sendemail_date, sendemail_id, creation_date, creation_id,
 				recruitment_search, user_search, email_search, creation_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -116,13 +111,12 @@ class RecruitmentEventUser extends CActiveRecord
 			'publish' => 'Publish',
 			'recruitment_id' => 'Recruitment',
 			'user_id' => 'User',
-			'salt' => 'Salt',
 			'test_number' => 'Test Number',
-			'password' => 'Password',
+			'sendemail_status' => 'Send Email',
+			'sendemail_date' => 'Sendemail Date',
+			'sendemail_id' => 'Sendemail',
 			'creation_date' => 'Creation Date',
 			'creation_id' => 'Creation',
-			'newPassword' => 'Password',
-			'confirmPassword' => 'Confirm Password',
 			'recruitment_search' => 'Recruitment',
 			'user_search' => 'User',
 			'email_search' => 'Email',
@@ -167,9 +161,14 @@ class RecruitmentEventUser extends CActiveRecord
 			$criteria->compare('t.user_id',$_GET['user']);
 		else
 			$criteria->compare('t.user_id',$this->user_id);
-		$criteria->compare('t.salt',strtolower($this->salt),true);
 		$criteria->compare('t.test_number',strtolower($this->test_number),true);
-		$criteria->compare('t.password',strtolower($this->password),true);
+		$criteria->compare('t.sendemail_status',strtolower($this->sendemail_status),true);
+		if($this->sendemail_date != null && !in_array($this->sendemail_date, array('0000-00-00 00:00:00', '0000-00-00')))
+			$criteria->compare('date(t.sendemail_date)',date('Y-m-d', strtotime($this->sendemail_date)));
+		if(isset($_GET['sendemail']))
+			$criteria->compare('t.sendemail_id',$_GET['sendemail']);
+		else
+			$criteria->compare('t.sendemail_id',$this->sendemail_id);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
 			$criteria->compare('date(t.creation_date)',date('Y-m-d', strtotime($this->creation_date)));
 		if(isset($_GET['creation']))
@@ -230,9 +229,10 @@ class RecruitmentEventUser extends CActiveRecord
 			$this->defaultColumns[] = 'publish';
 			$this->defaultColumns[] = 'recruitment_id';
 			$this->defaultColumns[] = 'user_id';
-			$this->defaultColumns[] = 'salt';
 			$this->defaultColumns[] = 'test_number';
-			$this->defaultColumns[] = 'password';
+			$this->defaultColumns[] = 'sendemail_status';
+			$this->defaultColumns[] = 'sendemail_date';
+			$this->defaultColumns[] = 'sendemail_id';
 			$this->defaultColumns[] = 'creation_date';
 			$this->defaultColumns[] = 'creation_id';
 		}
@@ -302,6 +302,24 @@ class RecruitmentEventUser extends CActiveRecord
 				), true),
 			);
 			*/
+			$this->defaultColumns[] = array(
+				'header' => 'Send Email',
+				'value' => 'CHtml::link("Send Email", Yii::app()->controller->createUrl("sendemail",array("id"=>$data->event_user_id)))',
+				'htmlOptions' => array(
+					'class' => 'center',
+				),
+				'type' => 'raw',
+			);
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'sendemail_status',
+					'value' => '$data->sendemail_status == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'type' => 'raw',
+				);
+			}
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'publish',
@@ -336,54 +354,8 @@ class RecruitmentEventUser extends CActiveRecord
 			return $model;			
 		}
 	}
-
-	/**
-	 * User salt codes
-	 */
-	public static function getUniqueCode() {
-		$chars = "abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		srand((double)microtime()*1000000);
-		$i = 0;
-		$salt = '' ;
-
-		while ($i <= 15) {
-			$num = rand() % 33;
-			$tmp = substr($chars, $num, 2);
-			$salt = $salt . $tmp; 
-			$i++;
-		}
-
-		return $salt;
-	}
-
-	/**
-	 * User generate password
-	 */
-	public static function getGeneratePassword() {
-		$chars = "abcdefghijkmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		srand((double)microtime()*1000000);
-		$i = 0;
-		$password = '' ;
-
-		while ($i <= 4) {
-			$num = rand() % 33;
-			$tmp = substr($chars, $num, 2);
-			$password = $password . $tmp; 
-			$i++;
-		}
-
-		return $password;
-	}
-
-	/**
-	 * User Salt
-	 */
-	public static function hashPassword($salt, $password)
-	{
-		return md5($salt.$password);
-	}
 	
-	public static function insertUser($recruitment_id, $user_id, $test_number, $password) 
+	public static function insertUser($recruitment_id, $user_id, $test_number) 
 	{
 		$return = true;
 		
@@ -391,7 +363,6 @@ class RecruitmentEventUser extends CActiveRecord
 		$model->recruitment_id = $recruitment_id;
 		$model->user_id = $user_id;
 		$model->test_number = $test_number;
-		$model->newPassword = $password;
 		
 		if($model->save())
 			$return = $model->event_user_id;
@@ -403,19 +374,8 @@ class RecruitmentEventUser extends CActiveRecord
 	 */
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {
-			$controller = strtolower(Yii::app()->controller->id);
-			$currentAction = strtolower(Yii::app()->controller->id.'/'.Yii::app()->controller->action->id);
-			
-			if($this->isNewRecord) {
-				$this->salt = self::getUniqueCode();
-				if($currentAction == 'o/batch/import') {
-					if($this->newPassword == '')
-						$this->confirmPassword = $this->newPassword = self::getGeneratePassword();
-					else
-						$this->confirmPassword = $this->newPassword;
-				}
-				$this->creation_id = Yii::app()->user->id;				
-			}
+			if($this->isNewRecord)
+				$this->creation_id = Yii::app()->user->id;
 		}
 		return true;
 	}
@@ -426,7 +386,6 @@ class RecruitmentEventUser extends CActiveRecord
 	protected function beforeSave() {
 		if(parent::beforeSave()) {
 			$this->test_number = strtolower($this->test_number);
-			$this->password = self::hashPassword($this->salt, $this->newPassword);
 		}
 		return true;	
 	}
