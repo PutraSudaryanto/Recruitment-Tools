@@ -456,7 +456,7 @@ class RecruitmentSessions extends CActiveRecord
 			if(!isset($_GET['type'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'blasting_status',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("blast",array("id"=>$data->session_id)), $data->blasting_status, 1)',
+					'value' => '$data->blasting_status == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/unpublish.png\')',
 					'htmlOptions' => array(
 						'class' => 'center',
 					),

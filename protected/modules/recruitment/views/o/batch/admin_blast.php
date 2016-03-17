@@ -30,6 +30,8 @@
 <div class="dialog-content">
 
 	<fieldset>
+		<p>Peserta akan dikirimkan email undangan tes termasuk didalamnya informasi tes yang akan dilaksanakan dan sebuah kartu masuk yang dapat digunakan oleh peserta untuk dapat mengikuti tes.</p>
+		
 		<?php //begin.Messages ?>
 		<div id="ajax-message">
 			<?php //echo $form->errorSummary($batch); ?>

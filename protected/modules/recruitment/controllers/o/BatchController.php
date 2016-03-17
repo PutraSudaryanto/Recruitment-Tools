@@ -184,8 +184,8 @@ class BatchController extends Controller
 						if($model->recruitment->event_type == 1) {
 							$no				= trim($xls->sheets[0]['cells'][$row][1]);
 							$test_number	= strtolower(trim($xls->sheets[0]['cells'][$row][2]));
-							$password		= trim($xls->sheets[0]['cells'][$row][3]);
-							$email			= strtolower(trim($xls->sheets[0]['cells'][$row][4]));
+							$email			= strtolower(trim($xls->sheets[0]['cells'][$row][3]));
+							$password		= trim($xls->sheets[0]['cells'][$row][4]);
 							$displayname	= trim($xls->sheets[0]['cells'][$row][5]);
 							$major			= trim($xls->sheets[0]['cells'][$row][6]);
 							$session_seat	= strtoupper(trim($xls->sheets[0]['cells'][$row][7]));
@@ -200,16 +200,18 @@ class BatchController extends Controller
 								$userId = $user->user_id;
 							
 							$eventUser = RecruitmentEventUser::model()->find(array(
-								'select'    => 'event_user_id, recruitment_id, test_number',
-								'condition' => 'recruitment_id= :recruitment AND test_number= :number',
+								'select'    => 'event_user_id',
+								//'condition' => 'recruitment_id= :recruitment AND test_number= :number',
+								'condition' => 'recruitment_id= :recruitment AND user_id= :user AND test_number= :number',
 								'params'    => array(
 									':recruitment' => $model->recruitment_id,
+									':user' => $userId,
 									':number' => strtolower($test_number),
 								),
 							));
 							//echo $model->recruitment_id.' '.$userId.' '.$test_number.' '.$password.' '.$major;
 							if($eventUser == null)
-								$eventUserId = RecruitmentEventUser::insertUser($model->recruitment_id, $userId, $test_number, $password);
+								$eventUserId = RecruitmentEventUser::insertUser($model->recruitment_id, $userId, $test_number);
 							else
 								$eventUserId = $eventUser->event_user_id;
 							
@@ -248,17 +250,15 @@ class BatchController extends Controller
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionBlast() 
+	public function actionBlast($id) 
 	{
 		ini_set('max_execution_time', 0);
 		ob_start();
 		
-		if(!isset($_GET['id']))
+		if(!isset($id))
 			$this->redirect(Yii::app()->createUrl('admin/index'));
-		else
-			$batchId = $_GET['id'];
 		
-		$batch = $this->loadModel($batchId);
+		$batch = $this->loadModel($id);
 		if($batch->parent_id == 0)
 			$this->redirect(Yii::app()->createUrl('admin/index'));
 
@@ -272,7 +272,7 @@ class BatchController extends Controller
 			if($batch->save()) {
 				$criteria=new CDbCriteria;
 				$criteria->compare('t.publish',1);
-				$criteria->compare('t.session_id',$batchId);
+				$criteria->compare('t.session_id',$id);
 				
 				$model = RecruitmentSessionUser::model()->findAll($criteria);
 				if($model != null) {
@@ -307,7 +307,7 @@ class BatchController extends Controller
 						}
 					}
 				}
-				RecruitmentSessions::model()->updateByPk($batchId, array('blasting_status'=>1));
+				RecruitmentSessions::model()->updateByPk($id, array('blasting_status'=>1));
 		
 				Yii::app()->user->setFlash('success', 'Blasting success.');
 				$this->redirect(array('manage'));

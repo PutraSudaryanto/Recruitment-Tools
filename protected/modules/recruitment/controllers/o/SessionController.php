@@ -143,17 +143,15 @@ class SessionController extends Controller
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionBlast() 
+	public function actionBlast($id) 
 	{
 		ini_set('max_execution_time', 0);
 		ob_start();
 		
-		if(!isset($_GET['id']))
+		if(!isset($id))
 			$this->redirect(Yii::app()->createUrl('admin/index'));
-		else
-			$sessionId = $_GET['id'];
 		
-		$session = $this->loadModel($sessionId);
+		$session = $this->loadModel($id);
 		if($session->parent_id != 0)
 			$this->redirect(Yii::app()->createUrl('admin/index'));
 
@@ -172,7 +170,7 @@ class SessionController extends Controller
 						'condition' => 'publish = :publish AND parent_id = :parent',
 						'params' => array(
 							':publish' => 1,
-							':parent' => $sessionId,
+							':parent' => $id,
 						),
 					));
 					$items = array();
@@ -216,7 +214,7 @@ class SessionController extends Controller
 						}
 					}
 				}
-				RecruitmentSessions::model()->updateByPk($sessionId, array('blasting_status'=>1));
+				RecruitmentSessions::model()->updateByPk($id, array('blasting_status'=>1));
 		
 				Yii::app()->user->setFlash('success', 'Blasting success.');
 				$this->redirect(array('manage'));
