@@ -238,31 +238,27 @@ class OmmuLanguages extends CActiveRecord
 	/**
 	 * Get Language
 	 */
-	public static function getLanguage() {
-		$model = self::model()->findAll(array('orders' => 'language_id ASC'));
-		$items = array();
-		if($model != null) {
-			foreach($model as $key => $val) {
-				$items[$val->language_id] = $val->name;
-			}
-			return $items;
-		}else {
-			return false;
-		}
-	}
-
-	// Get language if condition active
-	public static function getLanguageActive() {
-		$model = self::model()->findAll(array(
-			'select' => 'name',
-			'condition' => 'actived = :actived',
-			'params' => array(
-				':actived' => 1,
-			),
-			'order'=> 'orders ASC',
-		));
-
-		return $model;
+	public static function getLanguage($publish=null, $type=null) 
+	{
+		$criteria=new CDbCriteria;
+		if($publish != null)
+			$criteria->compare('t.actived',$publish);
+		$criteria->order = 't.orders ASC';
+		
+		$model = self::model()->findAll($criteria);
+		
+		if($type == null) {
+			$items = array();
+			if($model != null) {
+				foreach($model as $key => $val)
+					$items[$val->language_id] = $val->name;
+				return $items;
+				
+			} else
+				return false;
+			
+		} else
+			return $model;
 	}
 
 	/**
