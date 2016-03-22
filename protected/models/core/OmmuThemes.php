@@ -101,7 +101,7 @@ class OmmuThemes extends CActiveRecord
 			'default_theme' => Yii::t('attribute', 'default_theme'),
 			'folder' => Yii::t('attribute', 'folder'),
 			'layout' => Yii::t('attribute', 'layout'),
-			'name' => Yii::t('attribute', 'name'),
+			'name' => Yii::t('attribute', 'theme_name'),
 			'thumbnail' => Yii::t('attribute', 'thumbnail'),
 			'creation_date' => Yii::t('attribute', 'creation_date'),
 			'creation_id' => Yii::t('attribute', 'creation_id'),
