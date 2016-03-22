@@ -16,7 +16,7 @@ $currentModule = strtolower(Yii::app()->controller->module->id.'/'.Yii::app()->c
 $currentModuleAction = strtolower(Yii::app()->controller->module->id.'/'.Yii::app()->controller->id.'/'.Yii::app()->controller->action->id);
 
 class Controller extends CController
-{	
+{
 	/**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
 	 * meaning using a single column layout. See 'protected/views/layouts/column1.php'.
@@ -91,7 +91,7 @@ class Controller extends CController
 	public $pageImage;
 
 	public function render($view, $data = null, $return = false) {
-		if ($this->beforeRender($view)) {			
+		if ($this->beforeRender($view)) {
 			/**
 			 * Custom condition
 			 ** 
