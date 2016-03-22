@@ -144,7 +144,7 @@ class OmmuSettings extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => Yii::t('attribute', 'id'),
+			'id' => Yii::t('attribute', 'setting'),
 			'online' => Yii::t('attribute', 'online'),
 			'site_type' => Yii::t('attribute', 'site_type'),
 			'site_admin' => Yii::t('attribute', 'site_admin'),

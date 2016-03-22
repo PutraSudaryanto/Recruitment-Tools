@@ -91,7 +91,7 @@ class OmmuLocale extends CActiveRecord
 			'locale_id' => Yii::t('attribute', 'locale_id'),
 			'defaults' => Yii::t('attribute', 'defaults'),
 			'locale' => Yii::t('attribute', 'locale'),
-			'title' => Yii::t('attribute', 'title'),
+			'title' => Yii::t('attribute', 'description'),
 			'default_locale' => Yii::t('attribute', 'default_locale'),
 			'timezone' => Yii::t('attribute', 'timezone'),
 			'dateformat' => Yii::t('attribute', 'dateformat'),
