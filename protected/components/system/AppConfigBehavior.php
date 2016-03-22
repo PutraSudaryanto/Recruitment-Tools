@@ -25,11 +25,6 @@ class AppConfigBehavior extends CBehavior
 	*/
 	public function beginRequest()
 	{
-		/*
-		if(isset($_GET['lang']) && $_GET['lang'] != '')
-			$this->owner->user->setState('applicationLanguage', $_GET['lang']);
-		*/
-		
 		if($this->owner->user->getState('applicationLanguage'))
 			$this->owner->language = $this->owner->user->getState('applicationLanguage');
 		else

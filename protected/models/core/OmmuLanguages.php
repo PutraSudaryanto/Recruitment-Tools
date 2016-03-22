@@ -67,7 +67,7 @@ class OmmuLanguages extends CActiveRecord
 		return array(
 			array('code, name', 'required'),
 			array('actived, defaults, orders', 'numerical', 'integerOnly'=>true),
-			array('code', 'length', 'max'=>8),
+			array('code', 'length', 'max'=>6),
 			array('name', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
@@ -95,18 +95,18 @@ class OmmuLanguages extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'language_id' => Phrase::trans(495,0),
-			'actived' => Phrase::trans(231,0),
-			'defaults' => Phrase::trans(156,0),
-			'code' => Phrase::trans(155,0),
-			'orders' => Phrase::trans(202,0),
-			'name' => Phrase::trans(154,0),
-			'creation_date' => 'Creation Date',
-			'creation_id' => 'Creation',
-			'modified_date' => 'Modified Date',
-			'modified_id' => 'Modified',
-			'creation_search' => 'Creation',
-			'modified_search' => 'Modified',
+			'language_id' => Yii::t('attribute', 'language_id'),
+			'actived' => Yii::t('attribute', 'actived'),
+			'defaults' => Yii::t('attribute', 'defaults'),
+			'code' => Yii::t('attribute', 'code'),
+			'orders' => Yii::t('attribute', 'orders'),
+			'name' => Yii::t('attribute', 'name'),
+			'creation_date' => Yii::t('attribute', 'creation_date'),
+			'creation_id' => Yii::t('attribute', 'creation_id'),
+			'modified_date' => Yii::t('attribute', 'modified_date'),
+			'modified_id' => Yii::t('attribute', 'modified_id'),
+			'creation_search' => Yii::t('attribute', 'creation_id'),
+			'modified_search' => Yii::t('attribute', 'modified_id'),
 		);
 	}
 	

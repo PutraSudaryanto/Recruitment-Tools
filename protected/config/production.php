@@ -17,6 +17,8 @@ return array(
 	'name'=>'Ommu Platform',
 
 	// Language setting
+	'sourceLanguage' => '00',
+	'language'       => 'id',
 	'behaviors' => array('AppConfigBehavior'),
 
 	// preloading 'log' component
@@ -51,6 +53,11 @@ return array(
 		//Ommu module/plugin handle
 		'moduleHandle' => array(
 			'class' => 'application.ommu.ModuleHandle'
+		),
+
+		//move core message yii to protected
+		'coreMessages' => array(
+			'basePath' => null,
 		),
 
 		'clientScript' => array(

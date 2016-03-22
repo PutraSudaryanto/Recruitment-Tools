@@ -103,6 +103,11 @@ class Controller extends CController
 			 * Set owner and user info
 			 *
 			 */
+			 
+			// set language sessions
+			if(isset($_GET['lang']) && $_GET['lang'] != '')
+				Yii::app()->session['language'] = $_GET['lang'];
+		
 			// guest page
 			if($this->dialogFixed == true)
 				$this->pageGuest = true;
