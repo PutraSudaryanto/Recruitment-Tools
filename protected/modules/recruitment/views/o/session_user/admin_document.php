@@ -85,6 +85,6 @@
 		echo CHtml::button('Reset Document', array('off_address'=>'', 'class'=>'active', 'onclick'=>'window.location.href=\''.$url.'\''));
 	} ?>
 	<?php  ?>
-	<?php echo CHtml::button(Phrase::trans(4,0), array('id'=>'closed')); ?>
+	<?php echo CHtml::button(Yii::t('phrase', 'Close'), array('id'=>'closed')); ?>
 </div>
 <?php $this->endWidget(); ?>

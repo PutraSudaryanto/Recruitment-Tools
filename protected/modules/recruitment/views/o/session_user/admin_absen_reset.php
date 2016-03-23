@@ -28,7 +28,7 @@
 	<div class="dialog-content">Are you sure you want to reset this data?</div>
 	<div class="dialog-submit">
 		<?php echo CHtml::submitButton('Reset', array('onclick' => 'setEnableSave()')); ?>
-		<?php echo CHtml::button(Phrase::trans(174,0), array('id'=>'closed')); ?>
+		<?php echo CHtml::button(Yii::t('phrase', 'Cancel'), array('id'=>'closed')); ?>
 	</div>
 	
 <?php $this->endWidget(); ?>

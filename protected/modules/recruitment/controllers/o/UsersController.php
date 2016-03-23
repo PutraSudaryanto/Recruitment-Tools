@@ -348,10 +348,10 @@ class UsersController extends Controller
 	{
 		$model=$this->loadModel($id);
 		if($model->enabled == 1) {
-			$title = Phrase::trans(284,0);
+			$title = Yii::t('phrase', 'Disabled');
 			$replace = 0;
 		} else {
-			$title = Phrase::trans(283,0);
+			$title = Yii::t('phrase', 'Enabled');
 			$replace = 1;
 		}
 
@@ -395,7 +395,7 @@ class UsersController extends Controller
 	{
 		$model = RecruitmentUsers::model()->findByPk($id);
 		if($model===null)
-			throw new CHttpException(404, Phrase::trans(193,0));
+			throw new CHttpException(404, Yii::t('phrase', 'The requested page does not exist.'));
 		return $model;
 	}
 
