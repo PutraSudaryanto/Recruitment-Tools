@@ -15,16 +15,160 @@
 /* =Custom Default
 -------------------------------------------------------------- */
 
-
-/* =Main
+/* =Login
 -------------------------------------------------------------- */
-#main {
+#login form {
+	width: 350px;
+	margin: 0 auto;
+}
+#login form div.clearfix {
+	padding: 0 0 20px 0;
+}
+#login form div.clearfix:last-child {
+	padding: 0 0 0 0;
+}
+#login form div.clearfix .errorMessage {
+	padding: 10px 0 0 0;
+	font-size: 14px;
+	line-height: 14px;
+	color: #ff0000;
+}
+#login form input[type="text"],
+#login form input[type="password"],
+#login form input[type="submit"] {
+	width: 100%;
+	padding: 15px 20px;
+	font-size: 16px;
+	line-height: 21px;
+	font-weight: 300;
+}
+#login form input[type="submit"] {
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: 600;
+}
+
+/* =Recruitment
+-------------------------------------------------------------- */
+#recruitment .event-info {
+	display: table;
+	width: 100%;
+}
+#recruitment .event-info .event-photo,
+#recruitment .event-info .event-statistic {
+	display: table-cell;
+	vertical-align: middle;
+}
+#recruitment .event-photo {
+	width: 200px;
+}
+#recruitment .event-photo img {
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+#recruitment .event-statistic {
+	padding-left: 50px;
+}
+#recruitment .event-statistic ul {
+	display: inline-block;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	list-style: none;
+}
+#recruitment .event-statistic ul li {
+	float: left;
+	margin: 0 15px 0 0;
+}
+#recruitment .event-statistic ul li:last-child {
+	margin: 0 0 0 0;
+}
+#recruitment .event-statistic ul li,
+#recruitment .event-statistic ul li * {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	display: block;
+	font-weight: 600;
+}
+#recruitment .event-statistic ul li span {
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	padding: 10px 20px;
+	font-size: 40px;
+	line-height: 40px;
+	background: #76a7e1;
+	color: #fff;
+}
+#recruitment .event-statistic ul li strong {
+	margin: 10px 0 0 0;
+	text-transform: uppercase;
+	font-weight: 300;
+	font-size: 15px;
+	line-height: 15px;
+}
+#recruitment .sessions {
+	margin: 30px 0 0 0;
+	padding: 40px 0 0 0;
+	border-top: 1px solid #eee;
+}
+#recruitment .sessions .sep {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
-	background: #fff;
-	border: 1px solid #c9d0e1;
-	padding: 50px;	
+	border: 7px solid transparent;
+	padding: 25px 20px 25px 20px;
+	margin: 0 0 10px 0;
+	background: #f9f9f9;
+}
+#recruitment .sessions .sep.done,
+#recruitment .sessions .sep.active {
+	border: 7px solid #76a7e1;
+	background: #f7f7fa;
+}
+#recruitment .sessions .sep:last-child {
+	margin: 0 0 0 0;
+}
+#recruitment .sessions h3,
+#recruitment .sessions h3 strong {
+	font-size: 20px;
+	line-height: 26px;	
+}
+#recruitment .sessions h3 {
+	position: relative;
+	padding: 0 0 0 55px;
+	margin: 0 0 0 0;
+	font-weight: 600;
+}
+#recruitment .sessions h3 strong {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	position: absolute;
+	left: 0;
+	top: -4px;
+	border: 1px solid #6e768f;
+	padding-top: 3px;
+	width: 35px;
+	height: 35px;
+	text-align: center;
+	font-weight: 300;
+}
+#recruitment .sessions .sep.done h3 strong,
+#recruitment .sessions .sep.done h3 strong * {
+	border: 1px solid #76a7e1;
+	color: #76a7e1;
+	background: #76a7e1;	
+}
+#recruitment .sessions h3 span {
+	display: inline-block;
+	padding-bottom: 5px;
+	margin-left: 10px;
+	color: #9fa5b8;
 }
 
 /* =Responsive
