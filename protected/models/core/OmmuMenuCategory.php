@@ -23,7 +23,6 @@
  * The followings are the available columns in table 'ommu_core_menu_category':
  * @property integer $cat_id
  * @property integer $publish
- * @property integer $orders
  * @property string $name
  * @property string $desc
  * @property string $creation_date
@@ -73,7 +72,7 @@ class OmmuMenuCategory extends CActiveRecord
 		return array(
 			array('publish,
 				title, description', 'required'),
-			array('publish, orders, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
+			array('publish, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
 			array('name, desc, creation_id, modified_id', 'length', 'max'=>11),
 			array('
 				title', 'length', 'max'=>32),
@@ -81,7 +80,7 @@ class OmmuMenuCategory extends CActiveRecord
 				description', 'length', 'max'=>128),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('cat_id, publish, orders, name, desc, creation_date, creation_id, modified_date, modified_id,
+			array('cat_id, publish, name, desc, creation_date, creation_id, modified_date, modified_id,
 				title, description, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -109,7 +108,6 @@ class OmmuMenuCategory extends CActiveRecord
 		return array(
 			'cat_id' => Yii::t('attribute', 'cat_id'),
 			'publish' => Yii::t('attribute', 'publish'),
-			'orders' => Yii::t('attribute', 'orders'),
 			'name' => Yii::t('attribute', 'name'),
 			'desc' => Yii::t('attribute', 'desc'),
 			'creation_date' => Yii::t('attribute', 'creation_date'),
@@ -152,7 +150,6 @@ class OmmuMenuCategory extends CActiveRecord
 			$criteria->addInCondition('t.publish',array(0,1));
 			$criteria->compare('t.publish',$this->publish);
 		}
-		$criteria->compare('t.orders',$this->orders);
 		$criteria->compare('t.name',strtolower($this->name),true);
 		$criteria->compare('t.desc',strtolower($this->desc),true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -218,7 +215,6 @@ class OmmuMenuCategory extends CActiveRecord
 		} else {
 			//$this->defaultColumns[] = 'cat_id';
 			$this->defaultColumns[] = 'publish';
-			$this->defaultColumns[] = 'orders';
 			$this->defaultColumns[] = 'name';
 			$this->defaultColumns[] = 'desc';
 			$this->defaultColumns[] = 'creation_date';
@@ -352,10 +348,9 @@ class OmmuMenuCategory extends CActiveRecord
 	 */
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {		
-			if($this->isNewRecord) {
-				$this->orders = 0;
+			if($this->isNewRecord)
 				$this->creation_id = Yii::app()->user->id;	
-			} else
+			else
 				$this->modified_id = Yii::app()->user->id;
 		}
 		return true;

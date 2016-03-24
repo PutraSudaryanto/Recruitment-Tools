@@ -23,7 +23,7 @@
  *
  * @author Putra Sudaryanto <putra.sudaryanto@gmail.com>
  * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
- * @created date 15 January 2016, 16:57 WIB
+ * @created date 24 March 2016, 10:20 WIB
  * @link http://company.ommu.co
  * @contect (+62)856-299-4114
  *
@@ -132,7 +132,7 @@ class MenuController extends Controller
 			),
 		));
 
-		$this->pageTitle = 'Ommu Menus';
+		$this->pageTitle = Yii::t('phrase', 'Ommu Menus');
 		$this->pageDescription = $setting->meta_description;
 		$this->pageMeta = $setting->meta_keyword;
 		$this->render('front_index',array(
@@ -158,7 +158,7 @@ class MenuController extends Controller
 
 		$model=$this->loadModel($id);
 
-		$this->pageTitle = 'View Ommu Menus';
+		$this->pageTitle = Yii::t('phrase', 'View Ommu Menus');
 		$this->pageDescription = '';
 		$this->pageMeta = $setting->meta_keyword;
 		$this->render('front_view',array(
@@ -192,7 +192,7 @@ class MenuController extends Controller
 		}
 		$columns = $model->getGridColumn($columnTemp);
 
-		$this->pageTitle = 'Ommu Menus Manage';
+		$this->pageTitle = Yii::t('phrase', 'Ommu Menus Manage');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_manage',array(
@@ -239,7 +239,7 @@ class MenuController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-ommu-menu',
-							'msg' => '<div class="errorSummary success"><strong>OmmuMenu success created.</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'OmmuMenu success created.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -251,14 +251,14 @@ class MenuController extends Controller
 
 			if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
 				if($model->save()) {
-					Yii::app()->user->setFlash('success', 'OmmuMenu success created.');
+					Yii::app()->user->setFlash('success', Yii::t('phrase', 'OmmuMenu success created.'));
 					//$this->redirect(array('view','id'=>$model->id));
 					$this->redirect(array('manage'));
 				}
 			}
 		}
 
-		$this->pageTitle = 'Create Ommu Menus';
+		$this->pageTitle = Yii::t('phrase', 'Create Ommu Menus');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_add',array(
@@ -305,7 +305,7 @@ class MenuController extends Controller
 							'type' => 5,
 							'get' => Yii::app()->controller->createUrl('manage'),
 							'id' => 'partial-ommu-menu',
-							'msg' => '<div class="errorSummary success"><strong>OmmuMenu success updated.</strong></div>',
+							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'OmmuMenu success updated.').'</strong></div>',
 						));
 					} else {
 						print_r($model->getErrors());
@@ -317,14 +317,14 @@ class MenuController extends Controller
 
 			if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
 				if($model->save()) {
-					Yii::app()->user->setFlash('success', 'OmmuMenu success updated.');
+					Yii::app()->user->setFlash('success', Yii::t('phrase', 'OmmuMenu success updated.'));
 					//$this->redirect(array('view','id'=>$model->id));
 					$this->redirect(array('manage'));
 				}
 			}
 		}
 
-		$this->pageTitle = 'Update Ommu Menus';
+		$this->pageTitle = Yii::t('phrase', 'Update Ommu Menus');
 		$this->pageDescription = '';
 		$this->pageMeta = '';
 		$this->render('admin_edit',array(
@@ -385,7 +385,7 @@ class MenuController extends Controller
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-ommu-menu',
-						'msg' => '<div class="errorSummary success"><strong>OmmuMenu success deleted.</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'OmmuMenu success deleted.').'</strong></div>',
 					));
 				}
 			}
@@ -395,7 +395,7 @@ class MenuController extends Controller
 			$this->dialogGroundUrl = Yii::app()->controller->createUrl('manage');
 			$this->dialogWidth = 350;
 
-			$this->pageTitle = 'OmmuMenu Delete.';
+			$this->pageTitle = Yii::t('phrase', 'OmmuMenu Delete.');
 			$this->pageDescription = '';
 			$this->pageMeta = '';
 			$this->render('admin_delete');
@@ -412,10 +412,19 @@ class MenuController extends Controller
 		$model=$this->loadModel($id);
 		
 		if($model->publish == 1) {
+		//if($model->actived == 1) {
+		//if($model->enabled == 1) {
+		//if($model->status == 1) {
 			$title = Yii::t('phrase', 'Unpublish');
+			//$title = Yii::t('phrase', 'Deactived');
+			//$title = Yii::t('phrase', 'Disabled');
+			//$title = Yii::t('phrase', 'Unresolved');
 			$replace = 0;
 		} else {
 			$title = Yii::t('phrase', 'Publish');
+			//$title = Yii::t('phrase', 'Actived');
+			//$title = Yii::t('phrase', 'Enabled');
+			//$title = Yii::t('phrase', 'Resolved');
 			$replace = 1;
 		}
 
@@ -424,13 +433,16 @@ class MenuController extends Controller
 			if(isset($id)) {
 				//change value active or publish
 				$model->publish = $replace;
+				//$model->actived = $replace;
+				//$model->enabled = $replace;
+				//$model->status = $replace;
 
 				if($model->update()) {
 					echo CJSON::encode(array(
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-ommu-menu',
-						'msg' => '<div class="errorSummary success"><strong>OmmuMenu success published.</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'OmmuMenu success updated.').'</strong></div>',
 					));
 				}
 			}
@@ -471,7 +483,7 @@ class MenuController extends Controller
 						'type' => 5,
 						'get' => Yii::app()->controller->createUrl('manage'),
 						'id' => 'partial-ommu-menu',
-						'msg' => '<div class="errorSummary success"><strong>OmmuMenu success updated.</strong></div>',
+						'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'OmmuMenu success updated.').'</strong></div>',
 					));
 				}
 			}

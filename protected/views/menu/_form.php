@@ -7,7 +7,7 @@
  *
  * @author Putra Sudaryanto <putra.sudaryanto@gmail.com>
  * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
- * @created date 15 January 2016, 16:57 WIB
+ * @created date 24 March 2016, 10:20 WIB
  * @link http://company.ommu.co
  * @contect (+62)856-299-4114
  *
@@ -57,53 +57,6 @@
 	</div>
 
 	<div class="clearfix">
-		<?php echo $form->labelEx($model,'module'); ?>
-		<div class="desc">
-			<?php echo $form->textField($model,'module',array('size'=>32,'maxlength'=>32)); ?>
-			<?php echo $form->error($model,'module'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->labelEx($model,'controller'); ?>
-		<div class="desc">
-			<?php echo $form->textField($model,'controller',array('size'=>32,'maxlength'=>32)); ?>
-			<?php echo $form->error($model,'controller'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
-		<?php echo $form->labelEx($model,'action'); ?>
-		<div class="desc">
-			<?php echo $form->textField($model,'action',array('size'=>32,'maxlength'=>32)); ?>
-			<?php echo $form->error($model,'action'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix publish">
-		<?php echo $form->labelEx($model,'site_type'); ?>
-		<div class="desc">
-			<?php echo $form->checkBox($model,'site_type'); ?>
-			<?php echo $form->labelEx($model,'site_type'); ?>
-			<?php echo $form->error($model,'site_type'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix publish">
-		<?php echo $form->labelEx($model,'site_admin'); ?>
-		<div class="desc">
-			<?php echo $form->checkBox($model,'site_admin'); ?>
-			<?php echo $form->labelEx($model,'site_admin'); ?>
-			<?php echo $form->error($model,'site_admin'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
 		<?php echo $form->labelEx($model,'orders'); ?>
 		<div class="desc">
 			<?php echo $form->textField($model,'orders'); ?>
@@ -122,29 +75,10 @@
 	</div>
 
 	<div class="clearfix">
-		<?php echo $form->labelEx($model,'class'); ?>
-		<div class="desc">
-			<?php echo $form->textField($model,'class',array('size'=>16,'maxlength'=>16)); ?>
-			<?php echo $form->error($model,'class'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix">
 		<?php echo $form->labelEx($model,'url'); ?>
 		<div class="desc">
 			<?php echo $form->textField($model,'url',array('size'=>60,'maxlength'=>128)); ?>
 			<?php echo $form->error($model,'url'); ?>
-			<?php /*<div class="small-px silent"></div>*/?>
-		</div>
-	</div>
-
-	<div class="clearfix publish">
-		<?php echo $form->labelEx($model,'dialog'); ?>
-		<div class="desc">
-			<?php echo $form->checkBox($model,'dialog'); ?>
-			<?php echo $form->labelEx($model,'dialog'); ?>
-			<?php echo $form->error($model,'dialog'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>
@@ -154,6 +88,24 @@
 		<div class="desc">
 			<?php echo $form->textField($model,'attr',array('size'=>60,'maxlength'=>128)); ?>
 			<?php echo $form->error($model,'attr'); ?>
+			<?php /*<div class="small-px silent"></div>*/?>
+		</div>
+	</div>
+
+	<div class="clearfix">
+		<?php echo $form->labelEx($model,'sitetype_access'); ?>
+		<div class="desc">
+			<?php echo $form->textField($model,'sitetype_access',array('size'=>32,'maxlength'=>32)); ?>
+			<?php echo $form->error($model,'sitetype_access'); ?>
+			<?php /*<div class="small-px silent"></div>*/?>
+		</div>
+	</div>
+
+	<div class="clearfix">
+		<?php echo $form->labelEx($model,'userlevel_access'); ?>
+		<div class="desc">
+			<?php echo $form->textField($model,'userlevel_access',array('size'=>32,'maxlength'=>32)); ?>
+			<?php echo $form->error($model,'userlevel_access'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>
@@ -207,7 +159,7 @@
 </div>
 <div class="dialog-submit">
 	<?php echo CHtml::submitButton($model->isNewRecord ? Yii::t('phrase', 'Create') : Yii::t('phrase', 'Save') ,array('onclick' => 'setEnableSave()')); ?>
-	<?php echo CHtml::button(Yii::t('phrase', 'Close'), array('id'=>'closed')); ?>
+	<?php echo CHtml::button(Yii::t('phrase', 'Cancel'), array('id'=>'closed')); ?>
 </div>
 */?>
 <?php $this->endWidget(); ?>
