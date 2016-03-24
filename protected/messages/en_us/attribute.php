@@ -192,5 +192,9 @@ return array(
 	'wall_media' => 'Wall Media',
 	'wall_status' => 'Wall Status',
 	'zipcode' => 'Zipcode',
+	'Category' => 'Category',
+	'Title' => 'Title',
+	'Description' => 'Description',
+	'Menus' => 'Menus',
 );
 ?>

@@ -37,6 +37,12 @@
 class OmmuMenuCategory extends CActiveRecord
 {
 	public $defaultColumns = array();
+	public $title;
+	public $description;
+	
+	// Variable Search
+	public $creation_search;
+	public $modified_search;
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -65,13 +71,18 @@ class OmmuMenuCategory extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, desc, creation_date, creation_id, modified_id', 'required'),
-			array('publish, orders', 'numerical', 'integerOnly'=>true),
+			array('publish,
+				title, description', 'required'),
+			array('publish, orders, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
 			array('name, desc, creation_id, modified_id', 'length', 'max'=>11),
-			array('modified_date', 'safe'),
+			array('
+				title', 'length', 'max'=>32),
+			array('
+				description', 'length', 'max'=>128),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('cat_id, publish, orders, name, desc, creation_date, creation_id, modified_date, modified_id', 'safe', 'on'=>'search'),
+			array('cat_id, publish, orders, name, desc, creation_date, creation_id, modified_date, modified_id,
+				title, description, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -83,7 +94,10 @@ class OmmuMenuCategory extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'ommuCoreMenus_relation' => array(self::HAS_MANY, 'OmmuCoreMenu', 'cat_id'),
+			'view' => array(self::BELONGS_TO, 'ViewMenuCategory', 'cat_id'),
+			'creation_relation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified_relation' => array(self::BELONGS_TO, 'Users', 'modified_id'),
+			'menus' => array(self::HAS_MANY, 'OmmuMenu', 'cat_id'),
 		);
 	}
 
@@ -102,6 +116,10 @@ class OmmuMenuCategory extends CActiveRecord
 			'creation_id' => Yii::t('attribute', 'creation_id'),
 			'modified_date' => Yii::t('attribute', 'modified_date'),
 			'modified_id' => Yii::t('attribute', 'modified_id'),
+			'title' => Yii::t('attribute', 'title'),
+			'description' => Yii::t('attribute', 'description'),
+			'creation_search' => Yii::t('attribute', 'creation_id'),
+			'modified_search' => Yii::t('attribute', 'modified_id'),
 		);
 	}
 
@@ -149,6 +167,25 @@ class OmmuMenuCategory extends CActiveRecord
 			$criteria->compare('t.modified_id',$_GET['modified']);
 		else
 			$criteria->compare('t.modified_id',$this->modified_id);
+		
+		// Custom Search
+		$criteria->with = array(
+			'view' => array(
+				'alias'=>'view',
+			),
+			'creation_relation' => array(
+				'alias'=>'creation_relation',
+				'select'=>'displayname'
+			),
+			'modified_relation' => array(
+				'alias'=>'modified_relation',
+				'select'=>'displayname'
+			),
+		);
+		$criteria->compare('view.title',strtolower($this->title), true);
+		$criteria->compare('view.description',strtolower($this->description), true);
+		$criteria->compare('creation_relation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified_relation.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['OmmuMenuCategory_sort']))
 			$criteria->order = 't.cat_id DESC';
@@ -210,23 +247,18 @@ class OmmuMenuCategory extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			if(!isset($_GET['type'])) {
-				$this->defaultColumns[] = array(
-					'name' => 'publish',
-					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->cat_id)), $data->publish, 1)',
-					'htmlOptions' => array(
-						'class' => 'center',
-					),
-					'filter'=>array(
-						1=>Yii::t('phrase', 'Yes'),
-						0=>Yii::t('phrase', 'No'),
-					),
-					'type' => 'raw',
-				);
-			}
-			$this->defaultColumns[] = 'orders';
-			$this->defaultColumns[] = 'name';
-			$this->defaultColumns[] = 'desc';
+			$this->defaultColumns[] = array(
+				'name' => 'title',
+				'value' => 'Phrase::trans($data->name, 2)',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'description',
+				'value' => 'Phrase::trans($data->desc, 2)',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'creation_search',
+				'value' => '$data->creation_relation->displayname',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
 				'value' => 'Utility::dateFormat($data->creation_date)',
@@ -253,34 +285,20 @@ class OmmuMenuCategory extends CActiveRecord
 					),
 				), true),
 			);
-			$this->defaultColumns[] = 'creation_id';
-			$this->defaultColumns[] = array(
-				'name' => 'modified_date',
-				'value' => 'Utility::dateFormat($data->modified_date)',
-				'htmlOptions' => array(
-					'class' => 'center',
-				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
-					'model'=>$this,
-					'attribute'=>'modified_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
-					//'mode'=>'datetime',
+			if(!isset($_GET['type'])) {
+				$this->defaultColumns[] = array(
+					'name' => 'publish',
+					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->cat_id)), $data->publish, 1)',
 					'htmlOptions' => array(
-						'id' => 'modified_date_filter',
+						'class' => 'center',
 					),
-					'options'=>array(
-						'showOn' => 'focus',
-						'dateFormat' => 'dd-mm-yy',
-						'showOtherMonths' => true,
-						'selectOtherMonths' => true,
-						'changeMonth' => true,
-						'changeYear' => true,
-						'showButtonPanel' => true,
+					'filter'=>array(
+						1=>Yii::t('phrase', 'Yes'),
+						0=>Yii::t('phrase', 'No'),
 					),
-				), true),
-			);
-			$this->defaultColumns[] = 'modified_id';
+					'type' => 'raw',
+				);
+			}
 		}
 		parent::afterConstruct();
 	}
@@ -307,7 +325,7 @@ class OmmuMenuCategory extends CActiveRecord
 	 * 0 = unpublish
 	 * 1 = publish
 	 */
-	public static function getCategory($publish=null) {
+	public static function getCategory($publish=null, $type=null) {
 		
 		$criteria=new CDbCriteria;
 		if($publish != null)
@@ -315,82 +333,67 @@ class OmmuMenuCategory extends CActiveRecord
 		
 		$model = self::model()->findAll($criteria);
 
-		$items = array();
-		if($model != null) {
-			foreach($model as $key => $val) {
-				$items[$val->cat_id] = Phrase::trans($val->name, 2);
+		if($type == null) {
+			$items = array();
+			if($model != null) {
+				foreach($model as $key => $val) {
+					$items[$val->cat_id] = Phrase::trans($val->name, 2);
+				}
+				return $items;
+			} else {
+				return false;
 			}
-			return $items;
-		} else {
-			return false;
-		}
+		} else
+			return $model;
 	}
 
 	/**
 	 * before validate attributes
 	 */
-	/*
 	protected function beforeValidate() {
-		if(parent::beforeValidate()) {
-			// Create action
+		if(parent::beforeValidate()) {		
+			if($this->isNewRecord) {
+				$this->orders = 0;
+				$this->creation_id = Yii::app()->user->id;	
+			} else
+				$this->modified_id = Yii::app()->user->id;
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * after validate attributes
-	 */
-	/*
-	protected function afterValidate()
-	{
-		parent::afterValidate();
-			// Create action
-		return true;
-	}
-	*/
 	
 	/**
 	 * before save attributes
 	 */
-	/*
 	protected function beforeSave() {
 		if(parent::beforeSave()) {
-		}
-		return true;	
-	}
-	*/
-	
-	/**
-	 * After save attributes
-	 */
-	/*
-	protected function afterSave() {
-		parent::afterSave();
-		// Create action
-	}
-	*/
+			$action = strtolower(Yii::app()->controller->action->id);
+			if($this->isNewRecord) {
+				$currentAction = strtolower(Yii::app()->controller->module->id.'/'.Yii::app()->controller->id);
+				$title=new OmmuSystemPhrase;
+				$title->location = $currentAction;
+				$title->en = $this->title;
+				if($title->save())
+					$this->name = $title->phrase_id;
 
-	/**
-	 * Before delete attributes
-	 */
-	/*
-	protected function beforeDelete() {
-		if(parent::beforeDelete()) {
-			// Create action
+				$desc=new OmmuSystemPhrase;
+				$desc->location = $currentAction;
+				$desc->en = $this->description;
+				if($desc->save())
+					$this->desc = $desc->phrase_id;
+				
+			} else {
+				if($action == 'edit') {
+					$title = OmmuSystemPhrase::model()->findByPk($this->name);
+					$title->en = $this->title;
+					$title->save();
+
+					$desc = OmmuSystemPhrase::model()->findByPk($this->desc);
+					$desc->en = $this->description;
+					$desc->save();
+				}
+			}
 		}
 		return true;
 	}
-	*/
-
-	/**
-	 * After delete attributes
-	 */
-	/*
-	protected function afterDelete() {
-		parent::afterDelete();
-		// Create action
-	}
-	*/
 
 }
