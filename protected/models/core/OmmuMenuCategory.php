@@ -361,31 +361,28 @@ class OmmuMenuCategory extends CActiveRecord
 	 */
 	protected function beforeSave() {
 		if(parent::beforeSave()) {
-			$action = strtolower(Yii::app()->controller->action->id);
 			if($this->isNewRecord) {
-				$currentAction = strtolower(Yii::app()->controller->module->id.'/'.Yii::app()->controller->id);
+				$current = strtolower(Yii::app()->controller->id);
 				$title=new OmmuSystemPhrase;
-				$title->location = $currentAction;
+				$title->location = $current.'_title';
 				$title->en = $this->title;
 				if($title->save())
 					$this->name = $title->phrase_id;
 
 				$desc=new OmmuSystemPhrase;
-				$desc->location = $currentAction;
+				$desc->location = $current.'description';
 				$desc->en = $this->description;
 				if($desc->save())
 					$this->desc = $desc->phrase_id;
 				
 			} else {
-				if($action == 'edit') {
-					$title = OmmuSystemPhrase::model()->findByPk($this->name);
-					$title->en = $this->title;
-					$title->save();
+				$title = OmmuSystemPhrase::model()->findByPk($this->name);
+				$title->en = $this->title;
+				$title->save();
 
-					$desc = OmmuSystemPhrase::model()->findByPk($this->desc);
-					$desc->en = $this->description;
-					$desc->save();
-				}
+				$desc = OmmuSystemPhrase::model()->findByPk($this->desc);
+				$desc->en = $this->description;
+				$desc->save();
 			}
 		}
 		return true;

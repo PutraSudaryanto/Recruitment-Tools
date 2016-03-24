@@ -113,10 +113,10 @@ class OmmuMenu extends CActiveRecord
 		return array(
 			'id' => Yii::t('attribute', 'ID'),
 			'publish' => Yii::t('attribute', 'Publish'),
-			'cat_id' => Yii::t('attribute', 'Cat'),
-			'dependency' => Yii::t('attribute', 'Dependency'),
+			'cat_id' => Yii::t('attribute', 'Category'),
+			'dependency' => Yii::t('attribute', 'Parent Menu'),
 			'orders' => Yii::t('attribute', 'Orders'),
-			'name' => Yii::t('attribute', 'Name'),
+			'name' => Yii::t('attribute', 'Title Menu'),
 			'url' => Yii::t('attribute', 'Url'),
 			'attr' => Yii::t('attribute', 'Attr'),
 			'sitetype_access' => Yii::t('attribute', 'Sitetype Access'),
@@ -160,8 +160,8 @@ class OmmuMenu extends CActiveRecord
 			$criteria->addInCondition('t.publish',array(0,1));
 			$criteria->compare('t.publish',$this->publish);
 		}
-		if(isset($_GET['cat']))
-			$criteria->compare('t.cat_id',$_GET['cat']);
+		if(isset($_GET['category']))
+			$criteria->compare('t.cat_id',$_GET['category']);
 		else
 			$criteria->compare('t.cat_id',$this->cat_id);
 		$criteria->compare('t.dependency',$this->dependency);
@@ -267,19 +267,22 @@ class OmmuMenu extends CActiveRecord
 				'header' => 'No',
 				'value' => '$this->grid->dataProvider->pagination->currentPage*$this->grid->dataProvider->pagination->pageSize + $row+1'
 			);
-			$this->defaultColumns[] = array(
-				'name' => 'title',
-				'value' => 'Phrase::trans($data->name, 2)',
-			);
 			if(!isset($_GET['category'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'cat_id',
-					'value' => 'Phrase::trans($data->cat->name, 2)',
+					'value' => 'Phrase::trans($data->cat_relation->name, 2)',
 					'filter'=> OmmuMenuCategory::getCategory(),
 					'type' => 'raw',
 				);
 			}
-			$this->defaultColumns[] = 'dependency';
+			$this->defaultColumns[] = array(
+				'name' => 'title',
+				'value' => 'Phrase::trans($data->name, 2)',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'dependency',
+				'value' => '$data->dependency != 0 ? $data->dependency : "-"',
+			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
 				'value' => '$data->creation_relation->displayname',
@@ -346,6 +349,35 @@ class OmmuMenu extends CActiveRecord
 	}
 
 	/**
+	 * Get category
+	 * 0 = unpublish
+	 * 1 = publish
+	 */
+	public static function getParentMenu($publish=null, $dependency=null, $type=null) 
+	{		
+		$criteria=new CDbCriteria;
+		if($publish != null)
+			$criteria->compare('t.publish',$publish);
+		if($dependency != null)
+			$criteria->compare('t.dependency',$dependency);
+		
+		$model = self::model()->findAll($criteria);
+
+		if($type == null) {
+			$items = array();
+			if($model != null) {
+				foreach($model as $key => $val) {
+					$items[$val->cat_id] = Phrase::trans($val->name, 2);
+				}
+				return $items;
+			} else {
+				return false;
+			}
+		} else
+			return $model;
+	}
+
+	/**
 	 * before validate attributes
 	 */
 	protected function beforeValidate() {
@@ -366,7 +398,7 @@ class OmmuMenu extends CActiveRecord
 			if($this->isNewRecord) {
 				$current = strtolower(Yii::app()->controller->id);
 				$title=new OmmuSystemPhrase;
-				$title->location = $current;
+				$title->location = $current.'_title';
 				$title->en = $this->title;
 				if($title->save())
 					$this->name = $title->phrase_id;

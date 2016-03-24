@@ -211,5 +211,6 @@ return array(
 	'Modified Date' => 'Modified Date',
 	'Modified' => 'Modified',
 	'Title Menu' => 'Title Menu',
+	'Parent Menu' => 'Parent Menu',
 );
 ?>
