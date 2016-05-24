@@ -76,7 +76,7 @@
 			<td style="width: 50%; vertical-align: top; text-align: right; padding-right: 20px; padding-top: 30px;">
 	<?php
 		$text = str_pad($model->session->recruitment_id, 2, '0', STR_PAD_LEFT).''.str_pad($model->session_id, 3, '0', STR_PAD_LEFT).''.str_pad($model->user_id, 6, '0', STR_PAD_LEFT);
-		Yii::import('ext.php-barcodes.DNS1DBarcode');	
+		Yii::import('application.modules.recruitment.components.extensions.php-barcodes.DNS1DBarcode');	
 		$barcode = new DNS1DBarcode();
 		$barcode->save_path=YiiBase::getPathOfAlias('webroot.public.recruitment.user_barcode').'/';
 	?>

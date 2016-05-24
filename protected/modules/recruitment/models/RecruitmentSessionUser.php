@@ -453,10 +453,10 @@ class RecruitmentSessionUser extends CActiveRecord
 		ini_set('max_execution_time', 0);
 		ob_start();
 		
-		Yii::import('ext.html2pdf.HTML2PDF');
-		Yii::import('ext.html2pdf._mypdf.MyPDF');	// classe mypdf
-		Yii::import('ext.html2pdf.parsingHTML');	// classe de parsing HTML
-		Yii::import('ext.html2pdf.styleHTML');		// classe de gestion des styles
+		Yii::import('application.modules.recruitment.components.extensions.html2pdf.HTML2PDF');
+		Yii::import('application.modules.recruitment.components.extensions.html2pdf._mypdf.MyPDF');	// classe mypdf
+		Yii::import('application.modules.recruitment.components.extensions.html2pdf.parsingHTML');	// classe de parsing HTML
+		Yii::import('application.modules.recruitment.components.extensions.html2pdf.styleHTML');		// classe de gestion des styles
 		
 		if($template == null)
 			$template = 'pln_cdugm19_pdf';
