@@ -1,7 +1,7 @@
 <?php
 /**
  * RecruitmentSessionUser
- * @author Putra Sudaryanto <putra.sudaryanto@gmail.com>
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
  * @created date 1 March 2016, 13:49 WIB
  * @link http://company.ommu.co

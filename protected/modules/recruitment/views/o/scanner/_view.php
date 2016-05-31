@@ -4,7 +4,7 @@
  * @var $this ScannerController
  * @var $data Recruitments
  *
- * @author Putra Sudaryanto <putra.sudaryanto@gmail.com>
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
  * @created date 12 March 2016, 23:23 WIB
  * @link http://company.ommu.co

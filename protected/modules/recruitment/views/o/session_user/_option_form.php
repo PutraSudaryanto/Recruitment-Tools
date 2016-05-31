@@ -5,7 +5,7 @@
  * @var $model RecruitmentSessionUser
  * @var $form CActiveForm
  *
- * @author Putra Sudaryanto <putra.sudaryanto@gmail.com>
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
  * @created date 1 March 2016, 13:53 WIB
  * @link http://company.ommu.co

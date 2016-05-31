@@ -5,7 +5,7 @@
  * @var $model Recruitments
  * @var $dataProvider CActiveDataProvider
  *
- * @author Putra Sudaryanto <putra.sudaryanto@gmail.com>
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
  * @created date 11 March 2016, 10:27 WIB
  * @link http://company.ommu.co
