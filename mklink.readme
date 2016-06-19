@@ -18,6 +18,7 @@ mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\yiic.php" "D:\htdoc
 protected\components
 =======
 mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\components\Controller.php" "D:\htdocs\_project_ommu_platform\protected\components\Controller.php"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\components\ControllerApi.php" "D:\htdocs\_project_ommu_platform\protected\components\ControllerApi.php"
 mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\components\OauthIdentity.php" "D:\htdocs\_project_ommu_platform\protected\components\OauthIdentity.php"
 mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\components\UserIdentity.php" "D:\htdocs\_project_ommu_platform\protected\components\UserIdentity.php"
 mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\components\admin" "D:\htdocs\_project_ommu_platform\protected\components\admin"
