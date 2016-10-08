@@ -55,7 +55,7 @@ mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\views" "D:\htdocs\_
 -------
 themes
 =======
-mklink /J "D:\htdocs\_project_oos_recruitment_tool\themes\ommu" "D:\htdocs\_project_ommu_bootstrap\themes\backend-end\ommu"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\themes\ommu" "D:\htdocs\_project_ommu_bootstrap\themes\ommu"
 mklink /H "D:\htdocs\_project_oos_recruitment_tool\externals\content.css" "D:\htdocs\_project_oos_recruitment_tool\themes\pln_recruitment\css\content.css"
 
 -------
@@ -80,11 +80,24 @@ mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\views
 mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\views\forgot" "D:\htdocs\_project_ommu_module_users\modules\users\views\forgot"
 mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\users\views\verify" "D:\htdocs\_project_ommu_module_users\modules\users\views\verify"
 
+///report\\\
+mklink /J "D:\htdocs\_project_oos_library_system\externals\report" "D:\htdocs\_project_ommu_module_reports\externals\report"
+mklink /H "D:\htdocs\_project_oos_library_system\protected\modules\report\report.yaml" "D:\htdocs\_project_ommu_module_reports\modules\report\report.yaml"
+mklink /H "D:\htdocs\_project_oos_library_system\protected\modules\report\ReportModule.php" "D:\htdocs\_project_ommu_module_reports\modules\report\ReportModule.php"
+mklink /H "D:\htdocs\_project_oos_library_system\protected\modules\report\LICENSE" "D:\htdocs\_project_ommu_module_reports\modules\report\LICENSE"
+mklink /J "D:\htdocs\_project_oos_library_system\protected\modules\report\assets" "D:\htdocs\_project_ommu_module_reports\modules\report\assets"
+mklink /J "D:\htdocs\_project_oos_library_system\protected\modules\report\components" "D:\htdocs\_project_ommu_module_reports\modules\report\components"
+mklink /J "D:\htdocs\_project_oos_library_system\protected\modules\report\models" "D:\htdocs\_project_ommu_module_reports\modules\report\models"
+--
+mklink /J "D:\htdocs\_project_oos_library_system\protected\modules\report\controllers\o" "D:\htdocs\_project_ommu_module_reports\modules\report\controllers\o"
+--
+mklink /J "D:\htdocs\_project_oos_library_system\protected\modules\report\views\o" "D:\htdocs\_project_ommu_module_reports\modules\report\views\o"
+
 ///support\\\
 mklink /J "D:\htdocs\_project_oos_recruitment_tool\externals\support" "D:\htdocs\_project_ommu_module_support\externals\support"
 mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\support.yaml" "D:\htdocs\_project_ommu_module_support\modules\support\support.yaml"
-mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\LICENSE" "D:\htdocs\_project_ommu_module_support\modules\support\LICENSE"
 mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\SupportModule.php" "D:\htdocs\_project_ommu_module_support\modules\support\SupportModule.php"
+mklink /H "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\LICENSE" "D:\htdocs\_project_ommu_module_support\modules\support\LICENSE"
 mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\assets" "D:\htdocs\_project_ommu_module_support\modules\support\assets"
 mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\components" "D:\htdocs\_project_ommu_module_support\modules\support\components"
 mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\models" "D:\htdocs\_project_ommu_module_support\modules\support\models"
