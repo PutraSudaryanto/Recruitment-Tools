@@ -103,3 +103,7 @@ mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\mod
 mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\controllers\o" "D:\htdocs\_project_ommu_module_support\modules\support\controllers\o"
 --
 mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\support\views\o" "D:\htdocs\_project_ommu_module_support\modules\support\views\o"
+
+///recruitment\\\
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\externals\recruitment" "D:\htdocs\_project_ommu_module_recruitment\externals\recruitment"
+mklink /J "D:\htdocs\_project_oos_recruitment_tool\protected\modules\recruitment" "D:\htdocs\_project_ommu_module_recruitment\modules\recruitment"
