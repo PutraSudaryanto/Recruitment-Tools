@@ -201,7 +201,7 @@ class SessionController extends Controller
 						$message = str_ireplace($search, $replace, $message);
 						$sessions = new RecruitmentSessionUser();
 						$attachment = $sessions->getPdf($val);
-						if(SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, $session->blasting_subject, $message, 1, null, $attachment)) {
+						if(SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, $session->blasting_subject, $message, null, $attachment)) {
 							RecruitmentSessionUser::model()->updateByPk($val->id, array(
 								'sendemail_status'=>1, 
 								'sendemail_id'=>Yii::app()->user->id,
@@ -210,7 +210,7 @@ class SessionController extends Controller
 						
 						if($i%50 == 0) {
 							$event = $val->session->session_name.' '.$val->session->viewBatch->session_name.' '.$val->session->recruitment->event_name;
-							SupportMailSetting::sendEmail(SupportMailSetting::getInfo(1,'mail_contact'), 'Ommu Support', 'Send Email Blast: '.$event.' ('.$i.')', $event, 1, null, $attachment);
+							SupportMailSetting::sendEmail(SupportMailSetting::getInfo(1,'mail_contact'), 'Ommu Support', 'Send Email Blast: '.$event.' ('.$i.')', $event, null, $attachment);
 						}
 					}
 				}

@@ -149,7 +149,7 @@ class EventuserController extends Controller
 		$model=$this->loadModel($id);
 		
 		$message = 'testing email';
-		if(SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->recruitment->blasting_subject, $message, 1, null, $attachment)) {
+		if(SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->recruitment->blasting_subject, $message, null, $attachment)) {
 			RecruitmentEventUser::model()->updateByPk($model->event_user_id, array(
 				'sendemail_status'=>1, 
 				'sendemail_id'=>Yii::app()->user->id,

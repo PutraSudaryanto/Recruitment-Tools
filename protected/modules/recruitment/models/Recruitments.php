@@ -531,7 +531,7 @@ class Recruitments extends CActiveRecord
 			if(!file_exists($recruitment_path)) {
 				@mkdir($recruitment_path, 0755, true);
 
-				// Add File in Article Folder (index.php)
+				// Add file in directory (index.php)
 				$newFile = $recruitment_path.'/index.php';
 				$FileHandle = fopen($newFile, 'w');
 			} else

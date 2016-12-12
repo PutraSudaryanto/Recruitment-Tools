@@ -150,12 +150,11 @@ class BatchController extends Controller
 		ob_start();
 		
 		$path = 'public/recruitment/batch_excel';
-
 		// Generate path directory
 		if(!file_exists($path)) {
 			@mkdir($path, 0755, true);
 
-			// Add File in Article Folder (index.php)
+			// Add file in directory (index.php)
 			$newFile = $path.'/index.php';
 			$FileHandle = fopen($newFile, 'w');
 		} else
@@ -294,7 +293,7 @@ class BatchController extends Controller
 						$message = str_ireplace($search, $replace, $message);
 						$session = new RecruitmentSessionUser();
 						$attachment = $session->getPdf($val);
-						if(SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, $batch->blasting_subject, $message, 1, null, $attachment)) {
+						if(SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, $batch->blasting_subject, $message, null, $attachment)) {
 							RecruitmentSessionUser::model()->updateByPk($val->id, array(
 								'sendemail_status'=>1, 
 								'sendemail_id'=>Yii::app()->user->id,
@@ -303,7 +302,7 @@ class BatchController extends Controller
 						
 						if($i%50 == 0) {
 							$event = $val->session->session_name.' '.$val->session->viewBatch->session_name.' '.$val->session->recruitment->event_name;
-							SupportMailSetting::sendEmail(SupportMailSetting::getInfo(1,'mail_contact'), 'Ommu Support', 'Send Email Blast: '.$event.' ('.$i.')', $event, 1, null, $attachment);
+							SupportMailSetting::sendEmail(SupportMailSetting::getInfo(1,'mail_contact'), 'Ommu Support', 'Send Email Blast: '.$event.' ('.$i.')', $event, null, $attachment);
 						}
 					}
 				}

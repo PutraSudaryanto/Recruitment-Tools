@@ -168,7 +168,7 @@ class SessionuserController extends Controller
 		$message = str_ireplace($search, $replace, $message);
 		$session = new RecruitmentSessionUser();
 		$attachment = $session->getPdf($model);
-		if(SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->session->blasting_subject, $message, 1, null, $attachment)) {
+		if(SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, $model->session->blasting_subject, $message, null, $attachment)) {
 			RecruitmentSessionUser::model()->updateByPk($model->id, array(
 				'sendemail_status'=>1, 
 				'sendemail_id'=>Yii::app()->user->id,

@@ -133,7 +133,7 @@ class SessionuserController extends Controller
 		$message = file_get_contents(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');
 		$message = str_ireplace($search, $replace, $message);
 		$attachment = $model->getPdf($model);
-		SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, 'UNDANGAN PANGGILAN TES PT PLN (Persero) | CAREER DAYS UGM 19', $message, 1, null, $attachment);
+		SupportMailSetting::sendEmail($model->user->email, $model->user->displayname, 'UNDANGAN PANGGILAN TES PT PLN (Persero) | CAREER DAYS UGM 19', $message, null, $attachment);
 	}
 
 	/**

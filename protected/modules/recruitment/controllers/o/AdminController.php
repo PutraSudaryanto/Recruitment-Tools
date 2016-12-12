@@ -150,12 +150,11 @@ class AdminController extends Controller
 		ob_start();
 		
 		$path = 'public/recruitment/event_excel';
-
 		// Generate path directory
 		if(!file_exists($path)) {
 			@mkdir($path, 0755, true);
 
-			// Add File in Article Folder (index.php)
+			// Add file in directory (index.php)
 			$newFile = $path.'/index.php';
 			$FileHandle = fopen($newFile, 'w');
 		} else
@@ -278,7 +277,7 @@ class AdminController extends Controller
 					foreach($user as $key => $val) {
 						$i++;
 						$message = 'testing email';
-						if(SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, $model->blasting_subject, $message, 1, null, $attachment)) {
+						if(SupportMailSetting::sendEmail($val->user->email, $val->user->displayname, $model->blasting_subject, $message, null, $attachment)) {
 							RecruitmentEventUser::model()->updateByPk($val->event_user_id, array(
 								'sendemail_status'=>1, 
 								'sendemail_id'=>Yii::app()->user->id,
@@ -287,7 +286,7 @@ class AdminController extends Controller
 						
 						if($i%50 == 0) {
 							$event = $val->user->displayname.' '.$val->user->email.' '.$val->recruitment->event_name;
-							SupportMailSetting::sendEmail(SupportMailSetting::getInfo(1,'mail_contact'), 'Ommu Support', 'Send Email Blast: '.$event.' ('.$i.')', $event, 1, null, $attachment);
+							SupportMailSetting::sendEmail(SupportMailSetting::getInfo(1,'mail_contact'), 'Ommu Support', 'Send Email Blast: '.$event.' ('.$i.')', $event, null, $attachment);
 						}
 					}
 				}
