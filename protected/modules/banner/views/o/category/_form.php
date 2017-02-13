@@ -11,11 +11,6 @@
  * @contect (+62)856-299-4114
  *
  */
-if(!$model->isNewRecord && $model->media_size != '') {
-	$resizeSize = explode(',', $model->media_size);
-	$model->media_size_width = $resizeSize[0];
-	$model->media_size_height = $resizeSize[1];
-}
 ?>
 
 <?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
@@ -36,7 +31,7 @@ if(!$model->isNewRecord && $model->media_size != '') {
 			<?php echo $form->labelEx($model,'title'); ?>
 			<div class="desc">
 				<?php 
-				$model->title = Phrase::trans($model->name, 2);
+				$model->title = Phrase::trans($model->name);
 				echo $form->textField($model,'title',array('maxlength'=>32,'class'=>'span-8')); ?>
 				<?php echo $form->error($model,'title'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
@@ -47,7 +42,7 @@ if(!$model->isNewRecord && $model->media_size != '') {
 			<?php echo $form->labelEx($model,'description'); ?>
 			<div class="desc">
 				<?php 
-				$model->description = Phrase::trans($model->desc, 2);
+				$model->description = Phrase::trans($model->desc);
 				echo $form->textArea($model,'description',array('maxlength'=>64,'class'=>'span-11 smaller')); ?>
 				<?php echo $form->error($model,'description'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
@@ -55,28 +50,23 @@ if(!$model->isNewRecord && $model->media_size != '') {
 		</div>
 
 		<div class="clearfix">
-			<?php echo $form->labelEx($model,'media_size_width'); ?>
+			<?php echo $form->labelEx($model,'banner_limit'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'media_size_width',array('class'=>'span-4', 'maxlength'=>4)); ?>
-				<?php echo $form->error($model,'media_size_width'); ?>
+				<?php echo $form->textField($model,'banner_limit',array('class'=>'span-3', 'maxlength'=>2)); ?>
+				<?php echo $form->error($model,'banner_limit'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
 		</div>
-
+		
 		<div class="clearfix">
-			<?php echo $form->labelEx($model,'media_size_height'); ?>
+			<?php echo $form->labelEx($model,'banner_size'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'media_size_height',array('class'=>'span-4', 'maxlength'=>4)); ?>
-				<?php echo $form->error($model,'media_size_height'); ?>
-				<?php /*<div class="small-px silent"></div>*/?>
-			</div>
-		</div>
-
-		<div class="clearfix">
-			<?php echo $form->labelEx($model,'limit'); ?>
-			<div class="desc">
-				<?php echo $form->textField($model,'limit',array('class'=>'span-2', 'maxlength'=>1)); ?>
-				<?php echo $form->error($model,'limit'); ?>
+				<?php 
+				if(!$model->getErrors())
+					$model->banner_size = unserialize($model->banner_size);
+				echo Yii::t('phrase', 'Width').': ';?><?php echo $form->textField($model,'banner_size[width]',array('maxlength'=>4,'class'=>'span-3')); ?>&nbsp;&nbsp;&nbsp;
+				<?php echo Yii::t('phrase', 'Height').': ';?><?php echo $form->textField($model,'banner_size[height]',array('maxlength'=>4,'class'=>'span-3')); ?>
+				<?php echo $form->error($model,'banner_size'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
 		</div>

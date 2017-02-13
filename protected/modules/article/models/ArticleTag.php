@@ -32,7 +32,7 @@
 class ArticleTag extends CActiveRecord
 {
 	public $defaultColumns = array();
-	public $body;
+	public $tag_input;
 	
 	// Variable Search
 	public $article_search;
@@ -68,7 +68,7 @@ class ArticleTag extends CActiveRecord
 			array('article_id, tag_id', 'required'),
 			array('article_id, tag_id, creation_id', 'length', 'max'=>11),
 			array(' 
-				body', 'safe'),
+				tag_input', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, article_id, tag_id, creation_date,
@@ -85,8 +85,8 @@ class ArticleTag extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'article' => array(self::BELONGS_TO, 'Articles', 'article_id'),
-			'tag_TO' => array(self::BELONGS_TO, 'OmmuTags', 'tag_id'),
-			'creation_relation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'tag' => array(self::BELONGS_TO, 'OmmuTags', 'tag_id'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 		);
 	}
 
@@ -123,12 +123,12 @@ class ArticleTag extends CActiveRecord
 				'alias'=>'article',
 				'select'=>'title'
 			),
-			'tag_TO' => array(
-				'alias'=>'tag_TO',
+			'tag' => array(
+				'alias'=>'tag',
 				'select'=>'body'
 			),
-			'creation_relation' => array(
-				'alias'=>'creation_relation',
+			'creation' => array(
+				'alias'=>'creation',
 				'select'=>'displayname'
 			),
 		);
@@ -144,8 +144,8 @@ class ArticleTag extends CActiveRecord
 		$criteria->compare('t.creation_id',$this->creation_id);
 		
 		$criteria->compare('article.title',strtolower($this->article_search), true);
-		$criteria->compare('tag_TO.body',strtolower($this->tag_search), true);
-		$criteria->compare('creation_relation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('tag.body',strtolower($this->tag_search), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 
 		if(!isset($_GET['ArticleTag_sort']))
 			$criteria->order = 't.id DESC';
@@ -207,11 +207,11 @@ class ArticleTag extends CActiveRecord
 			}
 			$this->defaultColumns[] = array(
 				'name' => 'tag_search',
-				'value' => '$data->tag_TO->body',
+				'value' => '$data->tag->body',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
-				'value' => '$data->creation_relation->displayname',
+				'value' => '$data->creation->displayname',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
@@ -260,11 +260,22 @@ class ArticleTag extends CActiveRecord
 		$tag = '';
 		if($model != null) {
 			foreach($model as $val) {
-				$tag .= ','.$val->tag_TO->body;
+				$tag .= ','.$val->tag->body;
 			}
 		}
 		
 		return $keyword.$tag;
+	}
+
+	/**
+	 * before validate attributes
+	 */
+	protected function beforeValidate() {
+		if(parent::beforeValidate()) {
+			if($this->isNewRecord)
+				$this->creation_id = Yii::app()->user->id;
+		}
+		return true;
 	}
 	
 	/**
@@ -276,23 +287,22 @@ class ArticleTag extends CActiveRecord
 				if($this->tag_id == 0) {
 					$tag = OmmuTags::model()->find(array(
 						'select' => 'tag_id, body',
-						'condition' => 'publish = 1 AND body = :body',
+						'condition' => 'body = :body',
 						'params' => array(
-							':body' => $this->body,
+							':body' => strtolower(trim($this->tag_input)),
 						),
 					));
 					if($tag != null) {
 						$this->tag_id = $tag->tag_id;
 					} else {
 						$data = new OmmuTags;
-						$data->body = $this->body;
+						$data->body = $this->tag_input;
 						if($data->save()) {
 							$this->tag_id = $data->tag_id;
 						}
 					}					
 				}
 			}
-			$this->creation_id = Yii::app()->user->id;
 		}
 		return true;
 	}

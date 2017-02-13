@@ -23,8 +23,8 @@
  * @property integer $id
  * @property string $license
  * @property integer $permission
- * @property string $media_validation
- * @property string $media_resize
+ * @property string $banner_validation
+ * @property string $banner_resize
  * @property string $meta_keyword
  * @property string $meta_description
  * @property string $modified_date
@@ -64,12 +64,12 @@ class BannerSetting extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('license, permission, media_validation, media_resize, meta_keyword, meta_description', 'required'),
+			array('license, permission, banner_validation, banner_resize, meta_keyword, meta_description', 'required'),
 			array('permission', 'numerical', 'integerOnly'=>true),
 			array('license', 'length', 'max'=>32),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, license, permission, media_validation, media_resize, meta_keyword, meta_description, modified_date, modified_id,
+			array('id, license, permission, banner_validation, banner_resize, meta_keyword, meta_description, modified_date, modified_id,
 				modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -82,7 +82,7 @@ class BannerSetting extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'modified_relation' => array(self::BELONGS_TO, 'Users', 'modified_id'),
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 		);
 	}
 
@@ -95,8 +95,8 @@ class BannerSetting extends CActiveRecord
 			'id' => Yii::t('attribute', 'Banner'),
 			'license' => Yii::t('attribute', 'License Key'),
 			'permission' => Yii::t('attribute', 'Public Permission Defaults'),
-			'media_validation' => Yii::t('attribute', 'Media Validation'),
-			'media_resize' => Yii::t('attribute', 'Media Resize'),
+			'banner_validation' => Yii::t('attribute', 'Media Validation'),
+			'banner_resize' => Yii::t('attribute', 'Media Resize'),
 			'meta_keyword' => Yii::t('attribute', 'Meta Keyword'),
 			'meta_description' => Yii::t('attribute', 'Meta Description'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
@@ -126,8 +126,8 @@ class BannerSetting extends CActiveRecord
 		$criteria->compare('t.id',$this->id);
 		$criteria->compare('t.license',$this->license,true);
 		$criteria->compare('t.permission',$this->permission);
-		$criteria->compare('t.media_validation',$this->media_validation);
-		$criteria->compare('t.media_resize',$this->media_resize);
+		$criteria->compare('t.banner_validation',$this->banner_validation);
+		$criteria->compare('t.banner_resize',$this->banner_resize);
 		$criteria->compare('t.meta_keyword',$this->meta_keyword,true);
 		$criteria->compare('t.meta_description',$this->meta_description,true);
 		if($this->modified_date != null && !in_array($this->modified_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -136,12 +136,12 @@ class BannerSetting extends CActiveRecord
 		
 		// Custom Search
 		$criteria->with = array(
-			'modified_relation' => array(
-				'alias'=>'modified_relation',
+			'modified' => array(
+				'alias'=>'modified',
 				'select'=>'displayname',
 			),
 		);
-		$criteria->compare('modified_relation.displayname',strtolower($this->modified_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['BannerSetting_sort']))
 			$criteria->order = 't.id DESC';
@@ -175,8 +175,8 @@ class BannerSetting extends CActiveRecord
 			//$this->defaultColumns[] = 'id';
 			$this->defaultColumns[] = 'license';
 			$this->defaultColumns[] = 'permission';
-			$this->defaultColumns[] = 'media_validation';
-			$this->defaultColumns[] = 'media_resize';
+			$this->defaultColumns[] = 'banner_validation';
+			$this->defaultColumns[] = 'banner_resize';
 			$this->defaultColumns[] = 'meta_keyword';
 			$this->defaultColumns[] = 'meta_description';
 		}
@@ -191,15 +191,15 @@ class BannerSetting extends CActiveRecord
 		if(count($this->defaultColumns) == 0) {
 			$this->defaultColumns[] = 'license';
 			$this->defaultColumns[] = 'permission';
-			$this->defaultColumns[] = 'media_validation';
-			$this->defaultColumns[] = 'media_resize';
+			$this->defaultColumns[] = 'banner_validation';
+			$this->defaultColumns[] = 'banner_resize';
 			$this->defaultColumns[] = 'meta_keyword';
 			$this->defaultColumns[] = 'meta_description';
 			$this->defaultColumns[] = 'modified_date';
 			$this->defaultColumns[] = 'modified_id';
 			$this->defaultColumns[] = array(
 				'name' => 'modified_search',
-				'value' => '$data->modified_relation->displayname',
+				'value' => '$data->modified->displayname',
 			);
 		}
 		parent::afterConstruct();

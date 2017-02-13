@@ -9,7 +9,7 @@
  *
  * TOC :
  *	Index
- *	Manage
+ *	Edit
  *
  *	LoadModel
  *	performAjaxValidation
@@ -41,12 +41,10 @@ class SettingController extends Controller
 				$arrThemes = Utility::getCurrentTemplate('admin');
 				Yii::app()->theme = $arrThemes['folder'];
 				$this->layout = $arrThemes['layout'];
-			} else {
-				$this->redirect(Yii::app()->createUrl('site/login'));
-			}
-		} else {
+			} else
+				throw new CHttpException(404, Yii::t('phrase', 'The requested page does not exist.'));
+		} else
 			$this->redirect(Yii::app()->createUrl('site/login'));
-		}
 	}
 
 	/**

@@ -23,7 +23,6 @@
  * @property integer $cat_id
  * @property integer $publish
  * @property integer $dependency
- * @property integer $orders
  * @property string $name
  * @property string $desc
  * @property string $creation_date
@@ -72,7 +71,7 @@ class ArticleCategory extends CActiveRecord
 		return array(
 			array('
 				title, description', 'required'),
-			array('publish, dependency, orders, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
+			array('publish, dependency, creation_id, modified_id', 'numerical', 'integerOnly'=>true),
 			array('name, desc, creation_id, modified_id', 'length', 'max'=>11),
 			array('
 				title', 'length', 'max'=>32),
@@ -80,7 +79,7 @@ class ArticleCategory extends CActiveRecord
 				description', 'length', 'max'=>128),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('cat_id, publish, dependency, orders, name, desc, creation_date, creation_id, modified_date, modified_id,
+			array('cat_id, publish, dependency, name, desc, creation_date, creation_id, modified_date, modified_id,
 				title, description, creation_search, modified_search', 'safe', 'on'=>'search'),
 		);
 	}
@@ -94,8 +93,10 @@ class ArticleCategory extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'view' => array(self::BELONGS_TO, 'ViewArticleCategory', 'cat_id'),
-			'creation_relation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
-			'modified_relation' => array(self::BELONGS_TO, 'Users', 'modified_id'),
+			'title' => array(self::BELONGS_TO, 'OmmuSystemPhrase', 'name'),
+			'description' => array(self::BELONGS_TO, 'OmmuSystemPhrase', 'desc'),
+			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
+			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 		);
 	}
 
@@ -108,7 +109,6 @@ class ArticleCategory extends CActiveRecord
 			'cat_id' => Yii::t('attribute', 'Category'),
 			'publish' => Yii::t('attribute', 'Publish'),
 			'dependency' => Yii::t('attribute', 'Parent'),
-			'orders' => Yii::t('attribute', 'Orders'),
 			'name' => Yii::t('attribute', 'Category'),
 			'desc' => Yii::t('attribute', 'Description'),
 			'title' => Yii::t('attribute', 'Category'),
@@ -134,17 +134,30 @@ class ArticleCategory extends CActiveRecord
 		$criteria=new CDbCriteria;
 		
 		// Custom Search
+		$defaultLang = OmmuLanguages::getDefault('code');
+		if(isset(Yii::app()->session['language']))
+			$language = Yii::app()->session['language'];
+		else 
+			$language = $defaultLang;
+		
 		$criteria->with = array(
 			'view' => array(
 				'alias'=>'view',
-				'select'=>'category_name, category_desc, articles'
 			),
-			'creation_relation' => array(
-				'alias'=>'creation_relation',
+			'title' => array(
+				'alias'=>'title',
+				'select'=>$language,
+			),
+			'description' => array(
+				'alias'=>'description',
+				'select'=>$language,
+			),
+			'creation' => array(
+				'alias'=>'creation',
 				'select'=>'displayname'
 			),
-			'modified_relation' => array(
-				'alias'=>'modified_relation',
+			'modified' => array(
+				'alias'=>'modified',
 				'select'=>'displayname'
 			),
 		);
@@ -161,7 +174,6 @@ class ArticleCategory extends CActiveRecord
 			$criteria->compare('t.publish',$this->publish);
 		}
 		$criteria->compare('t.dependency',$this->dependency);
-		$criteria->compare('t.orders',$this->orders);
 		$criteria->compare('t.name',$this->name,true);
 		$criteria->compare('t.desc',$this->desc,true);
 		if($this->creation_date != null && !in_array($this->creation_date, array('0000-00-00 00:00:00', '0000-00-00')))
@@ -171,10 +183,10 @@ class ArticleCategory extends CActiveRecord
 			$criteria->compare('date(t.modified_date)',date('Y-m-d', strtotime($this->modified_date)));
 		$criteria->compare('t.modified_id',$this->modified_id);
 		
-		$criteria->compare('view.category_name',strtolower($this->title), true);
-		$criteria->compare('view.category_desc',strtolower($this->description), true);
-		$criteria->compare('creation_relation.displayname',strtolower($this->creation_search), true);
-		$criteria->compare('modified_relation.displayname',strtolower($this->modified_search), true);
+		$criteria->compare('title.'.$language,strtolower($this->title), true);
+		$criteria->compare('description.'.$language,strtolower($this->description), true);
+		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
+		$criteria->compare('modified.displayname',strtolower($this->modified_search), true);
 
 		if(!isset($_GET['ArticleCategory_sort']))
 			$criteria->order = 't.cat_id DESC';
@@ -205,7 +217,6 @@ class ArticleCategory extends CActiveRecord
 			//$this->defaultColumns[] = 'cat_id';
 			$this->defaultColumns[] = 'publish';
 			$this->defaultColumns[] = 'dependency';
-			$this->defaultColumns[] = 'orders';
 			$this->defaultColumns[] = 'name';
 			$this->defaultColumns[] = 'desc';
 			$this->defaultColumns[] = 'creation_date';
@@ -236,18 +247,18 @@ class ArticleCategory extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'title',
-				'value' => 'Phrase::trans($data->name, 2)',
+				'value' => 'Phrase::trans($data->name)',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'description',
-				'value' => 'Phrase::trans($data->desc, 2)',
+				'value' => 'Phrase::trans($data->desc)',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'dependency',
-				'value' => '$data->dependency != 0 ? Phrase::trans(ArticleCategory::model()->findByPk($data->dependency)->name, 2) : "-"',
+				'value' => '$data->dependency != 0 ? Phrase::trans(ArticleCategory::model()->findByPk($data->dependency)->name) : "-"',
 			);
 			$this->defaultColumns[] = array(
-				'header' => 'Count',
+				'header' => Yii::t('phrase', 'Articles'),
 				'value' => 'CHtml::link($data->view->articles.\' \'.Yii::t(\'attribute\', \'Article\'), Yii::app()->controller->createUrl("o/admin/manage",array("category"=>$data->cat_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
@@ -256,7 +267,7 @@ class ArticleCategory extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
-				'value' => '$data->creation_relation->displayname',
+				'value' => '$data->creation->displayname',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_date',
@@ -320,7 +331,7 @@ class ArticleCategory extends CActiveRecord
 		$items = array();
 		if($model != null) {
 			foreach($model as $key => $val) {
-				$items[$val->cat_id] = Phrase::trans($val->name, 2);
+				$items[$val->cat_id] = Phrase::trans($val->name);
 			}
 			return $items;
 			
@@ -329,30 +340,13 @@ class ArticleCategory extends CActiveRecord
 	}
 
 	/**
-	 * Get Article
-	 */
-	public static function getArticle($id, $type=null) {
-		$criteria=new CDbCriteria;
-		$criteria->compare('cat_id',$id);
-		
-		if($type == null) {
-			//$criteria->select = '';
-			$model = Articles::model()->findAll($criteria);
-		} else
-			$model = Articles::model()->count($criteria);
-		
-		return $model;
-	}
-
-	/**
 	 * before validate attributes
 	 */
 	protected function beforeValidate() {
 		if(parent::beforeValidate()) {		
-			if($this->isNewRecord) {
-				$this->orders = 0;
+			if($this->isNewRecord)
 				$this->creation_id = Yii::app()->user->id;	
-			} else
+			else
 				$this->modified_id = Yii::app()->user->id;
 		}
 		return true;
