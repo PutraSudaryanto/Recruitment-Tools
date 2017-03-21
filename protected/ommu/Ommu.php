@@ -15,7 +15,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @create date August 6, 2012 15:02 WIB
  * @updated date February 20, 2014 15:50 WIB
- * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
  * @link https://github.com/ommu/Core
  * @contact (+62)856-299-4114
  *
@@ -249,8 +249,8 @@ class Ommu extends CApplicationComponent
 					'place:location:latitude'=>$point[0],
 					'place:location:longitude'=>$point[1],
 					'business:contact_data:street_address'=>$meta->office_place.', '.$meta->office_village.', '.$meta->office_district,
-					'business:contact_data:country_name'=>$meta->view_meta->country,					
-					'business:contact_data:locality'=>$meta->view_meta->city,
+					'business:contact_data:country_name'=>$meta->view->country_name,					
+					'business:contact_data:locality'=>$meta->view->city_name,
 					'business:contact_data:region'=>$meta->office_district,
 					'business:contact_data:postal_code'=>$meta->office_zipcode,
 					'business:contact_data:email'=>$meta->office_email,

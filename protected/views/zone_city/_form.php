@@ -7,7 +7,7 @@
  * version: 1.2.0
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2015 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2015 Ommu Platform (opensource.ommu.co)
  * @link https://github.com/ommu/Core
  * @contact (+62)856-299-4114
  *
@@ -37,10 +37,10 @@
 		</div>
 
 		<div class="clearfix">
-			<?php echo $form->labelEx($model,'city'); ?>
+			<?php echo $form->labelEx($model,'city_name'); ?>
 			<div class="desc">
-				<?php echo $form->textField($model,'city',array('maxlength'=>64)); ?>
-				<?php echo $form->error($model,'city'); ?>
+				<?php echo $form->textField($model,'city_name',array('maxlength'=>64)); ?>
+				<?php echo $form->error($model,'city_name'); ?>
 				<?php /*<div class="small-px silent"></div>*/?>
 			</div>
 		</div>

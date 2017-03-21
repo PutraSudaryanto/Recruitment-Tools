@@ -19,7 +19,7 @@
  *	performAjaxValidation
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2015 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2015 Ommu Platform (opensource.ommu.co)
  * @link https://github.com/ommu/Core
  * @contact (+62)856-299-4114
  *
@@ -111,15 +111,15 @@ class ZonecountryController extends Controller
 		if($id == null) {
 			if(isset($_GET['term'])) {
 				$criteria = new CDbCriteria;
-				$criteria->condition = 'country LIKE :country';
-				$criteria->select	= "country_id, country";
+				$criteria->condition = 'country_name LIKE :country';
+				$criteria->select	= "country_id, country_name";
 				$criteria->order = "country_id ASC";
 				$criteria->params = array(':country' => '%' . strtolower($_GET['term']) . '%');
 				$model = OmmuZoneCountry::model()->findAll($criteria);
 
 				if($model) {
 					foreach($model as $items) {
-						$result[] = array('id' => $items->country_id, 'value' => $items->country);
+						$result[] = array('id' => $items->country_id, 'value' => $items->country_name);
 					}
 				}
 			}
