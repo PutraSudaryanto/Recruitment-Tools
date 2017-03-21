@@ -1,9 +1,11 @@
 <?php
 /**
  * Articles
+ * version: 0.0.1
+ *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
- * @link https://github.com/oMMu/Ommu-Articles
+ * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @link https://github.com/ommu/Articles
  * @contact (+62)856-299-4114
  *
  * This is the template for generating the model class of a specified table.
@@ -306,11 +308,7 @@ class Articles extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'title',
-				'value' => '$data->title."<br/><span>".Utility::shortText(Utility::hardDecode($data->body),200)."</span>"',
-				'htmlOptions' => array(
-					'class' => 'bold',
-				),
-				'type' => 'raw',
+				'value' => '$data->title',
 			);
 			$category = ArticleCategory::model()->findByPk($_GET['category']);
 			if(!isset($_GET['category']) || (isset($_GET['category']) && $category->dependency == 0)) {
@@ -383,21 +381,21 @@ class Articles extends CActiveRecord
 					), true),
 				);
 			}
+			if(OmmuSettings::getInfo('site_headline') == 1) {
+				$this->defaultColumns[] = array(
+					'name' => 'headline',
+					'value' => '$data->headline == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Utility::getPublish(Yii::app()->controller->createUrl("headline",array("id"=>$data->article_id)), $data->headline, 9)',
+					'htmlOptions' => array(
+						'class' => 'center',
+					),
+					'filter'=>array(
+						1=>Yii::t('phrase', 'Yes'),
+						0=>Yii::t('phrase', 'No'),
+					),
+					'type' => 'raw',
+				);
+			}
 			if(!isset($_GET['type'])) {
-				if(OmmuSettings::getInfo('site_headline') == 1) {
-					$this->defaultColumns[] = array(
-						'name' => 'headline',
-						'value' => '$data->headline == 1 ? Chtml::image(Yii::app()->theme->baseUrl.\'/images/icons/publish.png\') : Utility::getPublish(Yii::app()->controller->createUrl("headline",array("id"=>$data->article_id)), $data->headline, 9)',
-						'htmlOptions' => array(
-							'class' => 'center',
-						),
-						'filter'=>array(
-							1=>Yii::t('phrase', 'Yes'),
-							0=>Yii::t('phrase', 'No'),
-						),
-						'type' => 'raw',
-					);
-				}
 				$this->defaultColumns[] = array(
 					'name' => 'publish',
 					'value' => 'Utility::getPublish(Yii::app()->controller->createUrl("publish",array("id"=>$data->article_id)), $data->publish, 1)',

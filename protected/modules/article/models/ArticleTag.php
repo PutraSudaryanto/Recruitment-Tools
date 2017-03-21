@@ -1,9 +1,11 @@
 <?php
 /**
  * ArticleTag
+ * version: 0.0.1
+ *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
- * @link https://github.com/oMMu/Ommu-Articles
+ * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @link https://github.com/ommu/Articles
  * @contact (+62)856-299-4114
  *
  * This is the template for generating the model class of a specified table.
@@ -144,7 +146,7 @@ class ArticleTag extends CActiveRecord
 		$criteria->compare('t.creation_id',$this->creation_id);
 		
 		$criteria->compare('article.title',strtolower($this->article_search), true);
-		$criteria->compare('tag.body',strtolower($this->tag_search), true);
+		$criteria->compare('tag.body',Utility::getUrlTitle(strtolower(trim($this->tag_search))), true);
 		$criteria->compare('creation.displayname',strtolower($this->creation_search), true);
 
 		if(!isset($_GET['ArticleTag_sort']))
@@ -198,16 +200,12 @@ class ArticleTag extends CActiveRecord
 			if(!isset($_GET['article'])) {
 				$this->defaultColumns[] = array(
 					'name' => 'article_search',
-					'value' => '$data->article->title."<br/><span>".Utility::shortText(Utility::hardDecode($data->article->body),150)."</span>"',
-					'htmlOptions' => array(
-						'class' => 'bold',
-					),
-					'type' => 'raw',
+					'value' => '$data->article->title',
 				);
 			}
 			$this->defaultColumns[] = array(
 				'name' => 'tag_search',
-				'value' => '$data->tag->body',
+				'value' => 'str_replace(\'-\', \' \', $data->tag->body)',
 			);
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
@@ -289,17 +287,16 @@ class ArticleTag extends CActiveRecord
 						'select' => 'tag_id, body',
 						'condition' => 'body = :body',
 						'params' => array(
-							':body' => strtolower(trim($this->tag_input)),
+							':body' => Utility::getUrlTitle(strtolower(trim($this->tag_input))),
 						),
 					));
-					if($tag != null) {
+					if($tag != null)
 						$this->tag_id = $tag->tag_id;
-					} else {
+					else {
 						$data = new OmmuTags;
 						$data->body = $this->tag_input;
-						if($data->save()) {
+						if($data->save())
 							$this->tag_id = $data->tag_id;
-						}
 					}					
 				}
 			}

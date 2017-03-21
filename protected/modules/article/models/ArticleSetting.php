@@ -1,9 +1,11 @@
 <?php
 /**
  * ArticleSetting
+ * version: 0.0.1
+ *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
- * @link https://github.com/oMMu/Ommu-Articles
+ * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @link https://github.com/ommu/Articles
  * @contact (+62)856-299-4114
  *
  * This is the template for generating the model class of a specified table.
@@ -282,7 +284,7 @@ class ArticleSetting extends CActiveRecord
 				$this->addError('media_limit', Yii::t('phrase', 'Photo Limit lebih besar dari 0'));
 			
 			if($this->media_resize == 1 && ($this->media_resize_size['width'] == '' || $this->media_resize_size['height'] == ''))
-				$this->addError('media_resize_size', Yii::t('attribute', 'Media Resize cannot be blank.'));
+				$this->addError('media_resize_size', Yii::t('phrase', 'Media Resize cannot be blank.'));
 			
 			if($this->media_view_size['large']['width'] == '' || $this->media_view_size['large']['height'] == '')
 				$this->addError('media_view_size[large]', Yii::t('phrase', 'Large Size cannot be blank.'));
