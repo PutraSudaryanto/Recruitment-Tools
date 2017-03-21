@@ -1,9 +1,11 @@
 <?php
 /**
  * UserVerify
+ * version: 0.0.1
+ *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
- * @link https://github.com/oMMu/Ommu-Users
+ * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @link https://github.com/ommu/Users
  * @contact (+62)856-299-4114
  *
  * This is the template for generating the model class of a specified table.
@@ -263,12 +265,12 @@ class UserVerify extends CActiveRecord
 				'{$site_title}', '{$verify_link}',
 			);
 			$verify_replace = array(
-				Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl, $this->user->displayname, SupportMailSetting::getInfo(1, 'mail_contact'),
+				Utility::getProtocol().'://'.Yii::app()->request->serverName.$this->module->assetsUrl, $this->user->displayname, SupportMailSetting::getInfo(1, 'mail_contact'),
 				$setting->site_title, Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->createUrl('users/verify/code',array('key'=>$this->code, 'secret'=>$this->user->salt)),
 			);
 			$verify_template = 'user_verify_email';
 			$verify_title = 'Please verify your '.$setting->site_title.' account';
-			$verify_message = file_get_contents(YiiBase::getPathOfAlias('webroot.externals.users.template').'/'.$verify_template.'.php');
+			$verify_message = file_get_contents(YiiBase::getPathOfAlias('application.modules.users.components.templates').'/'.$verify_template.'.php');
 			$verify_ireplace = str_ireplace($verify_search, $verify_replace, $verify_message);
 			SupportMailSetting::sendEmail($this->user->email, $this->user->displayname, $verify_title, $verify_ireplace);
 		}

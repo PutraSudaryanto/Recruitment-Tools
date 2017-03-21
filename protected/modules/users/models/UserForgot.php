@@ -1,9 +1,11 @@
 <?php
 /**
  * UserForgot
+ * version: 0.0.1
+ *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2012 Ommu Platform (ommu.co)
- * @link https://github.com/oMMu/Ommu-Users
+ * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
+ * @link https://github.com/ommu/Users
  * @contact (+62)856-299-4114
  *
  * This is the template for generating the model class of a specified table.
@@ -259,12 +261,12 @@ class UserForgot extends CActiveRecord
 				'{$forgot_link}',
 			);
 			$forgot_replace = array(
-				Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl, $this->user->displayname, SupportMailSetting::getInfo(1, 'mail_contact'),
+				Utility::getProtocol().'://'.Yii::app()->request->serverName.$this->module->assetsUrl, $this->user->displayname, SupportMailSetting::getInfo(1, 'mail_contact'),
 				Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->createUrl('users/password/verify',array('key'=>$this->code, 'secret'=>$this->user->salt)),
 			);
 			$forgot_template = 'user_forgot_password';
 			$forgot_title = $setting->site_title.' Password Assistance';
-			$forgot_message = file_get_contents(YiiBase::getPathOfAlias('webroot.externals.users.template').'/'.$forgot_template.'.php');
+			$forgot_message = file_get_contents(YiiBase::getPathOfAlias('application.modules.users.components.templates').'/'.$forgot_template.'.php');
 			$forgot_ireplace = str_ireplace($forgot_search, $forgot_replace, $forgot_message);
 			SupportMailSetting::sendEmail($this->user->email, $this->user->displayname, $forgot_title, $forgot_ireplace);
 		}
