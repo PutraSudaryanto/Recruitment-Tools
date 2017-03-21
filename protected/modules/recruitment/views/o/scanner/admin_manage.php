@@ -17,8 +17,8 @@
 		'Manage',
 	);
 	$cs = Yii::app()->getClientScript();
-	$cs->registerCssFile(Yii::app()->request->baseUrl.'/externals/recruitment/recruitment.css');
-	$cs->registerScriptFile(Yii::app()->request->baseUrl.'/externals/recruitment/custom.js', CClientScript::POS_END);
+	$cs->registerCssFile($this->module->assetsUrl.'/recruitment.css');
+	$cs->registerScriptFile($this->module->assetsUrl.'/custom.js', CClientScript::POS_END);
 	
 ?>
 

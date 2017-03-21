@@ -107,20 +107,20 @@ class RecruitmentEventUser extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'event_user_id' => 'Event User Id',
-			'publish' => 'Publish',
-			'recruitment_id' => 'Recruitment',
-			'user_id' => 'User',
-			'test_number' => 'Test Number',
-			'sendemail_status' => 'Send Email',
-			'sendemail_date' => 'Sendemail Date',
-			'sendemail_id' => 'Sendemail',
-			'creation_date' => 'Creation Date',
-			'creation_id' => 'Creation',
-			'recruitment_search' => 'Recruitment',
-			'user_search' => 'User',
-			'email_search' => 'Email',
-			'creation_search' => 'Creation',
+			'event_user_id' => Yii::t('attribute', 'Event User Id'),
+			'publish' => Yii::t('attribute', 'Publish'),
+			'recruitment_id' => Yii::t('attribute', 'Recruitment'),
+			'user_id' => Yii::t('attribute', 'User'),
+			'test_number' => Yii::t('attribute', 'Test Number'),
+			'sendemail_status' => Yii::t('attribute', 'Send Email'),
+			'sendemail_date' => Yii::t('attribute', 'Sendemail Date'),
+			'sendemail_id' => Yii::t('attribute', 'Sendemail'),
+			'creation_date' => Yii::t('attribute', 'Creation Date'),
+			'creation_id' => Yii::t('attribute', 'Creation'),
+			'recruitment_search' => Yii::t('attribute', 'Recruitment'),
+			'user_search' => Yii::t('attribute', 'User'),
+			'email_search' => Yii::t('attribute', 'Email'),
+			'creation_search' => Yii::t('attribute', 'Creation'),
 		);
 	}
 

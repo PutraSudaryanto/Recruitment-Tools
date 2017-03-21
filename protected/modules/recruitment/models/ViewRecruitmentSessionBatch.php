@@ -99,14 +99,14 @@ class ViewRecruitmentSessionBatch extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'batch_id' => 'Batch',
-			'session_id' => 'Session',
-			'batch_name' => 'Batch Name',
-			'session_name' => 'Session Name',
-			'event_name' => 'Event Name',
-			'users' => 'Users',
-			'user_scan' => 'User Scan',
-			'user_notscan' => 'User Not Scan',
+			'batch_id' => Yii::t('attribute', 'Batch'),
+			'session_id' => Yii::t('attribute', 'Session'),
+			'batch_name' => Yii::t('attribute', 'Batch Name'),
+			'session_name' => Yii::t('attribute', 'Session Name'),
+			'event_name' => Yii::t('attribute', 'Event Name'),
+			'users' => Yii::t('attribute', 'Users'),
+			'user_scan' => Yii::t('attribute', 'User Scan'),
+			'user_notscan' => Yii::t('attribute', 'User Not Scan'),
 		);
 	}
 

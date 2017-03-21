@@ -85,10 +85,10 @@ class RecruitmentStatisticTotal extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'statistic_key' => 'Statistic Key',
-			'total' => 'Total',
-			'flag' => 'Flag',
-			'note' => 'Note',
+			'statistic_key' => Yii::t('attribute', 'Statistic Key'),
+			'total' => Yii::t('attribute', 'Total'),
+			'flag' => Yii::t('attribute', 'Flag'),
+			'note' => Yii::t('attribute', 'Note'),
 		);
 	}
 

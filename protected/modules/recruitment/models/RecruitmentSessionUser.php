@@ -112,27 +112,27 @@ class RecruitmentSessionUser extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'publish' => 'Publish',
-			'user_id' => 'User',
-			'event_user_id' => 'Event User',
-			'session_id' => 'Session',
-			'session_seat' => 'Session Seat',
-			'creation_date' => 'Creation Date',
-			'creation_id' => 'Creation',
-			'sendemail_status' => 'Send Email',
-			'sendemail_date' => 'Sendemail Date',
-			'sendemail_id' => 'Sendemail',
-			'printcard_date' => 'Printcard Date',
-			'printcard_id' => 'Printcard',
-			'scanner_status' => 'Scanner Status',
-			'scanner_field' => 'Scanner Field',
-			'scanner_date' => 'Scanner Date',
-			'scanner_id' => 'Scanner',
-			'email_search' => 'Email',
-			'user_search' => 'User',
-			'session_search' => 'Session',
-			'creation_search' => 'Creation',
+			'id' => Yii::t('attribute', 'ID'),
+			'publish' => Yii::t('attribute', 'Publish'),
+			'user_id' => Yii::t('attribute', 'User'),
+			'event_user_id' => Yii::t('attribute', 'Event User'),
+			'session_id' => Yii::t('attribute', 'Session'),
+			'session_seat' => Yii::t('attribute', 'Session Seat'),
+			'creation_date' => Yii::t('attribute', 'Creation Date'),
+			'creation_id' => Yii::t('attribute', 'Creation'),
+			'sendemail_status' => Yii::t('attribute', 'Send Email'),
+			'sendemail_date' => Yii::t('attribute', 'Sendemail Date'),
+			'sendemail_id' => Yii::t('attribute', 'Sendemail'),
+			'printcard_date' => Yii::t('attribute', 'Printcard Date'),
+			'printcard_id' => Yii::t('attribute', 'Printcard'),
+			'scanner_status' => Yii::t('attribute', 'Scanner Status'),
+			'scanner_field' => Yii::t('attribute', 'Scanner Field'),
+			'scanner_date' => Yii::t('attribute', 'Scanner Date'),
+			'scanner_id' => Yii::t('attribute', 'Scanner'),
+			'email_search' => Yii::t('attribute', 'Email'),
+			'user_search' => Yii::t('attribute', 'User'),
+			'session_search' => Yii::t('attribute', 'Session'),
+			'creation_search' => Yii::t('attribute', 'Creation'),
 		);
 	}
 
@@ -461,7 +461,7 @@ class RecruitmentSessionUser extends CActiveRecord
 		if($template == null)
 			$template = 'pln_cdugm19_pdf';
 		
-		include(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');		
+		include(YiiBase::getPathOfAlias('application.modules.recruitment.components.templates').'/'.$template.'.php');		
 		$content  = ob_get_clean();
 		$fileName = '';
 		

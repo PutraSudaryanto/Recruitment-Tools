@@ -162,7 +162,7 @@ class SessionuserController extends Controller
 			Utility::getLocalDayName($model->session->session_date, false), date('d', strtotime($model->session->session_date)), Utility::getLocalMonthName($model->session->session_date), date('Y', strtotime($model->session->session_date)),
 			$model->session->session_name, $model->session->session_time_start, $model->session->session_time_finish);
 		$template = 'pln_cdugm19_mail';
-		$message = file_get_contents(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');
+		$message = file_get_contents(YiiBase::getPathOfAlias('application.modules.recruitment.components.templates').'/'.$template.'.php');
 		$message = str_ireplace($search, $replace, $message);
 		$session = new RecruitmentSessionUser();
 		$attachment = $session->getPdf($model);

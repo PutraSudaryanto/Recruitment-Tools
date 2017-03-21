@@ -93,11 +93,11 @@ class ViewRecruitmentSessions extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'session_id' => 'Session',
-			'session_name' => 'Session Name',
-			'event_name' => 'Event Name',
-			'batchs' => 'Batchs',
-			'users' => 'Users',
+			'session_id' => Yii::t('attribute', 'Session'),
+			'session_name' => Yii::t('attribute', 'Session Name'),
+			'event_name' => Yii::t('attribute', 'Event Name'),
+			'batchs' => Yii::t('attribute', 'Batchs'),
+			'users' => Yii::t('attribute', 'Users'),
 		);
 	}
 

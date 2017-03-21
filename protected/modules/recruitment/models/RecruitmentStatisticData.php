@@ -84,11 +84,11 @@ class RecruitmentStatisticData extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'content_id' => 'Content',
-			'user_id' => 'User',
-			'flag' => 'Flag',
-			'creation_date' => 'Creation Date',
+			'id' => Yii::t('attribute', 'ID'),
+			'content_id' => Yii::t('attribute', 'Content'),
+			'user_id' => Yii::t('attribute', 'User'),
+			'flag' => Yii::t('attribute', 'Flag'),
+			'creation_date' => Yii::t('attribute', 'Creation Date'),
 		);
 	}
 

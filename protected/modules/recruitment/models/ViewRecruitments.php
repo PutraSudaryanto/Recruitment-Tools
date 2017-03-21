@@ -90,10 +90,10 @@ class ViewRecruitments extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'recruitment_id' => 'Recruitment',
-			'sessions' => 'Sessions',
-			'batchs' => 'Batchs',
-			'users' => 'Users',
+			'recruitment_id' => Yii::t('attribute', 'Recruitment'),
+			'sessions' => Yii::t('attribute', 'Sessions'),
+			'batchs' => Yii::t('attribute', 'Batchs'),
+			'users' => Yii::t('attribute', 'Users'),
 		);
 	}
 

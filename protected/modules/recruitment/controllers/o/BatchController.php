@@ -287,7 +287,7 @@ class BatchController extends Controller
 							Utility::getLocalDayName($val->session->session_date, false), date('d', strtotime($val->session->session_date)), Utility::getLocalMonthName($val->session->session_date), date('Y', strtotime($val->session->session_date)),
 							$val->session->session_name, $val->session->session_time_start, $val->session->session_time_finish);
 						$template = 'pln_cdugm19_mail';
-						$message = file_get_contents(YiiBase::getPathOfAlias('webroot.externals.recruitment.template').'/'.$template.'.php');
+						$message = file_get_contents(YiiBase::getPathOfAlias('application.modules.recruitment.components.templates').'/'.$template.'.php');
 						$message = str_ireplace($search, $replace, $message);
 						$session = new RecruitmentSessionUser();
 						$attachment = $session->getPdf($val);

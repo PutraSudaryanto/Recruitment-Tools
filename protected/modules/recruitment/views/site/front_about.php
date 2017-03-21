@@ -26,4 +26,4 @@
 	}
 }?>
 
-<?php echo Phrase::trans($news->name, 2) != Utility::hardDecode(Phrase::trans($news->desc, 2)) ? Utility::cleanImageContent(Phrase::trans($news->desc, 2)) : '';?>
+<?php echo Phrase::trans($news->name) != Utility::hardDecode(Phrase::trans($news->desc)) ? Utility::cleanImageContent(Phrase::trans($news->desc)) : '';?>

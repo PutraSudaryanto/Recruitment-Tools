@@ -45,9 +45,9 @@ class LoginFormRecruitment extends CFormModel
 	public function attributeLabels()
 	{
 		return array(
-			'email' => 'Email',
-			'password' => 'Password',
-			'rememberMe' => 'Remember me next time',
+			'email' => Yii::t('attribute', 'Email'),
+			'password' => Yii::t('attribute', 'Password'),
+			'rememberMe' => Yii::t('attribute', 'Remember me next time'),
 		);
 	}
 

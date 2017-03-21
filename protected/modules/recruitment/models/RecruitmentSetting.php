@@ -93,14 +93,14 @@ class RecruitmentSetting extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'license' => 'License',
-			'permission' => 'Permission',
-			'meta_keyword' => 'Meta Keyword',
-			'meta_description' => 'Meta Description',
-			'modified_date' => 'Modified Date',
-			'modified_id' => 'Modified',
-			'modified_search' => 'Modified',
+			'id' => Yii::t('attribute', 'ID'),
+			'license' => Yii::t('attribute', 'License'),
+			'permission' => Yii::t('attribute', 'Permission'),
+			'meta_keyword' => Yii::t('attribute', 'Meta Keyword'),
+			'meta_description' => Yii::t('attribute', 'Meta Description'),
+			'modified_date' => Yii::t('attribute', 'Modified Date'),
+			'modified_id' => Yii::t('attribute', 'Modified'),
+			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
 	}
 
