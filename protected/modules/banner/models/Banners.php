@@ -1,9 +1,11 @@
 <?php
 /**
  * Banners
+ * version: 0.0.1
+ *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2014 Ommu Platform (ommu.co)
- * @link https://github.com/oMMu/Ommu-Banner
+ * @copyright Copyright (c) 2014 Ommu Platform (opensource.ommu.co)
+ * @link https://github.com/ommu/Banner
  * @contact (+62)856-299-4114
  *
  * This is the template for generating the model class of a specified table.
@@ -102,6 +104,7 @@ class Banners extends CActiveRecord
 			'creation' => array(self::BELONGS_TO, 'Users', 'creation_id'),
 			'modified' => array(self::BELONGS_TO, 'Users', 'modified_id'),
 			'clicks' => array(self::HAS_MANY, 'BannerClicks', 'banner_id'),
+			'views' => array(self::HAS_MANY, 'BannerViews', 'banner_id'),
 		);
 	}
 
@@ -470,7 +473,7 @@ class Banners extends CActiveRecord
 				}				
 			} else {
 				if($this->isNewRecord && $controller == 'o/admin')
-					$this->addError('banner_filename', Yii::t('attribute', 'Banner (File) cannot be blank.'));
+					$this->addError('banner_filename', Yii::t('phrase', 'Banner (File) cannot be blank.'));
 			}
 			
 			if($this->linked_input == 0)
@@ -483,10 +486,10 @@ class Banners extends CActiveRecord
 				$this->expired_date = '00-00-0000';
 			
 			if($this->linked_input == 1 && $this->url == '-')
-				$this->addError('url', Yii::t('attribute', 'URL harus dalam format hyperlink'));
+				$this->addError('url', Yii::t('phrase', 'URL harus dalam format hyperlink'));
 			
 			if($this->permanent_input != 1 && ($this->published_date != '' && $this->expired_date != '') && ($this->published_date >= $this->expired_date))
-				$this->addError('expired_date', Yii::t('attribute', 'Expired lebih kecil'));
+				$this->addError('expired_date', Yii::t('phrase', 'Expired lebih kecil'));
 		}
 		return true;
 	}
