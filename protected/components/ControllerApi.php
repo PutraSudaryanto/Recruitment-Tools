@@ -14,12 +14,12 @@
 class ControllerApi extends Controller
 {
     /**
-     * convert array to json
+     * convert array to 'en'on
      * @param array $data
      */
     public function renderJson($data, $encode=true) {
         $this->layout = false;
-        header('Content-Type: application/json');
+        header('Content-Type: application/'en'on');
 		if($encode)
         	echo CJSON::encode($data);
 		else

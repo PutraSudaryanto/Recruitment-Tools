@@ -69,7 +69,7 @@ class BannerClicks extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('banner_id, user_id, click_date, click_ip', 'required'),
+			array('banner_id, user_id', 'required'),
 			array('clicks', 'numerical', 'integerOnly'=>true),
 			array('banner_id, user_id', 'length', 'max'=>11),
 			array('click_ip', 'length', 'max'=>20),
@@ -242,11 +242,11 @@ class BannerClicks extends CActiveRecord
 				'htmlOptions' => array(
 					//'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'click_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'click_date_filter',
@@ -287,6 +287,27 @@ class BannerClicks extends CActiveRecord
 		} else {
 			$model = self::model()->findByPk($id);
 			return $model;			
+		}
+	}
+
+	/**
+	 * User get information
+	 */
+	public static function insertClick($banner_id)
+	{
+		$criteria=new CDbCriteria;
+		$criteria->select = 'click_id, banner_id, user_id, clicks';
+		$criteria->compare('banner_id', $banner_id);
+		$criteria->compare('user_id', !Yii::app()->user->isGuest ? Yii::app()->user->id : '0');
+		$findClick = self::model()->find($criteria);
+		
+		if($findClick != null)
+			self::model()->updateByPk($findClick->click_id, array('clicks'=>$findClick->clicks + 1));
+		
+		else {
+			$click=new BannerClicks;
+			$click->banner_id = $banner_id;
+			$click->save();
 		}
 	}
 

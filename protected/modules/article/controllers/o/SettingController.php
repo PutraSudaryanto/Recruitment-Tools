@@ -17,7 +17,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
  * @link https://github.com/ommu/Articles
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
@@ -147,7 +147,7 @@ class SettingController extends Controller
 
 			} else {
 				if(isset($_GET['enablesave']) && $_GET['enablesave'] == 1) {
-					if($model->update()) {
+					if($model->save()) {
 						echo CJSON::encode(array(
 							'type' => 0,
 							'msg' => '<div class="errorSummary success"><strong>'.Yii::t('phrase', 'Article setting success updated.').'</strong></div>',

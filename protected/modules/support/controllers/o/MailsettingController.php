@@ -17,7 +17,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2012 Ommu Platform (opensource.ommu.co)
  * @link https://github.com/ommu/Support
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
@@ -174,7 +174,7 @@ class MailsettingController extends Controller
 	 */
 	protected function performAjaxValidation($model) 
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='support-feedbacks-form') {
+		if(isset($_POST['ajax']) && $_POST['ajax']==='support-mail-setting-form') {
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}

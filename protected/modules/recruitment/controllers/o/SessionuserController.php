@@ -26,10 +26,10 @@
  *	performAjaxValidation
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 1 March 2016, 13:53 WIB
  * @link http://company.ommu.co
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
@@ -236,7 +236,7 @@ class SessionuserController extends Controller
 					$offset = (int)($i-1)*$pageSize;
 				
 					$criteria=new CDbCriteria;
-					$criteria->compare('t.publish',1);
+					$criteria->compare('publish',1);
 					if($batch->parent_id == 0) {
 						$subBatch = RecruitmentSessions::model()->findAll(array(
 							'condition' => 'publish = :publish AND parent_id = :parent',
@@ -250,10 +250,10 @@ class SessionuserController extends Controller
 							foreach($subBatch as $key => $val)
 								$items[] = $val->session_id;
 						}
-						$criteria->addInCondition('t.session_id',$items);
+						$criteria->addInCondition('session_id',$items);
 						
 					} else					
-						$criteria->compare('t.session_id',$session);
+						$criteria->compare('session_id',$session);
 					
 					$criteria->limit = $pageSize;
 					$criteria->offset = $offset;
@@ -300,8 +300,8 @@ class SessionuserController extends Controller
 		$batch = RecruitmentSessions::model()->findByPk($session);
 		
 		$criteria=new CDbCriteria;
-		$criteria->compare('t.publish',1);
-		$criteria->compare('t.session_id',$session);
+		$criteria->compare('publish',1);
+		$criteria->compare('session_id',$session);
 		//$criteria->limit = 4;
 		$model = RecruitmentSessionUser::model()->findAll($criteria);
 		
@@ -325,7 +325,7 @@ class SessionuserController extends Controller
 		$batch = RecruitmentSessions::model()->findByPk($session);
 		
 		$criteria=new CDbCriteria;
-		$criteria->compare('t.publish',1);
+		$criteria->compare('publish',1);
 		if($batch->parent_id == 0) {
 			$subBatch = RecruitmentSessions::model()->findAll(array(
 				'condition' => 'publish = :publish AND parent_id = :parent',
@@ -339,10 +339,10 @@ class SessionuserController extends Controller
 				foreach($subBatch as $key => $val)
 					$items[] = $val->session_id;
 			}
-			$criteria->addInCondition('t.session_id',$items);
+			$criteria->addInCondition('session_id',$items);
 			
 		} else					
-			$criteria->compare('t.session_id',$session);
+			$criteria->compare('session_id',$session);
 		
 		//$criteria->limit = 4;
 		$model = RecruitmentSessionUser::model()->findAll($criteria);
@@ -369,7 +369,7 @@ class SessionuserController extends Controller
 			// we only allow deletion via POST request
 			if(isset($session)) {				
 				$criteria=new CDbCriteria;
-				$criteria->compare('t.publish',1);
+				$criteria->compare('publish',1);
 				if($model->parent_id == 0) {
 					$batch = RecruitmentSessions::model()->findAll(array(
 						'condition' => 'publish = :publish AND parent_id = :parent',
@@ -383,10 +383,10 @@ class SessionuserController extends Controller
 						foreach($batch as $key => $val)
 							$items[] = $val->session_id;
 					}
-					$criteria->addInCondition('t.session_id',$items);
+					$criteria->addInCondition('session_id',$items);
 					
 				} else					
-					$criteria->compare('t.session_id',$session);
+					$criteria->compare('session_id',$session);
 				
 				$user = RecruitmentSessionUser::model()->findAll($criteria);
 				foreach($user as $key => $val)

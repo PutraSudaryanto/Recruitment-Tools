@@ -23,10 +23,10 @@
  *	performAjaxValidation
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 1 March 2016, 13:52 WIB
  * @link http://company.ommu.co
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
@@ -266,8 +266,8 @@ class AdminController extends Controller
 			
 			if($model->save()) {
 				$criteria=new CDbCriteria;
-				$criteria->compare('t.publish',1);
-				$criteria->compare('t.recruitment_id',$id);
+				$criteria->compare('publish',1);
+				$criteria->compare('recruitment_id',$id);
 				
 				$user = RecruitmentEventUser::model()->findAll($criteria);
 				if($user != null) {

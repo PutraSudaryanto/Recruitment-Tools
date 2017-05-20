@@ -9,7 +9,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2014 Ommu Platform (opensource.ommu.co)
  * @link https://github.com/ommu/Banner
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  */
 
@@ -22,6 +22,6 @@
 <div class="form">
 	<?php echo $this->renderPartial('_form', array(
 		'model'=>$model,
-		'setting'=>$setting,
+		'banner_file_type'=>$banner_file_type,
 	)); ?>
 </div>

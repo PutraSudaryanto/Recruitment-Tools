@@ -264,11 +264,11 @@ class OmmuZoneDistricts extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'creation_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'creation_date_filter',
@@ -336,18 +336,13 @@ class OmmuZoneDistricts extends CActiveRecord
 	/**
 	 * Get city
 	 */
-	public static function getDistrict($city=null) {
-		if($city == null || ($city != null && ($city == '' || $city == 0))) {
-			$model = self::model()->findAll();
-		} else {
-			$model = self::model()->findAll(array(
-				//'select' => 'publish, name',
-				'condition' => 'city_id = :city',
-				'params' => array(
-					':city' => $city,
-				),
-			));
-		}
+	public static function getDistrict($city=null) 
+	{
+		$criteria=new CDbCriteria;
+		if($city != null && ($city != '' || $city != 0))
+			$criteria->compare('city_id',$city);
+		
+		$model = self::model()->findAll($criteria);
 
 		$items = array();
 		if($model != null) {

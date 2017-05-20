@@ -195,9 +195,18 @@ class OmmuSystemPhrase extends CActiveRecord
 	protected function afterConstruct() {
 		if(count($this->defaultColumns) == 0) {
 			$this->defaultColumns[] = 'phrase_id';
-			$this->defaultColumns[] = 'en_us';
-			$this->defaultColumns[] = 'id';
+			$this->defaultColumns[] = array(
+				'name' => 'en_us',
+				'value' => '$data->en_us',
+				'type' => 'raw',
+			);
+			$this->defaultColumns[] = array(
+				'name' => 'id',
+				'value' => '$data->id',
+				'type' => 'raw',
+			);
 			$this->defaultColumns[] = 'location';
+			/*
 			$this->defaultColumns[] = array(
 				'name' => 'creation_search',
 				'value' => '$data->creation->displayname',
@@ -208,11 +217,11 @@ class OmmuSystemPhrase extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'creation_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'creation_date_filter',
@@ -228,6 +237,7 @@ class OmmuSystemPhrase extends CActiveRecord
 					),
 				), true),
 			);
+			*/
 		}
 		parent::afterConstruct();
 	}

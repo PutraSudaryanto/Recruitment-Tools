@@ -77,7 +77,7 @@ class MaintenanceController extends Controller
 		$this->pageTitle = Phrase::trans($model->name);
 		$this->pageDescription = Utility::shortText(Utility::hardDecode(Phrase::trans($model->desc)),300);
 		$this->pageMeta = '';
-		$this->pageImage = ($model->media != '' && $model->media_show == 1) ? Yii::app()->request->baseUrl.'/public/page/'.$model->media : '';
+		$this->pageImage = ($model->media != '' && $model->media_show == 1) ? Utility::getProtocol().'://'.Yii::app()->request->serverName.Yii::app()->request->baseUrl.'/public/page/'.$model->media : '';
 		$this->render('application.webs.maintenance.front_page',array(
 			'model'=>$model,
 		));
@@ -89,18 +89,18 @@ class MaintenanceController extends Controller
 	 */
 	public function actionFeedback()
 	{
-		$model=new SupportMails;
+		$model=new SupportFeedbacks;
 		if(!Yii::app()->user->isGuest) {
 			$user = Users::model()->findByPk(Yii::app()->user->id, array(
-				'select' => 'user_id, email, displayname, photo_id',
+				'select' => 'user_id, email, displayname, photos',
 			));
 		}
 
 		// Uncomment the following line if AJAX validation is needed
 		//$this->performAjaxValidation($model);
 
-		if(isset($_POST['SupportMails'])) {
-			$model->attributes=$_POST['SupportMails'];
+		if(isset($_POST['SupportFeedbacks'])) {
+			$model->attributes=$_POST['SupportFeedbacks'];
 			$model->scenario = 'contactus';
 
 			$jsonError = CActiveForm::validate($model);

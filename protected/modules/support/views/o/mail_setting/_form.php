@@ -20,7 +20,7 @@
 	);
 	$cs = Yii::app()->getClientScript();
 $js=<<<EOP
-	$('#SupportMailSetting_mail_smtp input[name="SupportMailSetting[mail_smtp]"]').live('change', function() {
+	$('#SupportMailSetting_mail_smtp input[name="SupportMailSetting[mail_smtp]"]').on('change', function() {
 		var id = $(this).val();
 		if(id == '1') {
 			$('div#smtp').slideDown();
@@ -28,7 +28,7 @@ $js=<<<EOP
 			$('div#smtp').slideUp();
 		}
 	});
-	$('#SupportMailSetting_smtp_authentication input[name="SupportMailSetting[smtp_authentication]"]').live('change', function() {
+	$('#SupportMailSetting_smtp_authentication input[name="SupportMailSetting[smtp_authentication]"]').on('change', function() {
 		var id = $(this).val();
 		if(id == '1') {
 			$('div#authentication').slideDown();
@@ -41,7 +41,7 @@ EOP;
 ?>
 
 <?php $form=$this->beginWidget('application.components.system.OActiveForm', array(
-	'id'=>'support-feedbacks-form',
+	'id'=>'support-mail-setting-form',
 	'enableAjaxValidation'=>true,
 	//'htmlOptions' => array('enctype' => 'multipart/form-data')
 )); ?>

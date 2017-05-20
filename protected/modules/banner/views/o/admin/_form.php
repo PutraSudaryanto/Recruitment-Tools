@@ -9,13 +9,13 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2014 Ommu Platform (opensource.ommu.co)
  * @link https://github.com/ommu/Banner
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  */
-
+	
 	$cs = Yii::app()->getClientScript();
 $js=<<<EOP
-	$('#Banners_permanent_input').live('change', function() {
+	$('#Banners_permanent_i').on('change', function() {
 		var id = $(this).prop('checked');		
 		if(id == true) {
 			$('div#expired-date').slideUp();
@@ -23,7 +23,7 @@ $js=<<<EOP
 			$('div#expired-date').slideDown();
 		}
 	});
-	$('#Banners_linked_input').live('change', function() {
+	$('#Banners_linked_i').on('change', function() {
 		var id = $(this).prop('checked');		
 		if(id == true) {
 			$('div#url').slideDown();
@@ -74,21 +74,21 @@ EOP;
 
 	<?php 
 	if(!$model->getErrors()) {
-		$model->linked_input = 0;
+		$model->linked_i = 0;
 		if($model->isNewRecord || (!$model->isNewRecord && $model->url != '-'))
-			$model->linked_input = 1;
+			$model->linked_i = 1;
 	}?>
 	
 	<div class="clearfix">
-		<?php echo $form->labelEx($model,'linked_input'); ?>
+		<?php echo $form->labelEx($model,'linked_i'); ?>
 		<div class="desc">
-			<?php echo $form->checkBox($model,'linked_input'); ?>
-			<?php echo $form->error($model,'linked_input'); ?>
+			<?php echo $form->checkBox($model,'linked_i'); ?>
+			<?php echo $form->error($model,'linked_i'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>
 
-	<div id="url" class="<?php echo $model->linked_input == 0 ? 'hide' : ''?> clearfix">
+	<div id="url" class="<?php echo $model->linked_i == 0 ? 'hide' : ''?> clearfix">
 		<?php echo $form->labelEx($model,'url'); ?>
 		<div class="desc">
 			<?php echo $form->textArea($model,'url',array('class'=>'span-10 smaller', 'rows'=>6, 'cols'=>50)); ?>
@@ -103,17 +103,17 @@ EOP;
 			<?php 
 			if(!$model->isNewRecord) {
 				if(!$model->getErrors())
-					$model->old_banner_filename_input = $model->banner_filename;
-				echo $form->hiddenField($model,'old_banner_filename_input');
-				if($model->old_banner_filename_input != '') {
+					$model->old_banner_filename_i = $model->banner_filename;
+				echo $form->hiddenField($model,'old_banner_filename_i');
+				if($model->old_banner_filename_i != '') {
 					$bannerSize = unserialize($model->category->banner_size);
-					$banner = Yii::app()->request->baseUrl.'/public/banner/'.$model->old_banner_filename_input;?>
+					$banner = Yii::app()->request->baseUrl.'/public/banner/'.$model->old_banner_filename_i;?>
 					<img class="mb-15" src="<?php echo Utility::getTimThumb($banner, $bannerSize['width'], $bannerSize['height'], 3);?>" alt="">
 			<?php }
 			}?>
 			<?php echo $form->fileField($model,'banner_filename'); ?>
 			<?php echo $form->error($model,'banner_filename'); ?>
-			<span class="small-px">extensions are allowed: <?php echo Utility::formatFileType(unserialize($setting->banner_file_type), false);?></span>
+			<span class="small-px">extensions are allowed: <?php echo Utility::formatFileType($banner_file_type, false);?></span>
 		</div>
 	</div>
 
@@ -123,7 +123,7 @@ EOP;
 			<?php
 			!$model->isNewRecord ? ($model->published_date != '0000-00-00' ? $model->published_date = date('d-m-Y', strtotime($model->published_date)) : '') : '';
 			//echo $form->textField($model,'published_date');
-			$this->widget('zii.widgets.jui.CJuiDatePicker',array(
+			$this->widget('application.components.system.CJuiDatePicker',array(
 				'model'=>$model,
 				'attribute'=>'published_date',
 				//'mode'=>'datetime',
@@ -141,27 +141,27 @@ EOP;
 
 	<?php 
 	if(!$model->getErrors()) {
-		$model->permanent_input = 0;
+		$model->permanent_i = 0;
 		if($model->isNewRecord || (!$model->isNewRecord && in_array(date('Y-m-d', strtotime($model->expired_date)), array('0000-00-00','1970-01-01'))))
-			$model->permanent_input = 1;
+			$model->permanent_i = 1;
 	}?>
 	
 	<div class="clearfix">
-		<?php echo $form->labelEx($model,'permanent_input'); ?>
+		<?php echo $form->labelEx($model,'permanent_i'); ?>
 		<div class="desc">
-			<?php echo $form->checkBox($model,'permanent_input'); ?>
-			<?php echo $form->error($model,'permanent_input'); ?>
+			<?php echo $form->checkBox($model,'permanent_i'); ?>
+			<?php echo $form->error($model,'permanent_i'); ?>
 			<?php /*<div class="small-px silent"></div>*/?>
 		</div>
 	</div>
 	
-	<div id="expired-date" class="<?php echo $model->permanent_input == 1 ? 'hide' : ''?> clearfix">
+	<div id="expired-date" class="<?php echo $model->permanent_i == 1 ? 'hide' : ''?> clearfix">
 		<?php echo $form->labelEx($model,'expired_date'); ?>
 		<div class="desc">
 			<?php
 			!$model->isNewRecord ? (!in_array(date('Y-m-d', strtotime($model->expired_date)), array('0000-00-00','1970-01-01')) ? $model->expired_date = date('d-m-Y', strtotime($model->expired_date)) : '') : '';
 			//echo $form->textField($model,'expired_date');
-			$this->widget('zii.widgets.jui.CJuiDatePicker',array(
+			$this->widget('application.components.system.CJuiDatePicker',array(
 				'model'=>$model,
 				'attribute'=>'expired_date',
 				//'mode'=>'datetime',

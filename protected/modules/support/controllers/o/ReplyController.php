@@ -24,7 +24,7 @@
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 16 February 2017, 16:00 WIB
  * @link https://github.com/ommu/Support
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
@@ -143,6 +143,7 @@ class ReplyController extends Controller
 	public function actionAdd($feedback) 
 	{
 		$feedbackFind = SupportFeedbacks::model()->findByPk($feedback);
+		SupportFeedbackView::insertView($feedbackFind->feedback_id);
 		$model=new SupportFeedbackReply;
 
 		// Uncomment the following line if AJAX validation is needed

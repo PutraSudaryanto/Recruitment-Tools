@@ -264,7 +264,7 @@ class Reports extends CActiveRecord
 			$this->defaultColumns[] = 'report_body';
 			$this->defaultColumns[] = array(
 				'header' => Yii::t('attribute', 'Reports'),
-				'value' => 'CHtml::link($data->view->reports != \'0\' ? $data->view->reports : "0", Yii::app()->controller->createUrl("o/history/manage",array(\'report\'=>$data->report_id,\'status\'=>0)))',				
+				'value' => 'CHtml::link($data->view->reports ? $data->view->reports : 0, Yii::app()->controller->createUrl("o/history/manage",array(\'report\'=>$data->report_id,\'status\'=>0)))',				
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -272,7 +272,7 @@ class Reports extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'header' => Yii::t('attribute', 'Comments'),
-				'value' => 'CHtml::link($data->view->comments != \'0\' ? $data->view->comments : "0", Yii::app()->controller->createUrl("o/comment/manage",array(\'report\'=>$data->report_id,\'publish\'=>1)))',		
+				'value' => 'CHtml::link($data->view->comments ? $data->view->comments : 0, Yii::app()->controller->createUrl("o/comment/manage",array(\'report\'=>$data->report_id,\'publish\'=>1)))',		
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -280,7 +280,7 @@ class Reports extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'header' => Yii::t('attribute', 'Users'),
-				'value' => 'CHtml::link($data->view->users != \'0\' ? $data->view->users : "0", Yii::app()->controller->createUrl("o/user/manage",array(\'report\'=>$data->report_id,\'publish\'=>1)))',		
+				'value' => 'CHtml::link($data->view->users ? $data->view->users : 0, Yii::app()->controller->createUrl("o/user/manage",array(\'report\'=>$data->report_id,\'publish\'=>1)))',		
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -296,11 +296,11 @@ class Reports extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
 					'model'=>$this, 
 					'attribute'=>'report_date', 
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'report_date_filter',

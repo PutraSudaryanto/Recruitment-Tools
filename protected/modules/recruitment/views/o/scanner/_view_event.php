@@ -1,3 +1,19 @@
+<?php
+/**
+ * Recruitments (recruitments)
+ * @var $this ScannerController
+ * @var $data Recruitments
+ * version: 0.0.1
+ *
+ * @author Putra Sudaryanto <putra@sudaryanto.id>
+ * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @created date 12 March 2016, 23:23 WIB
+ * @link http://company.ommu.co
+ * @contact (+62)856-299-4114
+ *
+ */
+?>
+
 <div class="sep">
 	<h3>Event Information</h3>
 	<?php 

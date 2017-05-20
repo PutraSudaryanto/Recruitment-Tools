@@ -42,13 +42,28 @@
 class Banners extends CActiveRecord
 {
 	public $defaultColumns = array();
-	public $linked_input;
-	public $permanent_input;
-	public $old_banner_filename_input;
+	public $linked_i;
+	public $permanent_i;
+	public $old_banner_filename_i;
 	
 	// Variable Search
 	public $creation_search;
 	public $modified_search;
+
+	/**
+	 * Behaviors for this model
+	 */
+	public function behaviors() 
+	{
+		return array(
+			'sluggable' => array(
+				'class'=>'ext.yii-behavior-sluggable.SluggableBehavior',
+				'columns' => array('title'),
+				'unique' => true,
+				'update' => true,
+			),
+		);
+	}
 
 	/**
 	 * Returns the static model of the specified AR class.
@@ -79,11 +94,11 @@ class Banners extends CActiveRecord
 		return array(
 			array('cat_id, title, url, published_date, expired_date', 'required'),
 			array('publish, cat_id,
-				linked_input, permanent_input', 'numerical', 'integerOnly'=>true),
+				linked_i, permanent_i', 'numerical', 'integerOnly'=>true),
 			array('user_id, creation_id, modified_id', 'length', 'max'=>11),
 			array('title', 'length', 'max'=>64),
 			array('banner_filename, user_id, creation_date, creation_id, modified_date, modified_id,
-				linked_input, permanent_input, old_banner_filename_input', 'safe'),
+				linked_i, permanent_i, old_banner_filename_i', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('banner_id, publish, cat_id, user_id, title, url, banner_filename, published_date, expired_date, creation_date, creation_id, modified_date, modified_id,
@@ -127,9 +142,9 @@ class Banners extends CActiveRecord
 			'creation_id' => Yii::t('attribute', 'Creation'),
 			'modified_date' => Yii::t('attribute', 'Modified Date'),
 			'modified_id' => Yii::t('attribute', 'Modified'),
-			'linked_input' => Yii::t('attribute', 'Linked'),
-			'permanent_input' => Yii::t('attribute', 'Permanent'),
-			'old_banner_filename_input' => Yii::t('attribute', 'Old Media'),
+			'linked_i' => Yii::t('attribute', 'Linked'),
+			'permanent_i' => Yii::t('attribute', 'Permanent'),
+			'old_banner_filename_i' => Yii::t('attribute', 'Old Media'),
 			'creation_search' => Yii::t('attribute', 'Creation'),
 			'modified_search' => Yii::t('attribute', 'Modified'),
 		);
@@ -287,7 +302,7 @@ class Banners extends CActiveRecord
 			*/
 			$this->defaultColumns[] = array(
 				'header' => Yii::t('phrase', 'Views'),
-				'value' => 'CHtml::link($data->view->views != null ? $data->view->views : "0", Yii::app()->controller->createUrl("o/view/manage",array(\'banner\'=>$data->banner_id)))',
+				'value' => 'CHtml::link($data->view->views ? $data->view->views : 0, Yii::app()->controller->createUrl("o/view/manage",array(\'banner\'=>$data->banner_id)))',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -295,7 +310,7 @@ class Banners extends CActiveRecord
 			);
 			$this->defaultColumns[] = array(
 				'header' => Yii::t('phrase', 'Clicks'),
-				'value' => '$data->url != "-" ? CHtml::link($data->view->clicks != null ? $data->view->clicks : "0", Yii::app()->controller->createUrl("o/click/manage",array(\'banner\'=>$data->banner_id))) : "-"',
+				'value' => '$data->url != "-" ? CHtml::link($data->view->clicks ? $data->view->clicks : 0, Yii::app()->controller->createUrl("o/click/manage",array(\'banner\'=>$data->banner_id))) : "-"',
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
@@ -307,11 +322,11 @@ class Banners extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'published_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'published_date_filter',
@@ -333,11 +348,11 @@ class Banners extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'expired_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'expired_date_filter',
@@ -363,11 +378,11 @@ class Banners extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'creation_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'creation_date_filter',
@@ -442,6 +457,8 @@ class Banners extends CActiveRecord
 			'select' => 'banner_validation, banner_file_type',
 		));
 		$banner_file_type = unserialize($setting->banner_file_type);
+		if(empty($banner_file_type))
+			$banner_file_type = array();
 		
 		if(parent::beforeValidate()) {	
 			if($this->isNewRecord)
@@ -476,19 +493,19 @@ class Banners extends CActiveRecord
 					$this->addError('banner_filename', Yii::t('phrase', 'Banner (File) cannot be blank.'));
 			}
 			
-			if($this->linked_input == 0)
+			if($this->linked_i == 0)
 				$this->url = '-';
 			
 			if(in_array(date('Y-m-d', strtotime($this->expired_date)), array('00-00-0000','01-01-1970')))
-				$this->permanent_input = 1;
+				$this->permanent_i = 1;
 			
-			if($this->permanent_input == 1)
+			if($this->permanent_i == 1)
 				$this->expired_date = '00-00-0000';
 			
-			if($this->linked_input == 1 && $this->url == '-')
+			if($this->linked_i == 1 && $this->url == '-')
 				$this->addError('url', Yii::t('phrase', 'URL harus dalam format hyperlink'));
 			
-			if($this->permanent_input != 1 && ($this->published_date != '' && $this->expired_date != '') && ($this->published_date >= $this->expired_date))
+			if($this->permanent_i != 1 && ($this->published_date != '' && $this->expired_date != '') && ($this->published_date >= $this->expired_date))
 				$this->addError('expired_date', Yii::t('phrase', 'Expired lebih kecil'));
 		}
 		return true;
@@ -500,7 +517,7 @@ class Banners extends CActiveRecord
 	protected function beforeSave() {
 		
 		$setting = BannerSetting::model()->findByPk(1, array(
-			'select' => 'banner_resize',
+			'select' => 'banner_validation, banner_resize',
 		));
 		
 		if(parent::beforeSave()) {			
@@ -522,17 +539,17 @@ class Banners extends CActiveRecord
 					if($this->banner_filename instanceOf CUploadedFile) {
 						$fileName = time().'_'.$this->banner_id.'_'.Utility::getUrlTitle($this->title).'.'.strtolower($this->banner_filename->extensionName);
 						if($this->banner_filename->saveAs($banner_path.'/'.$fileName)) {							
-							if($this->old_banner_filename_input != '' && file_exists($banner_path.'/'.$this->old_banner_filename_input))
-								rename($banner_path.'/'.$this->old_banner_filename_input, 'public/banner/verwijderen/'.$this->banner_id.'_'.$this->old_banner_filename_input);
+							if($this->old_banner_filename_i != '' && file_exists($banner_path.'/'.$this->old_banner_filename_i))
+								rename($banner_path.'/'.$this->old_banner_filename_i, 'public/banner/verwijderen/'.$this->banner_id.'_'.$this->old_banner_filename_i);
 							$this->banner_filename = $fileName;
 							
-							if($setting->banner_resize == 1)
+							if($setting->banner_validation == 0 && $setting->banner_resize == 1)
 								self::resizeBanner($banner_path.'/'.$fileName, unserialize($this->category->banner_size));
 						}
 					}
 				} else {
 					if($this->banner_filename == '')
-						$this->banner_filename = $this->old_banner_filename_input;
+						$this->banner_filename = $this->old_banner_filename_i;
 				}
 			}
 			
@@ -549,7 +566,7 @@ class Banners extends CActiveRecord
 		parent::afterSave();
 		
 		$setting = BannerSetting::model()->findByPk(1, array(
-			'select' => 'banner_resize',
+			'select' => 'banner_validation, banner_resize',
 		));
 		
 		if($this->isNewRecord) {
@@ -570,7 +587,7 @@ class Banners extends CActiveRecord
 				if($this->banner_filename instanceOf CUploadedFile) {
 					$fileName = time().'_'.$this->banner_id.'_'.Utility::getUrlTitle($this->title).'.'.strtolower($this->banner_filename->extensionName);
 					if($this->banner_filename->saveAs($banner_path.'/'.$fileName)) {
-						if($setting->banner_resize == 1)
+						if($setting->banner_validation == 0 && $setting->banner_resize == 1)
 							self::resizeBanner($banner_path.'/'.$fileName, unserialize($this->category->banner_size));
 						self::model()->updateByPk($this->banner_id, array('banner_filename'=>$fileName));
 					}

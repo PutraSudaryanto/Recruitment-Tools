@@ -269,11 +269,11 @@ class OmmuZoneProvince extends CActiveRecord
 				'htmlOptions' => array(
 					'class' => 'center',
 				),
-				'filter' => Yii::app()->controller->widget('zii.widgets.jui.CJuiDatePicker', array(
+				'filter' => Yii::app()->controller->widget('application.components.system.CJuiDatePicker', array(
 					'model'=>$this,
 					'attribute'=>'creation_date',
-					'language' => 'ja',
-					'i18nScriptFile' => 'jquery.ui.datepicker-en.js',
+					'language' => 'en',
+					'i18nScriptFile' => 'jquery-ui-i18n.min.js',
 					//'mode'=>'datetime',
 					'htmlOptions' => array(
 						'id' => 'creation_date_filter',
@@ -341,18 +341,13 @@ class OmmuZoneProvince extends CActiveRecord
 	/**
 	 * Get province
 	 */
-	public static function getProvince($country=null) {
-		if($country == null || ($country != null && ($country == '' || $country == 0))) {
-			$model = self::model()->findAll();
-		} else {
-			$model = self::model()->findAll(array(
-				//'select' => 'publish, name',
-				'condition' => 'country_id = :country',
-				'params' => array(
-					':country' => $country,
-				),
-			));
-		}
+	public static function getProvince($country=null) 
+	{
+		$criteria=new CDbCriteria;
+		if($country != null && ($country != '' || $country != 0))
+			$criteria->compare('country_id',$country);
+		
+		$model = self::model()->findAll($criteria);
 
 		$items = array();
 		if($model != null) {

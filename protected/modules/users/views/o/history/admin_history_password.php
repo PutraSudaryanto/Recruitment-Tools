@@ -9,7 +9,7 @@
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2015 Ommu Platform (opensource.ommu.co)
  * @link https://github.com/ommu/Users
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  */
 
@@ -19,7 +19,7 @@
 	);
 ?>
 
-<div id="partial-user-history-login">
+<div id="partial-user-history-password">
 	<?php //begin.Messages ?>
 	<div id="ajax-message">
 	<?php
@@ -36,9 +36,10 @@
 		<?php 
 			$columnData   = $columns;
 			$this->widget('application.components.system.OGridView', array(
-				'id'=>'user-history-login-grid',
+				'id'=>'user-history-password-grid',
 				'dataProvider'=>$model->search(),
 				'filter'=>$model,
+				'afterAjaxUpdate' => 'reinstallDatePicker',
 				'columns' => $columnData,
 				'pager' => array('header' => ''),
 			));

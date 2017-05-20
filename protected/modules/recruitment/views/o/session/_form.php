@@ -4,12 +4,13 @@
  * @var $this SessionController
  * @var $model RecruitmentSessions
  * @var $form CActiveForm
+ * version: 0.0.1
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 1 March 2016, 13:52 WIB
  * @link http://company.ommu.co
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  */
 ?>
@@ -91,7 +92,7 @@
 				<?php
 				!$model->isNewRecord ? ($model->session_date != '0000-00-00' ? $model->session_date = date('d-m-Y', strtotime($model->session_date)) : '') : '';
 				//echo $form->textField($model,'session_date');
-				$this->widget('zii.widgets.jui.CJuiDatePicker',array(
+				$this->widget('application.components.system.CJuiDatePicker',array(
 					'model'=>$model,
 					'attribute'=>'session_date',
 					//'mode'=>'datetime',

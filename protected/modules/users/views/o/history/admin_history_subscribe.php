@@ -1,15 +1,15 @@
 <?php
 /**
- * User History Logins (user-history-login)
+ * User Newsletter Histories (user-newsletter-history)
  * @var $this HistoryController
- * @var $model UserHistoryLogin
+ * @var $model UserNewsletterHistory
  * @var $form CActiveForm
  * version: 0.0.1
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
  * @copyright Copyright (c) 2015 Ommu Platform (opensource.ommu.co)
  * @link https://github.com/ommu/Users
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  */
 
@@ -19,7 +19,7 @@
 	);
 ?>
 
-<div id="partial-user-history-login">
+<div id="partial-user-newsletter-history">
 	<?php //begin.Messages ?>
 	<div id="ajax-message">
 	<?php
@@ -36,9 +36,10 @@
 		<?php 
 			$columnData   = $columns;
 			$this->widget('application.components.system.OGridView', array(
-				'id'=>'user-history-login-grid',
+				'id'=>'user-newsletter-history-grid',
 				'dataProvider'=>$model->search(),
 				'filter'=>$model,
+				'afterAjaxUpdate' => 'reinstallDatePicker',
 				'columns' => $columnData,
 				'pager' => array('header' => ''),
 			));

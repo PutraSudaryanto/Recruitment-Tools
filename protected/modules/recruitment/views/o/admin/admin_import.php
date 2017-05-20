@@ -1,15 +1,16 @@
 <?php
 /**
- * Visits (visits)
+ * Recruitments (recruitments)
  * @var $this AdminController
- * @var $model Visits
+ * @var $model Recruitments
  * @var $form CActiveForm
+ * version: 0.0.1
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
- * @created date 26 January 2016, 13:00 WIB
- * @link https://github.com/oMMuCo
- * @contect (+62)856-299-4114
+ * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
+ * @created date 1 March 2016, 13:52 WIB
+ * @link http://company.ommu.co
+ * @contact (+62)856-299-4114
  *
  */
 

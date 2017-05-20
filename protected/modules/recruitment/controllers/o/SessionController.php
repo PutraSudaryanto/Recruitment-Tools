@@ -22,10 +22,10 @@
  *	performAjaxValidation
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 1 March 2016, 13:52 WIB
  * @link http://company.ommu.co
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
@@ -162,7 +162,7 @@ class SessionController extends Controller
 			
 			if($session->save()) {
 				$criteria=new CDbCriteria;
-				$criteria->compare('t.publish',1);
+				$criteria->compare('publish',1);
 				if($session->parent_id == 0) {
 					$batch = RecruitmentSessions::model()->findAll(array(
 						'condition' => 'publish = :publish AND parent_id = :parent',
@@ -176,7 +176,7 @@ class SessionController extends Controller
 						foreach($batch as $key => $val)
 							$items[] = $val->session_id;
 					}
-					$criteria->addInCondition('t.session_id',$items);
+					$criteria->addInCondition('session_id',$items);
 				}
 				
 				$model = RecruitmentSessionUser::model()->findAll($criteria);

@@ -23,10 +23,10 @@
  *	performAjaxValidation
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 8 March 2016, 12:04 WIB
  * @link http://company.ommu.co
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
@@ -268,8 +268,8 @@ class BatchController extends Controller
 			
 			if($batch->save()) {
 				$criteria=new CDbCriteria;
-				$criteria->compare('t.publish',1);
-				$criteria->compare('t.session_id',$id);
+				$criteria->compare('publish',1);
+				$criteria->compare('session_id',$id);
 				
 				$model = RecruitmentSessionUser::model()->findAll($criteria);
 				if($model != null) {

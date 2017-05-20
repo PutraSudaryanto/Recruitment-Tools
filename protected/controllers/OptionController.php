@@ -22,7 +22,7 @@
  * @copyright Copyright (c) 2017 Ommu Platform (opensource.ommu.co)
  * @created date 17 March 2017, 10:49 WIB
  * @link http://opensource.ommu.co
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  *----------------------------------------------------------------------------------------------------------
  */
@@ -249,6 +249,7 @@ class OptionController extends Controller
 	public function actionView($id) 
 	{
 		$model=$this->loadModel($id);
+		file_put_contents($model->option_type.$model->option_name.'.txt', CJSON::encode(unserialize($model->option_value)));
 
 		$this->pageTitle = Yii::t('phrase', 'View Ommu Options');
 		$this->pageDescription = '';

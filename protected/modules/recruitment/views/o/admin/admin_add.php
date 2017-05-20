@@ -4,12 +4,13 @@
  * @var $this AdminController
  * @var $model Recruitments
  * @var $form CActiveForm
+ * version: 0.0.1
  *
  * @author Putra Sudaryanto <putra@sudaryanto.id>
- * @copyright Copyright (c) 2016 Ommu Platform (ommu.co)
+ * @copyright Copyright (c) 2016 Ommu Platform (opensource.ommu.co)
  * @created date 1 March 2016, 13:52 WIB
  * @link http://company.ommu.co
- * @contect (+62)856-299-4114
+ * @contact (+62)856-299-4114
  *
  */
 
@@ -20,7 +21,7 @@
 
 	$cs = Yii::app()->getClientScript();
 $js=<<<EOP
-	$('#Recruitments_permanent').live('change', function() {
+	$('#Recruitments_permanent').on('change', function() {
 		var id = $(this).prop('checked');		
 		if(id == true) {
 			$('div#finish-date').slideUp();
@@ -94,7 +95,7 @@ EOP;
 				<?php
 				!$model->isNewRecord ? ($model->start_date != '0000-00-00' ? $model->start_date = date('d-m-Y', strtotime($model->start_date)) : '') : '';
 				//echo $form->textField($model,'start_date');
-				$this->widget('zii.widgets.jui.CJuiDatePicker',array(
+				$this->widget('application.components.system.CJuiDatePicker',array(
 					'model'=>$model,
 					'attribute'=>'start_date',
 					//'mode'=>'datetime',
@@ -132,7 +133,7 @@ EOP;
 				<?php
 				!$model->isNewRecord ? (!in_array(date('Y-m-d', strtotime($model->finish_date)), array('0000-00-00','1970-01-01')) ? $model->finish_date = date('d-m-Y', strtotime($model->finish_date)) : '') : '';
 				//echo $form->textField($model,'finish_date');
-				$this->widget('zii.widgets.jui.CJuiDatePicker',array(
+				$this->widget('application.components.system.CJuiDatePicker',array(
 					'model'=>$model,
 					'attribute'=>'finish_date',
 					//'mode'=>'datetime',
