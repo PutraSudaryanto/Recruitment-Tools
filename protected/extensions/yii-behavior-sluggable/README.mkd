@@ -48,7 +48,7 @@ Demo configuration of this behavior for your model
 public function behaviors(){
   return array(
     'sluggable' => array(
-      'class'=>'ext.behaviors.SluggableBehavior.SluggableBehavior',
+      'class'=>'ext.yii-sluggable.SluggableBehavior',
       'columns' => array('category', 'title', 'author.name'),
       'unique' => true,
       'update' => true,
